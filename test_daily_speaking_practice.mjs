@@ -32,6 +32,9 @@ assert.match(html, /id="questionBankImport"/, 'page should include a Markdown qu
 assert.match(html, /id="questionBankUrl"/, 'page should include a GitHub Markdown URL input');
 assert.match(html, /id="questionBankUrlOptions"/, 'page should include a dropdown for sibling GitHub Markdown files');
 assert.match(html, /id="questionBankUrlImport"/, 'page should include a GitHub Markdown URL import button');
+assert.match(html, /id="recordPromptButton"/, 'page should include an icon button for recording the current prompt');
+assert.match(html, /id="playPromptRecordingButton"/, 'page should include an icon button for playing the current prompt recording');
+assert.match(html, /id="recordingStatus"/, 'page should include recording status text');
 assert.doesNotMatch(html, /id="mobilePromptScroll"/, 'page should not include the removed mobile prompt scroll control');
 assert.match(html, /function\s+parseQuestionBankMarkdown\(/, 'page should parse imported Markdown question banks');
 assert.match(html, /function\s+handleQuestionBankImport\(/, 'page should handle imported Markdown files');
@@ -40,6 +43,10 @@ assert.match(html, /function\s+getQuestionBankSourceName\(/, 'page should shorte
 assert.match(html, /SAVED_QUESTION_BANK_STORAGE_KEY/, 'page should define one localStorage key for saved imports');
 assert.match(html, /function\s+saveImportedQuestionBank\(/, 'page should save successful imports to localStorage');
 assert.match(html, /function\s+loadSavedQuestionBank\(/, 'page should automatically load the latest saved import');
+assert.match(html, /function\s+getCurrentPromptRecordingKey\(/, 'page should key recordings to the current prompt');
+assert.match(html, /function\s+togglePromptRecording\(/, 'page should toggle recording for the current prompt');
+assert.match(html, /function\s+playPromptRecording\(/, 'page should play the current prompt recording');
+assert.match(html, /function\s+renderRecordingControls\(/, 'page should update recording control state per prompt');
 assert.match(html, /function\s+selectPromptFromBank\(/, 'page should let users select a prompt from the question bank');
 assert.doesNotMatch(html, /function\s+movePromptByStep\(/, 'removed mobile prompt stepper should not remain');
 assert.doesNotMatch(html, /function\s+handleMobilePromptScroll\(/, 'removed mobile prompt scroll handler should not remain');
@@ -56,6 +63,9 @@ assert.match(
   'question bank list should scroll inside the IELTS prompt section'
 );
 assert.doesNotMatch(html, /\.mobile-prompt-scroll/, 'removed mobile prompt scroll CSS should not remain');
+assert.match(html, /\.icon-button/, 'recording controls should use icon button styling');
+assert.match(html, /\.record-icon/, 'record button should use a record icon');
+assert.match(html, /\.play-icon/, 'play button should use a play icon');
 
 function extractNamedFunction(source, name) {
   const start = source.indexOf(`function ${name}(`);
@@ -164,6 +174,26 @@ const renderQuestionBankSource = extractNamedFunction(html, 'renderQuestionBank'
 assert.match(renderQuestionBankSource, /<button type="button"/, 'question bank prompts should render as buttons');
 assert.match(renderQuestionBankSource, /onclick="selectPromptFromBank\(\$\{index\}\)"/, 'question bank buttons should select the matching prompt index');
 assert.match(renderQuestionBankSource, /aria-pressed="\$\{pressed\}"/, 'selected question bank prompt should be exposed with aria-pressed');
+assert.match(
+  extractNamedFunction(html, 'getCurrentPromptRecordingKey'),
+  /`\$\{part\.name\}:\$\{getPromptQuestion\(prompt\)\}`/,
+  'recordings should be keyed by part and prompt text'
+);
+assert.match(
+  extractNamedFunction(html, 'togglePromptRecording'),
+  /navigator\.mediaDevices\.getUserMedia\(\{ audio: true \}\)/,
+  'recording should request microphone audio'
+);
+assert.match(
+  extractNamedFunction(html, 'togglePromptRecording'),
+  /new MediaRecorder\(stream\)/,
+  'recording should use MediaRecorder'
+);
+assert.match(
+  extractNamedFunction(html, 'playPromptRecording'),
+  /new Audio\(recording\.url\)/,
+  'playback should use the current prompt recording URL'
+);
 
 assert.equal(
   normalizeQuestionBankUrl('https://github.com/example/oral_english/blob/main/ielts_2025_sep_dec_question_bank.md'),

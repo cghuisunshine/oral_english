@@ -177,6 +177,45 @@
     button:hover { background: var(--primary-strong); }
     button.secondary:hover { background: #f1f3f4; }
 
+    .icon-button {
+      width: 40px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .record-icon {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #b91c1c;
+    }
+
+    .recording .record-icon {
+      border-radius: 2px;
+      background: #b91c1c;
+    }
+
+    .play-icon {
+      width: 0;
+      height: 0;
+      margin-left: 2px;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 12px solid currentColor;
+    }
+
+    .recording-status {
+      min-height: 1.4em;
+      margin: 8px 0 0;
+    }
+
     .part-tabs {
       display: flex;
       gap: 8px;
@@ -537,7 +576,14 @@
             <button type="button" onclick="newPrompt()">New Prompt</button>
             <button type="button" class="secondary" onclick="repeatPrompt()">Repeat This Prompt</button>
             <button type="button" class="secondary" id="answerToggle" onclick="toggleModelAnswer()" hidden>Show Model Answer</button>
+            <button type="button" class="secondary icon-button" id="recordPromptButton" aria-label="Record answer" title="Record answer">
+              <span class="record-icon" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="secondary icon-button" id="playPromptRecordingButton" aria-label="Play recording" title="Play recording" disabled>
+              <span class="play-icon" aria-hidden="true"></span>
+            </button>
           </div>
+          <p class="muted recording-status" id="recordingStatus"></p>
           <textarea id="notes" placeholder="Write keywords only. Do not write a full answer. Then speak out loud."></textarea>
         </div>
         <aside>
@@ -599,6 +645,9 @@
       promptIndex: 0,
       answerVisible: false
     };
+    const promptRecordings = new Map();
+    let recordingSession = null;
+    let playbackAudio = null;
 
     const progressText = document.getElementById('progressText');
     const progressFill = document.getElementById('progressFill');
@@ -697,6 +746,7 @@
       answerToggle.hidden = !answer;
       answerBox.hidden = !answer || !state.answerVisible;
       answerToggle.textContent = state.answerVisible ? 'Hide Model Answer' : 'Show Model Answer';
+      renderRecordingControls();
     }
 
     function renderExamContent() {
@@ -714,6 +764,7 @@
     }
 
     function selectPart(index) {
+      stopActiveRecording();
       state.partIndex = index;
       state.promptIndex = 0;
       state.answerVisible = false;
@@ -722,12 +773,14 @@
     }
 
     function selectPromptFromBank(index) {
+      stopActiveRecording();
       state.promptIndex = index;
       state.answerVisible = false;
       renderPrompt();
     }
 
     function newPrompt() {
+      stopActiveRecording();
       const part = practiceContent.parts[state.partIndex];
       if (part.prompts.length <= 1) {
         state.promptIndex = 0;
@@ -744,6 +797,121 @@
 
     function repeatPrompt() {
       renderPrompt();
+    }
+
+    function getCurrentPromptRecordingKey() {
+      const part = practiceContent.parts[state.partIndex];
+      const prompt = part.prompts[state.promptIndex];
+      return `${part.name}:${getPromptQuestion(prompt)}`;
+    }
+
+    function isRecordingPrompt() {
+      return Boolean(recordingSession && recordingSession.mediaRecorder.state === 'recording');
+    }
+
+    function renderRecordingControls() {
+      const recordButton = document.getElementById('recordPromptButton');
+      const playButton = document.getElementById('playPromptRecordingButton');
+      if (!recordButton || !playButton) {
+        return;
+      }
+      const isRecording = isRecordingPrompt();
+      recordButton.classList.toggle('recording', isRecording);
+      recordButton.setAttribute('aria-pressed', isRecording ? 'true' : 'false');
+      recordButton.setAttribute('aria-label', isRecording ? 'Stop recording' : 'Record answer');
+      recordButton.title = isRecording ? 'Stop recording' : 'Record answer';
+      playButton.disabled = isRecording || !promptRecordings.has(getCurrentPromptRecordingKey());
+    }
+
+    function stopRecordingStream(stream) {
+      stream.getTracks().forEach((track) => track.stop());
+    }
+
+    function stopActiveRecording() {
+      if (!recordingSession) {
+        return;
+      }
+      if (recordingSession.mediaRecorder.state === 'recording') {
+        recordingSession.mediaRecorder.stop();
+      } else {
+        stopRecordingStream(recordingSession.stream);
+        recordingSession = null;
+        renderRecordingControls();
+      }
+    }
+
+    async function togglePromptRecording() {
+      if (isRecordingPrompt()) {
+        document.getElementById('recordingStatus').textContent = 'Saving recording...';
+        stopActiveRecording();
+        renderRecordingControls();
+        return;
+      }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
+        document.getElementById('recordingStatus').textContent = 'Recording is not supported in this browser.';
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        const chunks = [];
+        const recordingKey = getCurrentPromptRecordingKey();
+        recordingSession = { mediaRecorder, stream, chunks, recordingKey };
+
+        mediaRecorder.addEventListener('dataavailable', (event) => {
+          if (event.data && event.data.size > 0) {
+            chunks.push(event.data);
+          }
+        });
+
+        mediaRecorder.addEventListener('stop', () => {
+          stopRecordingStream(stream);
+          const blob = new Blob(chunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+          const previous = promptRecordings.get(recordingKey);
+          if (previous) {
+            URL.revokeObjectURL(previous.url);
+          }
+          if (blob.size > 0) {
+            promptRecordings.set(recordingKey, {
+              blob,
+              url: URL.createObjectURL(blob)
+            });
+            document.getElementById('recordingStatus').textContent = 'Recording saved for this prompt.';
+          } else {
+            document.getElementById('recordingStatus').textContent = 'No audio was captured.';
+          }
+          recordingSession = null;
+          renderRecordingControls();
+        });
+
+        mediaRecorder.start();
+        document.getElementById('recordingStatus').textContent = 'Recording...';
+        renderRecordingControls();
+      } catch (error) {
+        document.getElementById('recordingStatus').textContent = 'Microphone access was not available.';
+      }
+    }
+
+    async function playPromptRecording() {
+      const recording = promptRecordings.get(getCurrentPromptRecordingKey());
+      if (!recording) {
+        document.getElementById('recordingStatus').textContent = 'No recording for this prompt yet.';
+        return;
+      }
+      if (playbackAudio) {
+        playbackAudio.pause();
+        playbackAudio.currentTime = 0;
+      }
+      playbackAudio = new Audio(recording.url);
+      playbackAudio.addEventListener('ended', () => {
+        document.getElementById('recordingStatus').textContent = 'Playback finished.';
+      });
+      try {
+        document.getElementById('recordingStatus').textContent = 'Playing recording...';
+        await playbackAudio.play();
+      } catch (error) {
+        document.getElementById('recordingStatus').textContent = 'Could not play this recording.';
+      }
     }
 
     function toggleModelAnswer() {
@@ -1127,6 +1295,8 @@
     document.getElementById('questionBankUrl').addEventListener('change', discoverQuestionBankUrlOptions);
     document.getElementById('questionBankUrlOptions').addEventListener('change', handleQuestionBankUrlOptionChange);
     document.getElementById('questionBankUrlImport').addEventListener('click', handleQuestionBankUrlImport);
+    document.getElementById('recordPromptButton').addEventListener('click', togglePromptRecording);
+    document.getElementById('playPromptRecordingButton').addEventListener('click', playPromptRecording);
     renderExamContent();
     const savedQuestionBankLoaded = loadSavedQuestionBank();
     discoverCurrentGitHubMarkdownOptions({ preserveStatus: savedQuestionBankLoaded });
