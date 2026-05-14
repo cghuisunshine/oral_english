@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily IELTS Speaking Practice</title>
+  <link rel="icon" href="data:," />
+  <style>
+    :root {
+      --bg: #f7f7f5;
+      --surface: #ffffff;
+      --text: #202124;
+      --muted: #666a70;
+      --border: #dfe1e5;
+      --primary: #0f766e;
+      --primary-strong: #115e59;
+      --primary-soft: #e5f3f1;
+      --warning-soft: #fff7ed;
+      --warning-border: #fed7aa;
+      --success: #15803d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      padding: 28px 20px;
+    }
+
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.65rem, 3vw, 2.25rem);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 20px 16px 52px;
+    }
+
+    section {
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      color: #171717;
+      font-size: 1.2rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .daily-checklist label {
+      display: block;
+      padding: 10px 12px;
+      margin: 8px 0;
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin-right: 10px;
+      vertical-align: -2px;
+      accent-color: var(--primary);
+    }
+
+    input[type="file"],
+    input[type="url"] {
+      width: 100%;
+      padding: 9px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #e9ecef;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--success);
+      transition: width 0.2s ease;
+    }
+
+    .timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .timer {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-strong);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      min-height: 40px;
+      background: var(--primary);
+      color: white;
+      border: 1px solid var(--primary);
+      border-radius: 8px;
+      padding: 9px 13px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    button:hover { background: var(--primary-strong); }
+    button.secondary:hover { background: #f1f3f4; }
+
+    .part-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .part-tabs button {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .part-tabs button[aria-pressed="true"] {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .exam-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.8fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .prompt-box {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fbfbfa;
+      min-height: 210px;
+    }
+
+    .prompt-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .prompt-text {
+      margin: 0;
+      font-size: 1.28rem;
+      line-height: 1.35;
+    }
+
+    .answer-box {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .answer-box p {
+      margin: 8px 0 0;
+    }
+
+    .cue-card {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--warning-border);
+      border-radius: 8px;
+      background: var(--warning-soft);
+    }
+
+    .cue-card ul,
+    .side-panel ul,
+    .prompt-list {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .side-panel {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--surface);
+    }
+
+    .side-panel + .side-panel {
+      margin-top: 12px;
+    }
+
+    .import-panel {
+      display: grid;
+      gap: 10px;
+    }
+
+    .import-status {
+      min-height: 1.4em;
+      margin: 0;
+    }
+
+    .phrase-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .phrase {
+      border: 1px solid #c7deda;
+      background: var(--primary-soft);
+      color: var(--primary-strong);
+      padding: 6px 9px;
+      border-radius: 7px;
+      font-size: 0.92rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      resize: vertical;
+      font-family: inherit;
+      background: #fff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .mini-card {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 28px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 760px) {
+      header {
+        padding: 22px 16px;
+      }
+
+      main {
+        padding-inline: 12px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .exam-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .prompt-text {
+        font-size: 1.12rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script id="practice-content" type="application/json">
+{
+  "examName": "IELTS Speaking",
+  "routine": [
+    "3 minutes: answer one Part 1 question quickly",
+    "2 minutes: plan a Part 2 cue card with keywords only",
+    "2 minutes: speak the Part 2 answer without stopping",
+    "5 minutes: answer two Part 3 discussion questions",
+    "5 minutes: listen back and mark fluency, vocabulary, grammar, and pronunciation",
+    "3 minutes: repeat the weakest answer once"
+  ],
+  "parts": [
+    {
+      "name": "Part 1",
+      "title": "Interview Questions",
+      "time": "4-5 minutes",
+      "focus": "Short, natural answers about familiar topics. Aim for two or three sentences.",
+      "prompts": [
+        "Do you work or are you a student?",
+        "What do you usually do on weekends?",
+        "Do you prefer reading books or watching films?",
+        "What kind of weather do you like?",
+        "How often do you use public transport?",
+        "Did you enjoy science classes at school?",
+        "What is your favorite room in your home?",
+        "Do you like making plans for the future?"
+      ]
+    },
+    {
+      "name": "Part 2",
+      "title": "Long Turn Cue Cards",
+      "time": "1 minute preparation, then 1-2 minutes speaking",
+      "focus": "Build a clear story with past details, specific examples, and a short reflection.",
+      "prompts": [
+        "Describe a person who has influenced you.",
+        "Describe a place you visited and would like to visit again.",
+        "Describe a useful skill you learned.",
+        "Describe an important decision you made.",
+        "Describe a time when you helped someone.",
+        "Describe an object you use every day.",
+        "Describe a book, film, or program you enjoyed.",
+        "Describe a goal you want to achieve."
+      ],
+      "cuePoints": [
+        "what it was",
+        "when and where it happened",
+        "who was involved",
+        "why it was important to you"
+      ]
+    },
+    {
+      "name": "Part 3",
+      "title": "Discussion Questions",
+      "time": "4-5 minutes",
+      "focus": "Give opinions, compare groups, explain causes, and mention possible future changes.",
+      "prompts": [
+        "Why do some people prefer living in cities rather than small towns?",
+        "How has technology changed the way people learn?",
+        "Should children be encouraged to make decisions for themselves?",
+        "What are the advantages of learning practical skills at school?",
+        "Do you think people travel more now than in the past?",
+        "How can governments encourage people to live healthier lives?",
+        "Why do some traditions disappear over time?",
+        "What kinds of jobs may become more important in the future?"
+      ]
+    }
+  ],
+  "speakingFrames": [
+    "I would say that...",
+    "The main reason is that...",
+    "For example, when I...",
+    "Compared with the past...",
+    "It depends on the situation.",
+    "From my point of view...",
+    "One possible disadvantage is...",
+    "In the long run..."
+  ],
+  "rescuePhrases": [
+    "Let me think for a second.",
+    "What I mean is...",
+    "I am not sure how to express it exactly, but...",
+    "Could you repeat the question, please?",
+    "To give a more specific example...",
+    "I suppose another way to look at it is..."
+  ],
+  "weeklyPlan": [
+    ["Day 1", "Part 1: work or studies, home, daily routine"],
+    ["Day 2", "Part 1: hobbies, weather, transport"],
+    ["Day 3", "Part 2: people and relationships"],
+    ["Day 4", "Part 2: places, travel, and events"],
+    ["Day 5", "Part 3: education and technology"],
+    ["Day 6", "Part 3: society, health, and environment"],
+    ["Day 7", "Full mock test: Parts 1, 2, and 3"]
+  ],
+  "reviewQuestions": [
+    "Did I answer the question directly?",
+    "Did I speak without long silent pauses?",
+    "Did I use examples instead of memorized sentences?",
+    "Did I correct one pronunciation or grammar habit?"
+  ]
+}
+  </script>
+
+  <header>
+    <div class="header-inner">
+      <h1>Daily IELTS Speaking Practice</h1>
+      <p>Practice with IELTS-style Part 1, Part 2, and Part 3 prompts. Keep notes short, then speak out loud.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Today’s 20-Minute Routine</h2>
+      <div class="daily-checklist" id="routineList"></div>
+      <p class="muted">Progress: <span id="progressText">0%</span></p>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </section>
+
+    <section class="card">
+      <h2>Practice Timer</h2>
+      <div class="timer-row">
+        <div>
+          <p class="muted">Use the 2-minute timer for Part 2. Use the 5-minute timer for Part 1 or Part 3 drills.</p>
+          <div class="timer" id="timer">02:00</div>
+        </div>
+        <div class="button-row">
+          <button type="button" onclick="startTimer(120)">2-Minute Speaking</button>
+          <button type="button" onclick="startTimer(300)">5-Minute Practice</button>
+          <button type="button" class="secondary" onclick="resetTimer()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>IELTS Speaking Prompt</h2>
+      <div class="part-tabs" id="partTabs"></div>
+      <div class="exam-layout">
+        <div>
+          <div class="prompt-box">
+            <span class="prompt-label" id="partMeta"></span>
+            <p class="prompt-text" id="promptText"></p>
+            <div class="cue-card" id="cueCard" hidden>
+              <h3>You should say:</h3>
+              <ul id="cuePoints"></ul>
+            </div>
+            <div class="answer-box" id="answerBox" hidden>
+              <h3>Model answer</h3>
+              <p id="modelAnswer"></p>
+            </div>
+          </div>
+          <div class="button-row">
+            <button type="button" onclick="newPrompt()">New Prompt</button>
+            <button type="button" class="secondary" onclick="repeatPrompt()">Repeat This Prompt</button>
+            <button type="button" class="secondary" id="answerToggle" onclick="toggleModelAnswer()" hidden>Show Model Answer</button>
+          </div>
+          <textarea id="notes" placeholder="Write keywords only. Do not write a full answer. Then speak out loud."></textarea>
+        </div>
+        <aside>
+          <div class="side-panel import-panel">
+            <h3>Import Questions</h3>
+            <input type="file" id="questionBankImport" accept=".md,text/markdown,text/plain">
+            <input type="url" id="questionBankUrl" placeholder="GitHub .md link">
+            <button type="button" class="secondary" id="questionBankUrlImport">Import Link</button>
+            <p class="muted import-status" id="importStatus">Import a Markdown file or GitHub link to replace the built-in prompts.</p>
+          </div>
+          <div class="side-panel">
+            <h3 id="partTitle"></h3>
+            <p class="muted" id="partFocus"></p>
+          </div>
+          <div class="side-panel">
+            <h3>Question Bank</h3>
+            <ul class="prompt-list" id="promptBank"></ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Useful Speaking Frames</h2>
+      <div class="phrase-list" id="speakingFrames"></div>
+    </section>
+
+    <section class="card">
+      <h2>Rescue Phrases</h2>
+      <div class="phrase-list" id="rescuePhrases"></div>
+    </section>
+
+    <section class="card">
+      <h2>7-Day IELTS Speaking Plan</h2>
+      <div class="grid" id="weeklyPlan"></div>
+    </section>
+
+    <section class="card">
+      <h2>Self-Review</h2>
+      <p class="muted">After recording, check the items that describe your answer.</p>
+      <div class="daily-checklist" id="reviewList"></div>
+      <textarea placeholder="Write one specific thing to improve tomorrow."></textarea>
+    </section>
+
+    <footer>
+      This is IELTS-style speaking practice material for daily training, not an official exam question bank.
+    </footer>
+  </main>
+
+  <script>
+    const practiceContent = JSON.parse(document.getElementById('practice-content').textContent);
+    const state = {
+      partIndex: 0,
+      promptIndex: 0,
+      answerVisible: false
+    };
+
+    const progressText = document.getElementById('progressText');
+    const progressFill = document.getElementById('progressFill');
+
+    function renderChecklist(items, targetId, className = '') {
+      const target = document.getElementById(targetId);
+      target.innerHTML = items.map((item) => {
+        const inputClass = className ? ` class="${className}"` : '';
+        return `<label><input type="checkbox"${inputClass}> ${item}</label>`;
+      }).join('');
+    }
+
+    function renderPhrases(items, targetId) {
+      document.getElementById(targetId).innerHTML = items
+        .map((item) => `<span class="phrase">${item}</span>`)
+        .join('');
+    }
+
+    function renderWeeklyPlan() {
+      document.getElementById('weeklyPlan').innerHTML = practiceContent.weeklyPlan
+        .map(([day, task]) => `<div class="mini-card"><h3>${day}</h3><p>${task}</p></div>`)
+        .join('');
+    }
+
+    function renderPartTabs() {
+      document.getElementById('partTabs').innerHTML = practiceContent.parts
+        .map((part, index) => {
+          const pressed = index === state.partIndex ? 'true' : 'false';
+          return `<button type="button" aria-pressed="${pressed}" onclick="selectPart(${index})">${part.name}</button>`;
+        })
+        .join('');
+    }
+
+    function getPromptQuestion(prompt) {
+      return typeof prompt === 'string' ? prompt : prompt.question;
+    }
+
+    function getPromptAnswer(prompt) {
+      return typeof prompt === 'string' ? '' : prompt.answer || '';
+    }
+
+    function renderQuestionBank(part) {
+      document.getElementById('promptBank').innerHTML = part.prompts
+        .map((prompt) => `<li>${getPromptQuestion(prompt)}</li>`)
+        .join('');
+    }
+
+    function renderPrompt() {
+      const part = practiceContent.parts[state.partIndex];
+      const prompt = part.prompts[state.promptIndex];
+      const answer = getPromptAnswer(prompt);
+
+      document.getElementById('partMeta').textContent = `${practiceContent.examName} ${part.name} - ${part.time}`;
+      document.getElementById('promptText').textContent = getPromptQuestion(prompt);
+      document.getElementById('partTitle').textContent = `${part.name}: ${part.title}`;
+      document.getElementById('partFocus').textContent = part.focus;
+      renderQuestionBank(part);
+
+      const cueCard = document.getElementById('cueCard');
+      const cuePoints = document.getElementById('cuePoints');
+      if (part.cuePoints) {
+        cuePoints.innerHTML = part.cuePoints.map((point) => `<li>${point}</li>`).join('');
+        cueCard.hidden = false;
+      } else {
+        cuePoints.innerHTML = '';
+        cueCard.hidden = true;
+      }
+
+      const answerToggle = document.getElementById('answerToggle');
+      const answerBox = document.getElementById('answerBox');
+      document.getElementById('modelAnswer').textContent = answer;
+      answerToggle.hidden = !answer;
+      answerBox.hidden = !answer || !state.answerVisible;
+      answerToggle.textContent = state.answerVisible ? 'Hide Model Answer' : 'Show Model Answer';
+    }
+
+    function renderExamContent() {
+      renderChecklist(practiceContent.routine, 'routineList', 'task');
+      renderChecklist(practiceContent.reviewQuestions, 'reviewList');
+      renderPhrases(practiceContent.speakingFrames, 'speakingFrames');
+      renderPhrases(practiceContent.rescuePhrases, 'rescuePhrases');
+      renderWeeklyPlan();
+      renderPartTabs();
+      renderPrompt();
+
+      document.querySelectorAll('.task').forEach((task) => {
+        task.addEventListener('change', updateProgress);
+      });
+    }
+
+    function selectPart(index) {
+      state.partIndex = index;
+      state.promptIndex = 0;
+      state.answerVisible = false;
+      renderPartTabs();
+      renderPrompt();
+    }
+
+    function newPrompt() {
+      const part = practiceContent.parts[state.partIndex];
+      if (part.prompts.length <= 1) {
+        state.promptIndex = 0;
+      } else {
+        let nextIndex = state.promptIndex;
+        while (nextIndex === state.promptIndex) {
+          nextIndex = Math.floor(Math.random() * part.prompts.length);
+        }
+        state.promptIndex = nextIndex;
+      }
+      state.answerVisible = false;
+      renderPrompt();
+    }
+
+    function repeatPrompt() {
+      renderPrompt();
+    }
+
+    function toggleModelAnswer() {
+      state.answerVisible = !state.answerVisible;
+      renderPrompt();
+    }
+
+    function parseQuestionBankMarkdown(markdown) {
+      const partMeta = [
+        {
+          name: 'Part 1',
+          title: 'Interview Questions',
+          time: '4-5 minutes',
+          focus: 'Short, natural answers about familiar topics. Aim for two or three sentences.',
+          prompts: []
+        },
+        {
+          name: 'Part 2',
+          title: 'Long Turn Cue Cards',
+          time: '1 minute preparation, then 1-2 minutes speaking',
+          focus: 'Build a clear story with past details, specific examples, and a short reflection.',
+          prompts: [],
+          cuePoints: ['what it was', 'when and where it happened', 'who was involved', 'why it was important to you']
+        },
+        {
+          name: 'Part 3',
+          title: 'Discussion Questions',
+          time: '4-5 minutes',
+          focus: 'Give opinions, compare groups, explain causes, and mention possible future changes.',
+          prompts: []
+        }
+      ];
+      let section = '';
+      let currentTopic = '';
+      let currentCue = '';
+      const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
+      const clean = (value) => value.replace(/\*\*/g, '').trim();
+      const addPrompt = (partIndex, question, answer, topic) => {
+        const normalizedQuestion = clean(question);
+        const normalizedAnswer = clean(answer);
+        if (normalizedQuestion && normalizedAnswer) {
+          partMeta[partIndex].prompts.push({
+            question: normalizedQuestion,
+            answer: normalizedAnswer,
+            topic: clean(topic || normalizedQuestion)
+          });
+          }
+        };
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line) {
+          continue;
+          }
+        if (/^## Part 1 Quick Interview Bank/i.test(line)) {
+          section = 'part1';
+          continue;
+          }
+        if (/^## Part 2 And Part 3 Cue-Card Bank/i.test(line)) {
+          section = 'part23';
+          continue;
+          }
+        const topicMatch = line.match(/^\d+\.\s+\*\*(.+?)\*\*/);
+        if (topicMatch) {
+          currentTopic = topicMatch[1];
+          currentCue = '';
+          continue;
+          }
+        if (section === 'part1') {
+          const match = line.match(/^Question:\s*(.+?)\s+Answer:\s*(.+)$/i);
+          if (match) {
+            addPrompt(0, match[1], match[2], currentTopic);
+            continue;
+            }
+          }
+        if (section === 'part1' && /^Question:/i.test(line)) {
+          currentCue = line.replace(/^Question:\s*/i, '');
+          continue;
+          }
+        if (section === 'part1' && /^Answer:/i.test(line)) {
+          addPrompt(0, currentCue, line.replace(/^Answer:\s*/i, ''), currentTopic);
+          continue;
+          }
+        if (section === 'part23' && /^Cue card:/i.test(line)) {
+          currentCue = line.replace(/^Cue card:\s*/i, '');
+          continue;
+          }
+        if (section === 'part23' && /^Model answer:/i.test(line)) {
+          addPrompt(1, currentCue, line.replace(/^Model answer:\s*/i, ''), currentTopic);
+          continue;
+          }
+        if (section === 'part23' && /^Part 3:/i.test(line)) {
+          currentCue = line.replace(/^Part 3:\s*/i, '');
+          continue;
+          }
+        if (section === 'part23' && /^Answer:/i.test(line)) {
+          addPrompt(2, currentCue, line.replace(/^Answer:\s*/i, ''), currentTopic);
+          }
+        }
+      return { parts: partMeta };
+    }
+
+    function applyImportedQuestionBank(markdown, sourceLabel) {
+      const imported = parseQuestionBankMarkdown(markdown);
+      const totalPrompts = imported.parts.reduce((total, part) => total + part.prompts.length, 0);
+      if (totalPrompts === 0) {
+        throw new Error('No questions were found in this Markdown file.');
+      }
+      practiceContent.parts = imported.parts;
+      state.partIndex = 0;
+      state.promptIndex = 0;
+      state.answerVisible = false;
+      renderPartTabs();
+      renderPrompt();
+      document.getElementById('importStatus').textContent = `Imported ${totalPrompts} questions from ${sourceLabel}.`;
+    }
+
+    function normalizeQuestionBankUrl(source) {
+      const trimmed = source.trim();
+      const githubBlobMatch = trimmed.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/);
+      if (githubBlobMatch) {
+        const [, owner, repo, branch, path] = githubBlobMatch;
+        return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+      }
+      if (/^https?:\/\//i.test(trimmed)) {
+        return trimmed;
+      }
+      return new URL(trimmed, window.location.href).href;
+    }
+
+    function handleQuestionBankImport(event) {
+      const file = event.target.files[0];
+      if (!file) {
+        return;
+      }
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        try {
+          applyImportedQuestionBank(String(reader.result || ''), file.name);
+        } catch (error) {
+          document.getElementById('importStatus').textContent = error.message;
+        }
+      });
+      reader.readAsText(file);
+    }
+
+    async function handleQuestionBankUrlImport() {
+      const input = document.getElementById('questionBankUrl');
+      const source = input.value.trim();
+      if (!source) {
+        document.getElementById('importStatus').textContent = 'Enter a GitHub Markdown link first.';
+        return;
+      }
+      try {
+        const url = normalizeQuestionBankUrl(source);
+        document.getElementById('importStatus').textContent = 'Importing link...';
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Could not import link. HTTP ${response.status}.`);
+        }
+        applyImportedQuestionBank(await response.text(), source);
+      } catch (error) {
+        document.getElementById('importStatus').textContent = error.message;
+      }
+    }
+
+    function updateProgress() {
+      const tasks = document.querySelectorAll('.task');
+      const completed = Array.from(tasks).filter((task) => task.checked).length;
+      const percent = Math.round((completed / tasks.length) * 100);
+      progressText.textContent = percent + '%';
+      progressFill.style.width = percent + '%';
+    }
+
+    let countdown;
+    let remainingSeconds = 120;
+
+    function displayTime(seconds) {
+      const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const sec = String(seconds % 60).padStart(2, '0');
+      document.getElementById('timer').textContent = min + ':' + sec;
+    }
+
+    function startTimer(seconds) {
+      clearInterval(countdown);
+      remainingSeconds = seconds;
+      displayTime(remainingSeconds);
+      countdown = setInterval(() => {
+        remainingSeconds--;
+        displayTime(remainingSeconds);
+        if (remainingSeconds <= 0) {
+          clearInterval(countdown);
+          alert('Time is up. Listen back and review one specific thing.');
+        }
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(countdown);
+      remainingSeconds = 120;
+      displayTime(remainingSeconds);
+    }
+
+    document.getElementById('questionBankImport').addEventListener('change', handleQuestionBankImport);
+    document.getElementById('questionBankUrlImport').addEventListener('click', handleQuestionBankUrlImport);
+    renderExamContent();
+  </script>
+</body>
+</html>

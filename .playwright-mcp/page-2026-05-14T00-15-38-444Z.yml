@@ -1,0 +1,137 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - heading "Daily IELTS Speaking Practice" [level=1] [ref=e4]
+      - paragraph [ref=e5]: Practice with IELTS-style Part 1, Part 2, and Part 3 prompts. Keep notes short, then speak out loud.
+  - main [ref=e6]:
+    - generic [ref=e7]:
+      - heading "Today’s 20-Minute Routine" [level=2] [ref=e8]
+      - generic [ref=e9]:
+        - generic [ref=e10] [cursor=pointer]:
+          - 'checkbox "3 minutes: answer one Part 1 question quickly" [ref=e11]'
+          - text: "3 minutes: answer one Part 1 question quickly"
+        - generic [ref=e12] [cursor=pointer]:
+          - 'checkbox "2 minutes: plan a Part 2 cue card with keywords only" [ref=e13]'
+          - text: "2 minutes: plan a Part 2 cue card with keywords only"
+        - generic [ref=e14] [cursor=pointer]:
+          - 'checkbox "2 minutes: speak the Part 2 answer without stopping" [ref=e15]'
+          - text: "2 minutes: speak the Part 2 answer without stopping"
+        - generic [ref=e16] [cursor=pointer]:
+          - 'checkbox "5 minutes: answer two Part 3 discussion questions" [ref=e17]'
+          - text: "5 minutes: answer two Part 3 discussion questions"
+        - generic [ref=e18] [cursor=pointer]:
+          - 'checkbox "5 minutes: listen back and mark fluency, vocabulary, grammar, and pronunciation" [ref=e19]'
+          - text: "5 minutes: listen back and mark fluency, vocabulary, grammar, and pronunciation"
+        - generic [ref=e20] [cursor=pointer]:
+          - 'checkbox "3 minutes: repeat the weakest answer once" [ref=e21]'
+          - text: "3 minutes: repeat the weakest answer once"
+      - paragraph [ref=e22]: "Progress: 0%"
+    - generic [ref=e24]:
+      - heading "Practice Timer" [level=2] [ref=e25]
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - paragraph [ref=e28]: Use the 2-minute timer for Part 2. Use the 5-minute timer for Part 1 or Part 3 drills.
+          - generic [ref=e29]: 02:00
+        - generic [ref=e30]:
+          - button "2-Minute Speaking" [ref=e31] [cursor=pointer]
+          - button "5-Minute Practice" [ref=e32] [cursor=pointer]
+          - button "Reset" [ref=e33] [cursor=pointer]
+    - generic [ref=e34]:
+      - heading "IELTS Speaking Prompt" [level=2] [ref=e35]
+      - generic [ref=e36]:
+        - button "Part 1" [ref=e122] [cursor=pointer]
+        - button "Part 2" [pressed] [ref=e123] [cursor=pointer]
+        - button "Part 3" [ref=e124] [cursor=pointer]
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - generic [ref=e43]: IELTS Speaking Part 2 - 1 minute preparation, then 1-2 minutes speaking
+            - paragraph [ref=e44]: Describe a person who has influenced you.
+            - generic [ref=e125]:
+              - heading "You should say:" [level=3] [ref=e126]
+              - list [ref=e127]:
+                - listitem [ref=e128]: what it was
+                - listitem [ref=e129]: when and where it happened
+                - listitem [ref=e130]: who was involved
+                - listitem [ref=e131]: why it was important to you
+          - generic [ref=e45]:
+            - button "New Prompt" [ref=e46] [cursor=pointer]
+            - button "Repeat This Prompt" [ref=e47] [cursor=pointer]
+          - textbox "Write keywords only. Do not write a full answer. Then speak out loud." [ref=e48]
+        - complementary [ref=e49]:
+          - generic [ref=e50]:
+            - 'heading "Part 2: Long Turn Cue Cards" [level=3] [ref=e132]'
+            - paragraph [ref=e52]: Build a clear story with past details, specific examples, and a short reflection.
+          - generic [ref=e53]:
+            - heading "Question Bank" [level=3] [ref=e54]
+            - list [ref=e55]:
+              - listitem [ref=e133]: Describe a person who has influenced you.
+              - listitem [ref=e134]: Describe a place you visited and would like to visit again.
+              - listitem [ref=e135]: Describe a useful skill you learned.
+              - listitem [ref=e136]: Describe an important decision you made.
+              - listitem [ref=e137]: Describe a time when you helped someone.
+              - listitem [ref=e138]: Describe an object you use every day.
+              - listitem [ref=e139]: Describe a book, film, or program you enjoyed.
+              - listitem [ref=e140]: Describe a goal you want to achieve.
+    - generic [ref=e64]:
+      - heading "Useful Speaking Frames" [level=2] [ref=e65]
+      - generic [ref=e66]:
+        - generic [ref=e67]: I would say that...
+        - generic [ref=e68]: The main reason is that...
+        - generic [ref=e69]: For example, when I...
+        - generic [ref=e70]: Compared with the past...
+        - generic [ref=e71]: It depends on the situation.
+        - generic [ref=e72]: From my point of view...
+        - generic [ref=e73]: One possible disadvantage is...
+        - generic [ref=e74]: In the long run...
+    - generic [ref=e75]:
+      - heading "Rescue Phrases" [level=2] [ref=e76]
+      - generic [ref=e77]:
+        - generic [ref=e78]: Let me think for a second.
+        - generic [ref=e79]: What I mean is...
+        - generic [ref=e80]: I am not sure how to express it exactly, but...
+        - generic [ref=e81]: Could you repeat the question, please?
+        - generic [ref=e82]: To give a more specific example...
+        - generic [ref=e83]: I suppose another way to look at it is...
+    - generic [ref=e84]:
+      - heading "7-Day IELTS Speaking Plan" [level=2] [ref=e85]
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - heading "Day 1" [level=3] [ref=e88]
+          - paragraph [ref=e89]: "Part 1: work or studies, home, daily routine"
+        - generic [ref=e90]:
+          - heading "Day 2" [level=3] [ref=e91]
+          - paragraph [ref=e92]: "Part 1: hobbies, weather, transport"
+        - generic [ref=e93]:
+          - heading "Day 3" [level=3] [ref=e94]
+          - paragraph [ref=e95]: "Part 2: people and relationships"
+        - generic [ref=e96]:
+          - heading "Day 4" [level=3] [ref=e97]
+          - paragraph [ref=e98]: "Part 2: places, travel, and events"
+        - generic [ref=e99]:
+          - heading "Day 5" [level=3] [ref=e100]
+          - paragraph [ref=e101]: "Part 3: education and technology"
+        - generic [ref=e102]:
+          - heading "Day 6" [level=3] [ref=e103]
+          - paragraph [ref=e104]: "Part 3: society, health, and environment"
+        - generic [ref=e105]:
+          - heading "Day 7" [level=3] [ref=e106]
+          - paragraph [ref=e107]: "Full mock test: Parts 1, 2, and 3"
+    - generic [ref=e108]:
+      - heading "Self-Review" [level=2] [ref=e109]
+      - paragraph [ref=e110]: After recording, check the items that describe your answer.
+      - generic [ref=e111]:
+        - generic [ref=e112] [cursor=pointer]:
+          - checkbox "Did I answer the question directly?" [ref=e113]
+          - text: Did I answer the question directly?
+        - generic [ref=e114] [cursor=pointer]:
+          - checkbox "Did I speak without long silent pauses?" [ref=e115]
+          - text: Did I speak without long silent pauses?
+        - generic [ref=e116] [cursor=pointer]:
+          - checkbox "Did I use examples instead of memorized sentences?" [ref=e117]
+          - text: Did I use examples instead of memorized sentences?
+        - generic [ref=e118] [cursor=pointer]:
+          - checkbox "Did I correct one pronunciation or grammar habit?" [ref=e119]
+          - text: Did I correct one pronunciation or grammar habit?
+      - textbox "Write one specific thing to improve tomorrow." [ref=e120]
+    - generic [ref=e121]: This is IELTS-style speaking practice material for daily training, not an official exam question bank.
