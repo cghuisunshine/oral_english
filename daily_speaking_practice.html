@@ -219,34 +219,6 @@
       font-weight: 600;
     }
 
-    .mobile-prompt-scroll {
-      display: none;
-      height: 34px;
-      margin: -2px 0 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: #fff;
-      touch-action: none;
-      cursor: ns-resize;
-    }
-
-    .mobile-prompt-scroll::before {
-      content: "";
-      display: block;
-      width: 42px;
-      height: 10px;
-      margin: 10px auto 0;
-      border-top: 2px solid var(--border);
-      border-bottom: 2px solid var(--border);
-    }
-
-    .mobile-prompt-scroll:focus-visible {
-      border-color: var(--primary);
-      outline: 2px solid var(--primary-soft);
-      outline-offset: 2px;
-    }
-
     .prompt-text {
       margin: 0;
       font-size: 1.28rem;
@@ -407,10 +379,6 @@
       .prompt-text {
         font-size: 1.12rem;
       }
-
-      .mobile-prompt-scroll {
-        display: block;
-      }
     }
   </style>
 </head>
@@ -555,7 +523,6 @@
         <div>
           <div class="prompt-box">
             <span class="prompt-label" id="partMeta"></span>
-            <div class="mobile-prompt-scroll" id="mobilePromptScroll" role="slider" aria-label="Prompt" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1" tabindex="0"></div>
             <p class="prompt-text" id="promptText"></p>
             <div class="cue-card" id="cueCard" hidden>
               <h3>You should say:</h3>
@@ -672,6 +639,19 @@
       return typeof prompt === 'string' ? '' : prompt.answer || '';
     }
 
+    function getQuestionBankSourceName(sourceLabel) {
+      const fallback = 'question bank';
+      const source = String(sourceLabel || '').trim();
+      if (!source) {
+        return fallback;
+      }
+      const path = /^https?:\/\//i.test(source)
+        ? new URL(source).pathname
+        : source;
+      const filename = path.split('/').filter(Boolean).pop();
+      return filename ? decodeURIComponent(filename) : fallback;
+    }
+
     function renderQuestionBank(part) {
       document.getElementById('promptBank').innerHTML = part.prompts
         .map((prompt, index) => {
@@ -690,8 +670,6 @@
       document.getElementById('promptText').textContent = getPromptQuestion(prompt);
       document.getElementById('partTitle').textContent = `${part.name}: ${part.title}`;
       document.getElementById('partFocus').textContent = part.focus;
-      document.getElementById('mobilePromptScroll').setAttribute('aria-valuemax', String(part.prompts.length));
-      document.getElementById('mobilePromptScroll').setAttribute('aria-valuenow', String(state.promptIndex + 1));
       renderQuestionBank(part);
 
       const cueCard = document.getElementById('cueCard');
@@ -738,64 +716,6 @@
       state.promptIndex = index;
       state.answerVisible = false;
       renderPrompt();
-    }
-
-    function movePromptByStep(step) {
-      const part = practiceContent.parts[state.partIndex];
-      if (!part.prompts.length) {
-        return;
-      }
-      state.promptIndex = (state.promptIndex + step + part.prompts.length) % part.prompts.length;
-      state.answerVisible = false;
-      renderPrompt();
-    }
-
-    let mobilePromptTouchY = 0;
-    let mobilePromptScrollLocked = false;
-
-    function movePromptFromMobileScroll(step) {
-      if (!step || mobilePromptScrollLocked) {
-        return;
-      }
-      mobilePromptScrollLocked = true;
-      movePromptByStep(step);
-      setTimeout(() => {
-        mobilePromptScrollLocked = false;
-      }, 260);
-    }
-
-    function handleMobilePromptScroll(event) {
-      if (Math.abs(event.deltaY) < 8) {
-        return;
-      }
-      event.preventDefault();
-      movePromptFromMobileScroll(event.deltaY > 0 ? 1 : -1);
-    }
-
-    function handleMobilePromptTouchStart(event) {
-      mobilePromptTouchY = event.touches[0].clientY;
-    }
-
-    function handleMobilePromptTouchMove(event) {
-      const touchY = event.touches[0].clientY;
-      const deltaY = mobilePromptTouchY - touchY;
-      if (Math.abs(deltaY) < 24) {
-        return;
-      }
-      event.preventDefault();
-      mobilePromptTouchY = touchY;
-      movePromptFromMobileScroll(deltaY > 0 ? 1 : -1);
-    }
-
-    function handleMobilePromptKeydown(event) {
-      if (event.key === 'ArrowDown' || event.key === 'PageDown' || event.key === ' ') {
-        event.preventDefault();
-        movePromptByStep(1);
-      }
-      if (event.key === 'ArrowUp' || event.key === 'PageUp') {
-        event.preventDefault();
-        movePromptByStep(-1);
-      }
     }
 
     function newPrompt() {
@@ -928,7 +848,7 @@
       state.answerVisible = false;
       renderPartTabs();
       renderPrompt();
-      document.getElementById('importStatus').textContent = `Imported ${totalPrompts} questions from ${sourceLabel}.`;
+      document.getElementById('importStatus').textContent = `Imported ${totalPrompts} questions from ${getQuestionBankSourceName(sourceLabel)}.`;
     }
 
     function normalizeQuestionBankUrl(source) {
@@ -1166,10 +1086,6 @@
     document.getElementById('questionBankUrl').addEventListener('change', discoverQuestionBankUrlOptions);
     document.getElementById('questionBankUrlOptions').addEventListener('change', handleQuestionBankUrlOptionChange);
     document.getElementById('questionBankUrlImport').addEventListener('click', handleQuestionBankUrlImport);
-    document.getElementById('mobilePromptScroll').addEventListener('wheel', handleMobilePromptScroll, { passive: false });
-    document.getElementById('mobilePromptScroll').addEventListener('touchstart', handleMobilePromptTouchStart, { passive: true });
-    document.getElementById('mobilePromptScroll').addEventListener('touchmove', handleMobilePromptTouchMove, { passive: false });
-    document.getElementById('mobilePromptScroll').addEventListener('keydown', handleMobilePromptKeydown);
     renderExamContent();
     discoverCurrentGitHubMarkdownOptions();
   </script>

@@ -32,14 +32,15 @@ assert.match(html, /id="questionBankImport"/, 'page should include a Markdown qu
 assert.match(html, /id="questionBankUrl"/, 'page should include a GitHub Markdown URL input');
 assert.match(html, /id="questionBankUrlOptions"/, 'page should include a dropdown for sibling GitHub Markdown files');
 assert.match(html, /id="questionBankUrlImport"/, 'page should include a GitHub Markdown URL import button');
-assert.match(html, /id="mobilePromptScroll"/, 'page should include a mobile prompt scroll control inside the prompt box');
+assert.doesNotMatch(html, /id="mobilePromptScroll"/, 'page should not include the removed mobile prompt scroll control');
 assert.match(html, /function\s+parseQuestionBankMarkdown\(/, 'page should parse imported Markdown question banks');
 assert.match(html, /function\s+handleQuestionBankImport\(/, 'page should handle imported Markdown files');
 assert.match(html, /function\s+normalizeQuestionBankUrl\(/, 'page should normalize GitHub question-bank links');
+assert.match(html, /function\s+getQuestionBankSourceName\(/, 'page should shorten import status sources to filenames');
 assert.match(html, /function\s+selectPromptFromBank\(/, 'page should let users select a prompt from the question bank');
-assert.match(html, /function\s+movePromptByStep\(/, 'page should move through prompts one step at a time');
-assert.match(html, /function\s+handleMobilePromptScroll\(/, 'page should handle scroll gestures on the mobile prompt control');
-assert.match(html, /function\s+handleMobilePromptTouchMove\(/, 'page should handle mobile swipe gestures on the prompt control');
+assert.doesNotMatch(html, /function\s+movePromptByStep\(/, 'removed mobile prompt stepper should not remain');
+assert.doesNotMatch(html, /function\s+handleMobilePromptScroll\(/, 'removed mobile prompt scroll handler should not remain');
+assert.doesNotMatch(html, /function\s+handleMobilePromptTouchMove\(/, 'removed mobile prompt touch handler should not remain');
 assert.match(html, /CURRENT_GITHUB_REPOSITORY/, 'page should know the current GitHub repository');
 assert.match(html, /function\s+getCurrentGitHubMarkdownSearch\(/, 'page should search the current GitHub repository for Markdown files');
 assert.match(html, /function\s+renderCurrentGitHubMarkdownOptions\(/, 'page should render Markdown files from the current GitHub repository');
@@ -51,12 +52,7 @@ assert.match(
   /\.prompt-list\s*\{[\s\S]*?max-height:\s*min\(42vh,\s*360px\);[\s\S]*?overflow-y:\s*auto;/,
   'question bank list should scroll inside the IELTS prompt section'
 );
-assert.match(html, /\.mobile-prompt-scroll\s*\{[\s\S]*?display:\s*none;/, 'mobile prompt scroll control should be hidden by default');
-assert.match(
-  html,
-  /@media \(max-width:\s*760px\)\s*\{[\s\S]*?\.mobile-prompt-scroll\s*\{[\s\S]*?display:\s*block;/,
-  'mobile prompt scroll control should appear on mobile screens'
-);
+assert.doesNotMatch(html, /\.mobile-prompt-scroll/, 'removed mobile prompt scroll CSS should not remain');
 
 function extractNamedFunction(source, name) {
   const start = source.indexOf(`function ${name}(`);
@@ -81,6 +77,7 @@ function extractNamedFunction(source, name) {
 
 const parseQuestionBankMarkdown = Function(`${extractNamedFunction(html, 'parseQuestionBankMarkdown')}; return parseQuestionBankMarkdown;`)();
 const normalizeQuestionBankUrl = Function(`${extractNamedFunction(html, 'normalizeQuestionBankUrl')}; return normalizeQuestionBankUrl;`)();
+const getQuestionBankSourceName = Function(`${extractNamedFunction(html, 'getQuestionBankSourceName')}; return getQuestionBankSourceName;`)();
 const currentRepositoryMatch = html.match(/const CURRENT_GITHUB_REPOSITORY = (\{[\s\S]*?\});/);
 assert.ok(currentRepositoryMatch, 'current GitHub repository config should be readable by tests');
 const currentRepository = Function(`return (${currentRepositoryMatch[1]});`)();
@@ -161,9 +158,6 @@ const renderQuestionBankSource = extractNamedFunction(html, 'renderQuestionBank'
 assert.match(renderQuestionBankSource, /<button type="button"/, 'question bank prompts should render as buttons');
 assert.match(renderQuestionBankSource, /onclick="selectPromptFromBank\(\$\{index\}\)"/, 'question bank buttons should select the matching prompt index');
 assert.match(renderQuestionBankSource, /aria-pressed="\$\{pressed\}"/, 'selected question bank prompt should be exposed with aria-pressed');
-const movePromptByStepSource = extractNamedFunction(html, 'movePromptByStep');
-assert.match(movePromptByStepSource, /state\.promptIndex \+ step \+ part\.prompts\.length/, 'prompt stepping should wrap around the current part');
-assert.match(movePromptByStepSource, /state\.answerVisible = false;/, 'prompt stepping should hide the previous answer');
 
 assert.equal(
   normalizeQuestionBankUrl('https://github.com/example/oral_english/blob/main/ielts_2025_sep_dec_question_bank.md'),
@@ -172,6 +166,19 @@ assert.equal(
 assert.equal(
   normalizeQuestionBankUrl('https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'),
   'https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'
+);
+
+assert.equal(
+  getQuestionBankSourceName('https://raw.githubusercontent.com/example/oral_english/main/banks/ielts_2025_sep_dec_question_bank.md'),
+  'ielts_2025_sep_dec_question_bank.md'
+);
+assert.equal(
+  getQuestionBankSourceName('docs/extra_bank.md'),
+  'extra_bank.md'
+);
+assert.equal(
+  getQuestionBankSourceName('ielts_2025_sep_dec_question_bank.md'),
+  'ielts_2025_sep_dec_question_bank.md'
 );
 
 assert.deepEqual(currentRepository, {
