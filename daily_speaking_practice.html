@@ -109,7 +109,8 @@
     }
 
     input[type="file"],
-    input[type="url"] {
+    input[type="url"],
+    select {
       width: 100%;
       padding: 9px;
       border: 1px solid var(--border);
@@ -512,6 +513,9 @@
             <h3>Import Questions</h3>
             <input type="file" id="questionBankImport" accept=".md,text/markdown,text/plain">
             <input type="url" id="questionBankUrl" placeholder="GitHub .md link">
+            <select id="questionBankUrlOptions" aria-label="Markdown files in this GitHub folder" hidden disabled>
+              <option value="">Markdown files in this GitHub folder</option>
+            </select>
             <button type="button" class="secondary" id="questionBankUrlImport">Import Link</button>
             <p class="muted import-status" id="importStatus">Import a Markdown file or GitHub link to replace the built-in prompts.</p>
           </div>
@@ -805,6 +809,104 @@
       return new URL(trimmed, window.location.href).href;
     }
 
+    function getGitHubMarkdownDirectory(source) {
+      const trimmed = source.trim();
+      const githubBlobMatch = trimmed.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/);
+      const githubRawMatch = trimmed.match(/^https:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)$/);
+      const match = githubBlobMatch || githubRawMatch;
+      if (!match) {
+        return null;
+      }
+      const [, owner, repo, branch, filePath] = match;
+      const directoryPath = filePath.split('/').slice(0, -1).join('/');
+      const apiPath = directoryPath
+        ? '/' + directoryPath.split('/').map(encodeURIComponent).join('/')
+        : '';
+      return {
+        apiUrl: `https://api.github.com/repos/${owner}/${repo}/contents${apiPath}?ref=${encodeURIComponent(branch)}`,
+        directoryPath
+      };
+    }
+
+    function renderQuestionBankUrlOptions(items) {
+      const select = document.getElementById('questionBankUrlOptions');
+      const escapeOption = (value) => String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      const markdownItems = (Array.isArray(items) ? items : []).filter((item) => {
+        return (!item.type || item.type === 'file') && /\.md$/i.test(item.name || item.path || '');
+      });
+      if (markdownItems.length === 0) {
+        select.hidden = true;
+        select.disabled = true;
+        select.innerHTML = '<option value="">Markdown files in this GitHub folder</option>';
+        return;
+      }
+      select.innerHTML = '<option value="">Markdown files in this GitHub folder</option>' + markdownItems
+        .map((item) => {
+          const url = item.download_url || normalizeQuestionBankUrl(item.html_url || '');
+          return `<option value="${escapeOption(url)}">${escapeOption(item.name)}</option>`;
+        })
+        .join('');
+      select.hidden = false;
+      select.disabled = false;
+    }
+
+    let githubDirectoryLookupId = 0;
+
+    async function discoverQuestionBankUrlOptions() {
+      const input = document.getElementById('questionBankUrl');
+      const directory = getGitHubMarkdownDirectory(input.value);
+      const lookupId = ++githubDirectoryLookupId;
+      if (!directory) {
+        renderQuestionBankUrlOptions([]);
+        return;
+      }
+      document.getElementById('importStatus').textContent = 'Looking for Markdown files in this GitHub folder...';
+      try {
+        const response = await fetch(directory.apiUrl, {
+          headers: { Accept: 'application/vnd.github+json' }
+        });
+        if (lookupId !== githubDirectoryLookupId) {
+          return;
+        }
+        if (!response.ok) {
+          throw new Error(`Could not list this GitHub folder. HTTP ${response.status}.`);
+        }
+        const items = await response.json();
+        renderQuestionBankUrlOptions(items);
+        const markdownCount = Array.isArray(items)
+          ? items.filter((item) => (!item.type || item.type === 'file') && /\.md$/i.test(item.name || item.path || '')).length
+          : 0;
+        document.getElementById('importStatus').textContent = markdownCount > 0
+          ? `Found ${markdownCount} Markdown file${markdownCount === 1 ? '' : 's'} in this GitHub folder.`
+          : 'No Markdown files were found in this GitHub folder.';
+      } catch (error) {
+        if (lookupId !== githubDirectoryLookupId) {
+          return;
+        }
+        renderQuestionBankUrlOptions([]);
+        document.getElementById('importStatus').textContent = error.message;
+      }
+    }
+
+    let githubDirectoryLookupTimer;
+
+    function scheduleQuestionBankUrlOptionsDiscovery() {
+      clearTimeout(githubDirectoryLookupTimer);
+      githubDirectoryLookupTimer = setTimeout(discoverQuestionBankUrlOptions, 300);
+    }
+
+    function handleQuestionBankUrlOptionChange(event) {
+      if (!event.target.value) {
+        return;
+      }
+      document.getElementById('questionBankUrl').value = event.target.value;
+      document.getElementById('importStatus').textContent = `Selected ${event.target.selectedOptions[0].textContent}.`;
+    }
+
     function handleQuestionBankImport(event) {
       const file = event.target.files[0];
       if (!file) {
@@ -879,6 +981,9 @@
     }
 
     document.getElementById('questionBankImport').addEventListener('change', handleQuestionBankImport);
+    document.getElementById('questionBankUrl').addEventListener('input', scheduleQuestionBankUrlOptionsDiscovery);
+    document.getElementById('questionBankUrl').addEventListener('change', discoverQuestionBankUrlOptions);
+    document.getElementById('questionBankUrlOptions').addEventListener('change', handleQuestionBankUrlOptionChange);
     document.getElementById('questionBankUrlImport').addEventListener('click', handleQuestionBankUrlImport);
     renderExamContent();
   </script>

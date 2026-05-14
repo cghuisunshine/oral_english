@@ -30,10 +30,13 @@ assert.doesNotMatch(html, /const\s+prompts\s*=\s*\[/, 'prompts should not be har
 
 assert.match(html, /id="questionBankImport"/, 'page should include a Markdown question-bank import input');
 assert.match(html, /id="questionBankUrl"/, 'page should include a GitHub Markdown URL input');
+assert.match(html, /id="questionBankUrlOptions"/, 'page should include a dropdown for sibling GitHub Markdown files');
 assert.match(html, /id="questionBankUrlImport"/, 'page should include a GitHub Markdown URL import button');
 assert.match(html, /function\s+parseQuestionBankMarkdown\(/, 'page should parse imported Markdown question banks');
 assert.match(html, /function\s+handleQuestionBankImport\(/, 'page should handle imported Markdown files');
 assert.match(html, /function\s+normalizeQuestionBankUrl\(/, 'page should normalize GitHub question-bank links');
+assert.match(html, /function\s+getGitHubMarkdownDirectory\(/, 'page should derive the GitHub directory for sibling Markdown discovery');
+assert.match(html, /function\s+renderQuestionBankUrlOptions\(/, 'page should render sibling GitHub Markdown files into the dropdown');
 assert.match(html, /function\s+handleQuestionBankUrlImport\(/, 'page should import Markdown question banks from URLs');
 
 function extractNamedFunction(source, name) {
@@ -59,6 +62,26 @@ function extractNamedFunction(source, name) {
 
 const parseQuestionBankMarkdown = Function(`${extractNamedFunction(html, 'parseQuestionBankMarkdown')}; return parseQuestionBankMarkdown;`)();
 const normalizeQuestionBankUrl = Function(`${extractNamedFunction(html, 'normalizeQuestionBankUrl')}; return normalizeQuestionBankUrl;`)();
+const getGitHubMarkdownDirectory = Function(`${extractNamedFunction(html, 'getGitHubMarkdownDirectory')}; return getGitHubMarkdownDirectory;`)();
+const renderQuestionBankUrlOptions = Function(`
+  const select = {
+    hidden: true,
+    disabled: false,
+    innerHTML: '',
+    value: ''
+  };
+  const document = {
+    getElementById(id) {
+      if (id !== 'questionBankUrlOptions') {
+        throw new Error('Unexpected element id ' + id);
+      }
+      return select;
+    }
+  };
+  ${extractNamedFunction(html, 'normalizeQuestionBankUrl')}
+  ${extractNamedFunction(html, 'renderQuestionBankUrlOptions')}
+  return { renderQuestionBankUrlOptions, select };
+`)();
 const importedBank = parseQuestionBankMarkdown(`
 ## Part 1 Quick Interview Bank
 
@@ -94,3 +117,39 @@ assert.equal(
   normalizeQuestionBankUrl('https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'),
   'https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'
 );
+
+assert.deepEqual(
+  getGitHubMarkdownDirectory('https://github.com/example/oral_english/blob/main/banks/ielts_2025_sep_dec_question_bank.md'),
+  {
+    apiUrl: 'https://api.github.com/repos/example/oral_english/contents/banks?ref=main',
+    directoryPath: 'banks'
+  }
+);
+
+assert.deepEqual(
+  getGitHubMarkdownDirectory('https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'),
+  {
+    apiUrl: 'https://api.github.com/repos/example/oral_english/contents?ref=main',
+    directoryPath: ''
+  }
+);
+
+renderQuestionBankUrlOptions.renderQuestionBankUrlOptions([
+  {
+    name: 'ielts_2025_sep_dec_question_bank.md',
+    download_url: 'https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'
+  },
+  {
+    name: 'notes.txt',
+    download_url: 'https://raw.githubusercontent.com/example/oral_english/main/notes.txt'
+  },
+  {
+    name: 'part_2.md',
+    html_url: 'https://github.com/example/oral_english/blob/main/part_2.md'
+  }
+]);
+
+assert.equal(renderQuestionBankUrlOptions.select.hidden, false, 'dropdown should be shown when sibling Markdown files exist');
+assert.match(renderQuestionBankUrlOptions.select.innerHTML, /ielts_2025_sep_dec_question_bank\.md/);
+assert.match(renderQuestionBankUrlOptions.select.innerHTML, /part_2\.md/);
+assert.doesNotMatch(renderQuestionBankUrlOptions.select.innerHTML, /notes\.txt/);
