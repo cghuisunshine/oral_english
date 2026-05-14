@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content</title>
+  <link rel="icon" href="data:," />
+  <style>
+    :root {
+      --bg: #f7f7f5;
+      --surface: #ffffff;
+      --text: #202124;
+      --muted: #666a70;
+      --border: #dfe1e5;
+      --primary: #0f766e;
+      --primary-soft: #e5f3f1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 20px;
+    }
+
+    .wrap {
+      width: min(920px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    main {
+      padding: 20px 0 48px;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 56px;
+      padding: 14px 16px;
+      color: var(--text);
+      text-decoration: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .list a:hover,
+    .list a:focus-visible {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      outline: none;
+    }
+
+    .filename {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 560px) {
+      header {
+        padding: 22px 16px;
+      }
+
+      .wrap {
+        width: min(100% - 24px, 920px);
+      }
+
+      .list a {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Content</h1>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <ul class="list">
+      <li>
+        <a href="daily_speaking_practice.html">
+          <span>Daily IELTS Speaking Practice</span>
+          <span class="filename">daily_speaking_practice.html</span>
+        </a>
+      </li>
+    </ul>
+  </main>
+</body>
+</html>
