@@ -593,6 +593,7 @@
   <script>
     const practiceContent = JSON.parse(document.getElementById('practice-content').textContent);
     const CURRENT_GITHUB_REPOSITORY = { owner: 'cghuisunshine', repo: 'oral_english', branch: 'main' };
+    const SAVED_QUESTION_BANK_STORAGE_KEY = 'dailySpeakingPractice.latestQuestionBank';
     const state = {
       partIndex: 0,
       promptIndex: 0,
@@ -650,6 +651,14 @@
         : source;
       const filename = path.split('/').filter(Boolean).pop();
       return filename ? decodeURIComponent(filename) : fallback;
+    }
+
+    function saveImportedQuestionBank(markdown, sourceLabel) {
+      try {
+        localStorage.setItem(SAVED_QUESTION_BANK_STORAGE_KEY, JSON.stringify({ markdown, sourceLabel }));
+      } catch (error) {
+        console.warn('Could not save imported question bank.', error);
+      }
     }
 
     function renderQuestionBank(part) {
@@ -836,7 +845,8 @@
       return { parts: partMeta };
     }
 
-    function applyImportedQuestionBank(markdown, sourceLabel) {
+    function applyImportedQuestionBank(markdown, sourceLabel, options) {
+      const importOptions = { save: true, restored: false, ...(options || {}) };
       const imported = parseQuestionBankMarkdown(markdown);
       const totalPrompts = imported.parts.reduce((total, part) => total + part.prompts.length, 0);
       if (totalPrompts === 0) {
@@ -848,7 +858,31 @@
       state.answerVisible = false;
       renderPartTabs();
       renderPrompt();
-      document.getElementById('importStatus').textContent = `Imported ${totalPrompts} questions from ${getQuestionBankSourceName(sourceLabel)}.`;
+      if (importOptions.save) {
+        saveImportedQuestionBank(markdown, sourceLabel);
+      }
+      const action = importOptions.restored ? 'Loaded saved' : 'Imported';
+      document.getElementById('importStatus').textContent = `${action} ${totalPrompts} questions from ${getQuestionBankSourceName(sourceLabel)}.`;
+    }
+
+    function loadSavedQuestionBank() {
+      let saved;
+      try {
+        saved = JSON.parse(localStorage.getItem(SAVED_QUESTION_BANK_STORAGE_KEY) || 'null');
+      } catch (error) {
+        console.warn('Could not read saved question bank.', error);
+        return false;
+      }
+      if (!saved || !saved.markdown) {
+        return false;
+      }
+      try {
+        applyImportedQuestionBank(saved.markdown, saved.sourceLabel, { save: false, restored: true });
+        return true;
+      } catch (error) {
+        document.getElementById('importStatus').textContent = error.message;
+        return false;
+      }
     }
 
     function normalizeQuestionBankUrl(source) {
@@ -931,9 +965,12 @@
       renderQuestionBankUrlOptions(files);
     }
 
-    async function discoverCurrentGitHubMarkdownOptions() {
+    async function discoverCurrentGitHubMarkdownOptions(options) {
+      const discoveryOptions = options || {};
       const search = getCurrentGitHubMarkdownSearch();
-      document.getElementById('importStatus').textContent = 'Looking for Markdown files in this GitHub repository...';
+      if (!discoveryOptions.preserveStatus) {
+        document.getElementById('importStatus').textContent = 'Looking for Markdown files in this GitHub repository...';
+      }
       try {
         const response = await fetch(search.apiUrl, {
           headers: { Accept: 'application/vnd.github+json' }
@@ -946,12 +983,16 @@
         const markdownCount = payload && Array.isArray(payload.tree)
           ? payload.tree.filter((item) => item.type === 'blob' && /\.md$/i.test(item.path || '')).length
           : 0;
-        document.getElementById('importStatus').textContent = markdownCount > 0
-          ? `Found ${markdownCount} Markdown file${markdownCount === 1 ? '' : 's'} in this GitHub repository.`
-          : 'No Markdown files were found in this GitHub repository.';
+        if (!discoveryOptions.preserveStatus) {
+          document.getElementById('importStatus').textContent = markdownCount > 0
+            ? `Found ${markdownCount} Markdown file${markdownCount === 1 ? '' : 's'} in this GitHub repository.`
+            : 'No Markdown files were found in this GitHub repository.';
+        }
       } catch (error) {
         renderQuestionBankUrlOptions([]);
-        document.getElementById('importStatus').textContent = `${error.message} You can still paste a GitHub .md link or choose a local file.`;
+        if (!discoveryOptions.preserveStatus) {
+          document.getElementById('importStatus').textContent = `${error.message} You can still paste a GitHub .md link or choose a local file.`;
+        }
       }
     }
 
@@ -1087,7 +1128,8 @@
     document.getElementById('questionBankUrlOptions').addEventListener('change', handleQuestionBankUrlOptionChange);
     document.getElementById('questionBankUrlImport').addEventListener('click', handleQuestionBankUrlImport);
     renderExamContent();
-    discoverCurrentGitHubMarkdownOptions();
+    const savedQuestionBankLoaded = loadSavedQuestionBank();
+    discoverCurrentGitHubMarkdownOptions({ preserveStatus: savedQuestionBankLoaded });
   </script>
 </body>
 </html>

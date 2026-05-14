@@ -37,6 +37,9 @@ assert.match(html, /function\s+parseQuestionBankMarkdown\(/, 'page should parse 
 assert.match(html, /function\s+handleQuestionBankImport\(/, 'page should handle imported Markdown files');
 assert.match(html, /function\s+normalizeQuestionBankUrl\(/, 'page should normalize GitHub question-bank links');
 assert.match(html, /function\s+getQuestionBankSourceName\(/, 'page should shorten import status sources to filenames');
+assert.match(html, /SAVED_QUESTION_BANK_STORAGE_KEY/, 'page should define one localStorage key for saved imports');
+assert.match(html, /function\s+saveImportedQuestionBank\(/, 'page should save successful imports to localStorage');
+assert.match(html, /function\s+loadSavedQuestionBank\(/, 'page should automatically load the latest saved import');
 assert.match(html, /function\s+selectPromptFromBank\(/, 'page should let users select a prompt from the question bank');
 assert.doesNotMatch(html, /function\s+movePromptByStep\(/, 'removed mobile prompt stepper should not remain');
 assert.doesNotMatch(html, /function\s+handleMobilePromptScroll\(/, 'removed mobile prompt scroll handler should not remain');
@@ -78,6 +81,9 @@ function extractNamedFunction(source, name) {
 const parseQuestionBankMarkdown = Function(`${extractNamedFunction(html, 'parseQuestionBankMarkdown')}; return parseQuestionBankMarkdown;`)();
 const normalizeQuestionBankUrl = Function(`${extractNamedFunction(html, 'normalizeQuestionBankUrl')}; return normalizeQuestionBankUrl;`)();
 const getQuestionBankSourceName = Function(`${extractNamedFunction(html, 'getQuestionBankSourceName')}; return getQuestionBankSourceName;`)();
+const storageKeyMatch = html.match(/const SAVED_QUESTION_BANK_STORAGE_KEY = '([^']+)'/);
+assert.ok(storageKeyMatch, 'saved question bank storage key should be readable by tests');
+assert.equal(storageKeyMatch[1], 'dailySpeakingPractice.latestQuestionBank');
 const currentRepositoryMatch = html.match(/const CURRENT_GITHUB_REPOSITORY = (\{[\s\S]*?\});/);
 assert.ok(currentRepositoryMatch, 'current GitHub repository config should be readable by tests');
 const currentRepository = Function(`return (${currentRepositoryMatch[1]});`)();
@@ -181,6 +187,27 @@ assert.equal(
   'ielts_2025_sep_dec_question_bank.md'
 );
 
+assert.match(
+  extractNamedFunction(html, 'saveImportedQuestionBank'),
+  /localStorage\.setItem\(SAVED_QUESTION_BANK_STORAGE_KEY,\s*JSON\.stringify\(\{ markdown, sourceLabel \}\)\)/,
+  'manual imports should save the raw Markdown and source label'
+);
+assert.match(
+  extractNamedFunction(html, 'applyImportedQuestionBank'),
+  /if \(importOptions\.save\) \{[\s\S]*?saveImportedQuestionBank\(markdown, sourceLabel\);[\s\S]*?\}/,
+  'successful manual imports should persist by default'
+);
+assert.match(
+  extractNamedFunction(html, 'loadSavedQuestionBank'),
+  /applyImportedQuestionBank\(saved\.markdown,\s*saved\.sourceLabel,\s*\{ save: false, restored: true \}\)/,
+  'startup restore should load the saved import without resaving it'
+);
+assert.match(
+  html,
+  /const savedQuestionBankLoaded = loadSavedQuestionBank\(\);[\s\S]*?discoverCurrentGitHubMarkdownOptions\(\{ preserveStatus: savedQuestionBankLoaded \}\);/,
+  'page should load the saved bank during startup and preserve its status during GitHub discovery'
+);
+
 assert.deepEqual(currentRepository, {
   owner: 'cghuisunshine',
   repo: 'oral_english',
@@ -244,4 +271,4 @@ assert.match(
   /https:\/\/raw\.githubusercontent\.com\/cghuisunshine\/oral_english\/main\/docs\/extra_bank\.md/
 );
 assert.doesNotMatch(renderCurrentGitHubMarkdownOptions.select.innerHTML, /content\.html/);
-assert.match(html, /discoverCurrentGitHubMarkdownOptions\(\);/, 'page should search the current GitHub repository on startup');
+assert.match(html, /discoverCurrentGitHubMarkdownOptions\(\{ preserveStatus: savedQuestionBankLoaded \}\);/, 'page should search the current GitHub repository on startup');
