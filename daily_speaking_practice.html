@@ -219,6 +219,34 @@
       font-weight: 600;
     }
 
+    .mobile-prompt-scroll {
+      display: none;
+      height: 34px;
+      margin: -2px 0 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      touch-action: none;
+      cursor: ns-resize;
+    }
+
+    .mobile-prompt-scroll::before {
+      content: "";
+      display: block;
+      width: 42px;
+      height: 10px;
+      margin: 10px auto 0;
+      border-top: 2px solid var(--border);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .mobile-prompt-scroll:focus-visible {
+      border-color: var(--primary);
+      outline: 2px solid var(--primary-soft);
+      outline-offset: 2px;
+    }
+
     .prompt-text {
       margin: 0;
       font-size: 1.28rem;
@@ -250,6 +278,38 @@
     .prompt-list {
       margin: 8px 0 0;
       padding-left: 20px;
+    }
+
+    .prompt-list {
+      max-height: min(42vh, 360px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .prompt-list button {
+      width: 100%;
+      min-height: 0;
+      padding: 2px 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      line-height: inherit;
+      text-align: left;
+    }
+
+    .prompt-list button:hover,
+    .prompt-list button:focus-visible {
+      background: transparent;
+      color: var(--primary-strong);
+      text-decoration: underline;
+      outline: none;
+    }
+
+    .prompt-list button[aria-pressed="true"] {
+      color: var(--primary-strong);
+      font-weight: 700;
     }
 
     .side-panel {
@@ -346,6 +406,10 @@
 
       .prompt-text {
         font-size: 1.12rem;
+      }
+
+      .mobile-prompt-scroll {
+        display: block;
       }
     }
   </style>
@@ -491,6 +555,7 @@
         <div>
           <div class="prompt-box">
             <span class="prompt-label" id="partMeta"></span>
+            <div class="mobile-prompt-scroll" id="mobilePromptScroll" role="slider" aria-label="Prompt" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1" tabindex="0"></div>
             <p class="prompt-text" id="promptText"></p>
             <div class="cue-card" id="cueCard" hidden>
               <h3>You should say:</h3>
@@ -560,6 +625,7 @@
 
   <script>
     const practiceContent = JSON.parse(document.getElementById('practice-content').textContent);
+    const CURRENT_GITHUB_REPOSITORY = { owner: 'cghuisunshine', repo: 'oral_english', branch: 'main' };
     const state = {
       partIndex: 0,
       promptIndex: 0,
@@ -608,7 +674,10 @@
 
     function renderQuestionBank(part) {
       document.getElementById('promptBank').innerHTML = part.prompts
-        .map((prompt) => `<li>${getPromptQuestion(prompt)}</li>`)
+        .map((prompt, index) => {
+          const pressed = index === state.promptIndex ? 'true' : 'false';
+          return `<li><button type="button" aria-pressed="${pressed}" onclick="selectPromptFromBank(${index})">${getPromptQuestion(prompt)}</button></li>`;
+        })
         .join('');
     }
 
@@ -621,6 +690,8 @@
       document.getElementById('promptText').textContent = getPromptQuestion(prompt);
       document.getElementById('partTitle').textContent = `${part.name}: ${part.title}`;
       document.getElementById('partFocus').textContent = part.focus;
+      document.getElementById('mobilePromptScroll').setAttribute('aria-valuemax', String(part.prompts.length));
+      document.getElementById('mobilePromptScroll').setAttribute('aria-valuenow', String(state.promptIndex + 1));
       renderQuestionBank(part);
 
       const cueCard = document.getElementById('cueCard');
@@ -661,6 +732,70 @@
       state.answerVisible = false;
       renderPartTabs();
       renderPrompt();
+    }
+
+    function selectPromptFromBank(index) {
+      state.promptIndex = index;
+      state.answerVisible = false;
+      renderPrompt();
+    }
+
+    function movePromptByStep(step) {
+      const part = practiceContent.parts[state.partIndex];
+      if (!part.prompts.length) {
+        return;
+      }
+      state.promptIndex = (state.promptIndex + step + part.prompts.length) % part.prompts.length;
+      state.answerVisible = false;
+      renderPrompt();
+    }
+
+    let mobilePromptTouchY = 0;
+    let mobilePromptScrollLocked = false;
+
+    function movePromptFromMobileScroll(step) {
+      if (!step || mobilePromptScrollLocked) {
+        return;
+      }
+      mobilePromptScrollLocked = true;
+      movePromptByStep(step);
+      setTimeout(() => {
+        mobilePromptScrollLocked = false;
+      }, 260);
+    }
+
+    function handleMobilePromptScroll(event) {
+      if (Math.abs(event.deltaY) < 8) {
+        return;
+      }
+      event.preventDefault();
+      movePromptFromMobileScroll(event.deltaY > 0 ? 1 : -1);
+    }
+
+    function handleMobilePromptTouchStart(event) {
+      mobilePromptTouchY = event.touches[0].clientY;
+    }
+
+    function handleMobilePromptTouchMove(event) {
+      const touchY = event.touches[0].clientY;
+      const deltaY = mobilePromptTouchY - touchY;
+      if (Math.abs(deltaY) < 24) {
+        return;
+      }
+      event.preventDefault();
+      mobilePromptTouchY = touchY;
+      movePromptFromMobileScroll(deltaY > 0 ? 1 : -1);
+    }
+
+    function handleMobilePromptKeydown(event) {
+      if (event.key === 'ArrowDown' || event.key === 'PageDown' || event.key === ' ') {
+        event.preventDefault();
+        movePromptByStep(1);
+      }
+      if (event.key === 'ArrowUp' || event.key === 'PageUp') {
+        event.preventDefault();
+        movePromptByStep(-1);
+      }
     }
 
     function newPrompt() {
@@ -809,6 +944,13 @@
       return new URL(trimmed, window.location.href).href;
     }
 
+    function getCurrentGitHubMarkdownSearch() {
+      const { owner, repo, branch } = CURRENT_GITHUB_REPOSITORY;
+      return {
+        apiUrl: `https://api.github.com/repos/${owner}/${repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`
+      };
+    }
+
     function getGitHubMarkdownDirectory(source) {
       const trimmed = source.trim();
       const githubBlobMatch = trimmed.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/);
@@ -852,6 +994,45 @@
         .join('');
       select.hidden = false;
       select.disabled = false;
+    }
+
+    function renderCurrentGitHubMarkdownOptions(payload) {
+      const { owner, repo, branch } = CURRENT_GITHUB_REPOSITORY;
+      const files = (payload && Array.isArray(payload.tree) ? payload.tree : [])
+        .filter((item) => item.type === 'blob' && /\.md$/i.test(item.path || ''))
+        .map((item) => {
+          const encodedPath = item.path.split('/').map(encodeURIComponent).join('/');
+          return {
+            type: 'file',
+            name: item.path,
+            download_url: `https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(branch)}/${encodedPath}`
+          };
+        });
+      renderQuestionBankUrlOptions(files);
+    }
+
+    async function discoverCurrentGitHubMarkdownOptions() {
+      const search = getCurrentGitHubMarkdownSearch();
+      document.getElementById('importStatus').textContent = 'Looking for Markdown files in this GitHub repository...';
+      try {
+        const response = await fetch(search.apiUrl, {
+          headers: { Accept: 'application/vnd.github+json' }
+        });
+        if (!response.ok) {
+          throw new Error(`Could not search this GitHub repository. HTTP ${response.status}.`);
+        }
+        const payload = await response.json();
+        renderCurrentGitHubMarkdownOptions(payload);
+        const markdownCount = payload && Array.isArray(payload.tree)
+          ? payload.tree.filter((item) => item.type === 'blob' && /\.md$/i.test(item.path || '')).length
+          : 0;
+        document.getElementById('importStatus').textContent = markdownCount > 0
+          ? `Found ${markdownCount} Markdown file${markdownCount === 1 ? '' : 's'} in this GitHub repository.`
+          : 'No Markdown files were found in this GitHub repository.';
+      } catch (error) {
+        renderQuestionBankUrlOptions([]);
+        document.getElementById('importStatus').textContent = `${error.message} You can still paste a GitHub .md link or choose a local file.`;
+      }
     }
 
     let githubDirectoryLookupId = 0;
@@ -985,7 +1166,12 @@
     document.getElementById('questionBankUrl').addEventListener('change', discoverQuestionBankUrlOptions);
     document.getElementById('questionBankUrlOptions').addEventListener('change', handleQuestionBankUrlOptionChange);
     document.getElementById('questionBankUrlImport').addEventListener('click', handleQuestionBankUrlImport);
+    document.getElementById('mobilePromptScroll').addEventListener('wheel', handleMobilePromptScroll, { passive: false });
+    document.getElementById('mobilePromptScroll').addEventListener('touchstart', handleMobilePromptTouchStart, { passive: true });
+    document.getElementById('mobilePromptScroll').addEventListener('touchmove', handleMobilePromptTouchMove, { passive: false });
+    document.getElementById('mobilePromptScroll').addEventListener('keydown', handleMobilePromptKeydown);
     renderExamContent();
+    discoverCurrentGitHubMarkdownOptions();
   </script>
 </body>
 </html>

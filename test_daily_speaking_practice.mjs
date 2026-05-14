@@ -32,12 +32,31 @@ assert.match(html, /id="questionBankImport"/, 'page should include a Markdown qu
 assert.match(html, /id="questionBankUrl"/, 'page should include a GitHub Markdown URL input');
 assert.match(html, /id="questionBankUrlOptions"/, 'page should include a dropdown for sibling GitHub Markdown files');
 assert.match(html, /id="questionBankUrlImport"/, 'page should include a GitHub Markdown URL import button');
+assert.match(html, /id="mobilePromptScroll"/, 'page should include a mobile prompt scroll control inside the prompt box');
 assert.match(html, /function\s+parseQuestionBankMarkdown\(/, 'page should parse imported Markdown question banks');
 assert.match(html, /function\s+handleQuestionBankImport\(/, 'page should handle imported Markdown files');
 assert.match(html, /function\s+normalizeQuestionBankUrl\(/, 'page should normalize GitHub question-bank links');
+assert.match(html, /function\s+selectPromptFromBank\(/, 'page should let users select a prompt from the question bank');
+assert.match(html, /function\s+movePromptByStep\(/, 'page should move through prompts one step at a time');
+assert.match(html, /function\s+handleMobilePromptScroll\(/, 'page should handle scroll gestures on the mobile prompt control');
+assert.match(html, /function\s+handleMobilePromptTouchMove\(/, 'page should handle mobile swipe gestures on the prompt control');
+assert.match(html, /CURRENT_GITHUB_REPOSITORY/, 'page should know the current GitHub repository');
+assert.match(html, /function\s+getCurrentGitHubMarkdownSearch\(/, 'page should search the current GitHub repository for Markdown files');
+assert.match(html, /function\s+renderCurrentGitHubMarkdownOptions\(/, 'page should render Markdown files from the current GitHub repository');
 assert.match(html, /function\s+getGitHubMarkdownDirectory\(/, 'page should derive the GitHub directory for sibling Markdown discovery');
 assert.match(html, /function\s+renderQuestionBankUrlOptions\(/, 'page should render sibling GitHub Markdown files into the dropdown');
 assert.match(html, /function\s+handleQuestionBankUrlImport\(/, 'page should import Markdown question banks from URLs');
+assert.match(
+  html,
+  /\.prompt-list\s*\{[\s\S]*?max-height:\s*min\(42vh,\s*360px\);[\s\S]*?overflow-y:\s*auto;/,
+  'question bank list should scroll inside the IELTS prompt section'
+);
+assert.match(html, /\.mobile-prompt-scroll\s*\{[\s\S]*?display:\s*none;/, 'mobile prompt scroll control should be hidden by default');
+assert.match(
+  html,
+  /@media \(max-width:\s*760px\)\s*\{[\s\S]*?\.mobile-prompt-scroll\s*\{[\s\S]*?display:\s*block;/,
+  'mobile prompt scroll control should appear on mobile screens'
+);
 
 function extractNamedFunction(source, name) {
   const start = source.indexOf(`function ${name}(`);
@@ -62,6 +81,14 @@ function extractNamedFunction(source, name) {
 
 const parseQuestionBankMarkdown = Function(`${extractNamedFunction(html, 'parseQuestionBankMarkdown')}; return parseQuestionBankMarkdown;`)();
 const normalizeQuestionBankUrl = Function(`${extractNamedFunction(html, 'normalizeQuestionBankUrl')}; return normalizeQuestionBankUrl;`)();
+const currentRepositoryMatch = html.match(/const CURRENT_GITHUB_REPOSITORY = (\{[\s\S]*?\});/);
+assert.ok(currentRepositoryMatch, 'current GitHub repository config should be readable by tests');
+const currentRepository = Function(`return (${currentRepositoryMatch[1]});`)();
+const getCurrentGitHubMarkdownSearch = Function(`
+  const CURRENT_GITHUB_REPOSITORY = ${currentRepositoryMatch[1]};
+  ${extractNamedFunction(html, 'getCurrentGitHubMarkdownSearch')}
+  return getCurrentGitHubMarkdownSearch;
+`)();
 const getGitHubMarkdownDirectory = Function(`${extractNamedFunction(html, 'getGitHubMarkdownDirectory')}; return getGitHubMarkdownDirectory;`)();
 const renderQuestionBankUrlOptions = Function(`
   const select = {
@@ -81,6 +108,27 @@ const renderQuestionBankUrlOptions = Function(`
   ${extractNamedFunction(html, 'normalizeQuestionBankUrl')}
   ${extractNamedFunction(html, 'renderQuestionBankUrlOptions')}
   return { renderQuestionBankUrlOptions, select };
+`)();
+const renderCurrentGitHubMarkdownOptions = Function(`
+  const select = {
+    hidden: true,
+    disabled: false,
+    innerHTML: '',
+    value: ''
+  };
+  const document = {
+    getElementById(id) {
+      if (id !== 'questionBankUrlOptions') {
+        throw new Error('Unexpected element id ' + id);
+      }
+      return select;
+    }
+  };
+  const CURRENT_GITHUB_REPOSITORY = ${currentRepositoryMatch[1]};
+  ${extractNamedFunction(html, 'normalizeQuestionBankUrl')}
+  ${extractNamedFunction(html, 'renderQuestionBankUrlOptions')}
+  ${extractNamedFunction(html, 'renderCurrentGitHubMarkdownOptions')}
+  return { renderCurrentGitHubMarkdownOptions, select };
 `)();
 const importedBank = parseQuestionBankMarkdown(`
 ## Part 1 Quick Interview Bank
@@ -109,6 +157,14 @@ assert.equal(importedBank.parts[1].prompts[0].answer, 'My friend sings beautiful
 assert.equal(importedBank.parts[2].prompts[0].question, 'Why do people enjoy music?');
 assert.equal(importedBank.parts[2].prompts[0].answer, 'Music helps people relax and share emotions.');
 
+const renderQuestionBankSource = extractNamedFunction(html, 'renderQuestionBank');
+assert.match(renderQuestionBankSource, /<button type="button"/, 'question bank prompts should render as buttons');
+assert.match(renderQuestionBankSource, /onclick="selectPromptFromBank\(\$\{index\}\)"/, 'question bank buttons should select the matching prompt index');
+assert.match(renderQuestionBankSource, /aria-pressed="\$\{pressed\}"/, 'selected question bank prompt should be exposed with aria-pressed');
+const movePromptByStepSource = extractNamedFunction(html, 'movePromptByStep');
+assert.match(movePromptByStepSource, /state\.promptIndex \+ step \+ part\.prompts\.length/, 'prompt stepping should wrap around the current part');
+assert.match(movePromptByStepSource, /state\.answerVisible = false;/, 'prompt stepping should hide the previous answer');
+
 assert.equal(
   normalizeQuestionBankUrl('https://github.com/example/oral_english/blob/main/ielts_2025_sep_dec_question_bank.md'),
   'https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'
@@ -117,6 +173,16 @@ assert.equal(
   normalizeQuestionBankUrl('https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'),
   'https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'
 );
+
+assert.deepEqual(currentRepository, {
+  owner: 'cghuisunshine',
+  repo: 'oral_english',
+  branch: 'main'
+});
+
+assert.deepEqual(getCurrentGitHubMarkdownSearch(), {
+  apiUrl: 'https://api.github.com/repos/cghuisunshine/oral_english/git/trees/main?recursive=1'
+});
 
 assert.deepEqual(
   getGitHubMarkdownDirectory('https://github.com/example/oral_english/blob/main/banks/ielts_2025_sep_dec_question_bank.md'),
@@ -153,3 +219,22 @@ assert.equal(renderQuestionBankUrlOptions.select.hidden, false, 'dropdown should
 assert.match(renderQuestionBankUrlOptions.select.innerHTML, /ielts_2025_sep_dec_question_bank\.md/);
 assert.match(renderQuestionBankUrlOptions.select.innerHTML, /part_2\.md/);
 assert.doesNotMatch(renderQuestionBankUrlOptions.select.innerHTML, /notes\.txt/);
+
+renderCurrentGitHubMarkdownOptions.renderCurrentGitHubMarkdownOptions({
+  tree: [
+    { type: 'blob', path: 'ielts_2025_sep_dec_question_bank.md' },
+    { type: 'blob', path: 'docs/extra_bank.md' },
+    { type: 'blob', path: 'content.html' },
+    { type: 'tree', path: 'docs' }
+  ]
+});
+
+assert.equal(renderCurrentGitHubMarkdownOptions.select.hidden, false, 'default repo dropdown should be shown when Markdown files exist');
+assert.match(renderCurrentGitHubMarkdownOptions.select.innerHTML, /ielts_2025_sep_dec_question_bank\.md/);
+assert.match(renderCurrentGitHubMarkdownOptions.select.innerHTML, /docs\/extra_bank\.md/);
+assert.match(
+  renderCurrentGitHubMarkdownOptions.select.innerHTML,
+  /https:\/\/raw\.githubusercontent\.com\/cghuisunshine\/oral_english\/main\/docs\/extra_bank\.md/
+);
+assert.doesNotMatch(renderCurrentGitHubMarkdownOptions.select.innerHTML, /content\.html/);
+assert.match(html, /discoverCurrentGitHubMarkdownOptions\(\);/, 'page should search the current GitHub repository on startup');
