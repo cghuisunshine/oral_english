@@ -261,6 +261,16 @@
       margin: 8px 0 0;
     }
 
+    .model-answer-sentence {
+      border-radius: 4px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .model-answer-sentence.is-reading {
+      background: var(--primary-soft);
+      color: var(--primary-strong);
+    }
+
     .answer-heading {
       display: flex;
       align-items: center;
@@ -2401,6 +2411,7 @@
     let playbackAudio = null;
     let lastAutoFilledNotesText = '';
     let modelAnswerAudioManifest = { entries: {} };
+    let currentModelAnswerSentences = [];
 
     const progressText = document.getElementById('progressText');
     const progressFill = document.getElementById('progressFill');
@@ -2440,6 +2451,70 @@
 
     function getPromptAnswer(prompt) {
       return typeof prompt === 'string' ? '' : prompt.answer || '';
+    }
+
+    function splitModelAnswerSentences(answer) {
+      return String(answer || '').match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map((sentence) => sentence.trim()).filter(Boolean) || [];
+    }
+
+    function renderModelAnswerText(answer) {
+      const target = document.getElementById('modelAnswer');
+      currentModelAnswerSentences = splitModelAnswerSentences(answer);
+      target.innerHTML = '';
+      currentModelAnswerSentences.forEach((sentence, index) => {
+        if (index > 0) {
+          target.appendChild(document.createTextNode(' '));
+        }
+        const sentenceElement = document.createElement('span');
+        sentenceElement.className = 'model-answer-sentence';
+        sentenceElement.dataset.sentenceIndex = String(index);
+        sentenceElement.textContent = sentence;
+        target.appendChild(sentenceElement);
+      });
+    }
+
+    function clearModelAnswerSentenceHighlight() {
+      document.querySelectorAll('#modelAnswer .model-answer-sentence.is-reading').forEach((sentenceElement) => {
+        sentenceElement.classList.remove('is-reading');
+        sentenceElement.removeAttribute('aria-current');
+      });
+    }
+
+    function highlightModelAnswerSentence(sentenceIndex) {
+      clearModelAnswerSentenceHighlight();
+      const sentenceElement = document.querySelector(`#modelAnswer .model-answer-sentence[data-sentence-index="${sentenceIndex}"]`);
+      if (sentenceElement) {
+        sentenceElement.classList.add('is-reading');
+        sentenceElement.setAttribute('aria-current', 'true');
+      }
+    }
+
+    function getModelAnswerSentenceIndexAtTime(sentences, currentTime, duration) {
+      if (!Array.isArray(sentences) || sentences.length === 0 || !Number.isFinite(duration) || duration <= 0) {
+        return -1;
+      }
+      const sentenceWeights = sentences.map((sentence) => String(sentence || '').match(/\b[\w'-]+\b/g)?.length || 1);
+      const totalWeight = sentenceWeights.reduce((sum, weight) => sum + weight, 0);
+      const elapsedWeight = Math.max(0, Math.min(1, currentTime / duration)) * totalWeight;
+      let cumulativeWeight = 0;
+      for (let index = 0; index < sentenceWeights.length; index++) {
+        cumulativeWeight += sentenceWeights[index];
+        if (elapsedWeight <= cumulativeWeight) {
+          return index;
+        }
+      }
+      return sentences.length - 1;
+    }
+
+    function getModelAnswerSentenceIndexAtCharIndex(sentences, charIndex) {
+      let cumulativeLength = 0;
+      for (let index = 0; index < sentences.length; index++) {
+        cumulativeLength += sentences[index].length + (index > 0 ? 1 : 0);
+        if (charIndex < cumulativeLength) {
+          return index;
+        }
+      }
+      return sentences.length - 1;
     }
 
     function getModelAnswerAudioKey(partName, question, answer) {
@@ -2637,7 +2712,8 @@
 
       const answerToggle = document.getElementById('answerToggle');
       const answerBox = document.getElementById('answerBox');
-      document.getElementById('modelAnswer').textContent = answer;
+      renderModelAnswerText(answer);
+      clearModelAnswerSentenceHighlight();
       answerToggle.hidden = !answer;
       answerBox.hidden = !answer || !state.answerVisible;
       cueCard.hidden = !answer || !state.answerVisible || promptCuePoints.length === 0;
@@ -2846,6 +2922,7 @@
         playbackAudio.pause();
         playbackAudio.currentTime = 0;
       }
+      clearModelAnswerSentenceHighlight();
       playbackAudio = new Audio(recording.url);
       playbackAudio.addEventListener('ended', () => {
         document.getElementById('recordingStatus').textContent = 'Playback finished.';
@@ -2868,14 +2945,23 @@
         playbackAudio.currentTime = 0;
       }
       playbackAudio = new Audio(audioPath);
+      playbackAudio.addEventListener('timeupdate', () => {
+        const sentenceIndex = getModelAnswerSentenceIndexAtTime(currentModelAnswerSentences, playbackAudio.currentTime, playbackAudio.duration);
+        if (sentenceIndex >= 0) {
+          highlightModelAnswerSentence(sentenceIndex);
+        }
+      });
       playbackAudio.addEventListener('ended', () => {
+        clearModelAnswerSentenceHighlight();
         document.getElementById('recordingStatus').textContent = 'Model answer reading finished.';
       });
       try {
         document.getElementById('recordingStatus').textContent = 'Playing AI-generated model answer...';
+        highlightModelAnswerSentence(0);
         await playbackAudio.play();
         return true;
       } catch (error) {
+        clearModelAnswerSentenceHighlight();
         document.getElementById('recordingStatus').textContent = 'AI audio unavailable. Using browser voice...';
         return false;
       }
@@ -2887,6 +2973,7 @@
         document.getElementById('recordingStatus').textContent = 'No model answer to read.';
         return;
       }
+      clearModelAnswerSentenceHighlight();
       if (await playGeneratedModelAnswerAudio(modelAnswer)) {
         return;
       }
@@ -2902,13 +2989,22 @@
       const utterance = new SpeechSynthesisUtterance(modelAnswer);
       utterance.lang = 'en-US';
       utterance.rate = 0.9;
+      utterance.addEventListener('boundary', (event) => {
+        const sentenceIndex = getModelAnswerSentenceIndexAtCharIndex(currentModelAnswerSentences, event.charIndex || 0);
+        if (sentenceIndex >= 0) {
+          highlightModelAnswerSentence(sentenceIndex);
+        }
+      });
       utterance.addEventListener('end', () => {
+        clearModelAnswerSentenceHighlight();
         document.getElementById('recordingStatus').textContent = 'Model answer reading finished.';
       });
       utterance.addEventListener('error', () => {
+        clearModelAnswerSentenceHighlight();
         document.getElementById('recordingStatus').textContent = 'Could not read the model answer.';
       });
       document.getElementById('recordingStatus').textContent = 'Reading model answer...';
+      highlightModelAnswerSentence(0);
       speechSynthesis.speak(utterance);
     }
 

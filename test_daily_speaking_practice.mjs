@@ -95,6 +95,11 @@ assert.match(html, /id="model-answer-audio-manifest"/, 'page should embed genera
 assert.match(html, /function\s+getEmbeddedModelAnswerAudioManifest\(/, 'page should read the embedded model-answer audio manifest');
 assert.match(html, /function\s+loadModelAnswerAudioManifest\(/, 'page should load the generated model-answer audio manifest');
 assert.match(html, /function\s+playGeneratedModelAnswerAudio\(/, 'page should try generated audio before browser speech synthesis');
+assert.match(html, /function\s+splitModelAnswerSentences\(/, 'page should split model answers into highlightable sentences');
+assert.match(html, /function\s+renderModelAnswerText\(/, 'page should render model answers as sentence spans');
+assert.match(html, /function\s+highlightModelAnswerSentence\(/, 'page should highlight the sentence currently being read');
+assert.match(html, /function\s+getModelAnswerSentenceIndexAtTime\(/, 'page should estimate the current generated-audio sentence from playback time');
+assert.match(html, /\.model-answer-sentence\.is-reading/, 'page should style the sentence currently being read');
 assert.match(html, /function\s+getPromptCuePoints\(/, 'page should read cue-card points from the selected prompt');
 assert.match(html, /function\s+getCueCardNotesText\(/, 'page should format cue cards for the keyword notes box');
 assert.match(html, /function\s+fillCueCardNotesTextarea\(/, 'page should fill the keyword notes box with cue-card content');
@@ -180,6 +185,8 @@ const getCurrentGitHubMarkdownSearch = Function(`
 const getGitHubMarkdownDirectory = Function(`${extractNamedFunction(html, 'getGitHubMarkdownDirectory')}; return getGitHubMarkdownDirectory;`)();
 const getCueCardNotesText = Function(`${extractNamedFunction(html, 'getCueCardNotesText')}; return getCueCardNotesText;`)();
 const getModelAnswerKeywordNotesText = Function(`${extractNamedFunction(html, 'getModelAnswerKeywordNotesText')}; return getModelAnswerKeywordNotesText;`)();
+const splitModelAnswerSentences = Function(`${extractNamedFunction(html, 'splitModelAnswerSentences')}; return splitModelAnswerSentences;`)();
+const getModelAnswerSentenceIndexAtTime = Function(`${extractNamedFunction(html, 'getModelAnswerSentenceIndexAtTime')}; return getModelAnswerSentenceIndexAtTime;`)();
 const getPromptKeywordNotesText = Function(`
   ${extractNamedFunction(html, 'getModelAnswerKeywordNotesText')}
   ${extractNamedFunction(html, 'getPromptAnswer')}
@@ -397,14 +404,34 @@ assert.match(
   'playback should use the current prompt recording URL'
 );
 assert.match(
+  extractNamedFunction(html, 'playPromptRecording'),
+  /clearModelAnswerSentenceHighlight\(\)/,
+  'prompt recording playback should clear any model-answer sentence highlight'
+);
+assert.match(
   extractNamedFunction(html, 'readModelAnswerAloud'),
   /await playGeneratedModelAnswerAudio\(modelAnswer\)/,
   'model answer read button should try generated audio before browser speech synthesis'
 );
 assert.match(
+  extractNamedFunction(html, 'readModelAnswerAloud'),
+  /clearModelAnswerSentenceHighlight\(\)[\s\S]*?await playGeneratedModelAnswerAudio\(modelAnswer\)/,
+  'model answer playback should reset any previous sentence highlight before starting'
+);
+assert.match(
   extractNamedFunction(html, 'playGeneratedModelAnswerAudio'),
   /new Audio\(audioPath\)/,
   'generated model-answer audio should play from the manifest path'
+);
+assert.match(
+  extractNamedFunction(html, 'playGeneratedModelAnswerAudio'),
+  /timeupdate[\s\S]*?highlightModelAnswerSentence/,
+  'generated model-answer audio should update the highlighted sentence while playing'
+);
+assert.match(
+  extractNamedFunction(html, 'playGeneratedModelAnswerAudio'),
+  /ended[\s\S]*?clearModelAnswerSentenceHighlight/,
+  'generated model-answer audio should clear the highlighted sentence when finished'
 );
 assert.match(
   extractNamedFunction(html, 'playGeneratedModelAnswerAudio'),
@@ -427,9 +454,34 @@ assert.match(
   'model answer read button should speak the model answer text'
 );
 assert.match(
+  extractNamedFunction(html, 'readModelAnswerAloud'),
+  /boundary[\s\S]*?highlightModelAnswerSentence/,
+  'browser speech synthesis should highlight the sentence reported by boundary events'
+);
+assert.match(
   html,
   /readModelAnswerButton'\)\.addEventListener\('click', readModelAnswerAloud\)/,
   'model answer read button should call the read-aloud handler'
+);
+assert.deepEqual(
+  splitModelAnswerSentences('First sentence. Second sentence? Third sentence!'),
+  ['First sentence.', 'Second sentence?', 'Third sentence!'],
+  'model answers should be split into sentence-sized highlight units'
+);
+assert.deepEqual(
+  splitModelAnswerSentences('This answer has no final punctuation'),
+  ['This answer has no final punctuation'],
+  'sentence splitting should keep an unpunctuated final sentence'
+);
+assert.equal(
+  getModelAnswerSentenceIndexAtTime(['Short sentence.', 'This sentence has many more words.'], 1, 4),
+  0,
+  'generated audio highlight should begin on the first sentence'
+);
+assert.equal(
+  getModelAnswerSentenceIndexAtTime(['Short sentence.', 'This sentence has many more words.'], 3.7, 4),
+  1,
+  'generated audio highlight should move to later sentences by proportional reading time'
 );
 assert.equal(
   getModelAnswerAudioKey('Part 2', 'Describe a useful skill.', 'A useful skill I learned is organizing notes.'),
