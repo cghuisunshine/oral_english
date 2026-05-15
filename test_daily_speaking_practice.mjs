@@ -142,9 +142,9 @@ assert.ok(modelAnswerAudioManifest.entries && typeof modelAnswerAudioManifest.en
 assert.match(audioGenerationScript, /writeEmbeddedManifest/, 'audio generation script should keep the embedded HTML manifest in sync');
 assert.match(audioGenerationScript, /edge-tts/, 'audio generation script should use edge-tts');
 assert.match(audioGenerationScript, /en-US-AriaNeural/, 'audio generation script should default to en-US-AriaNeural');
+assert.match(audioGenerationScript, /Part 1/, 'audio generation script should include Part 1 model answers');
 assert.match(audioGenerationScript, /Part 2|part\.name === 'Part 2'/, 'audio generation script should include Part 2 model answers');
 assert.match(audioGenerationScript, /Part 3|part\.name === 'Part 3'/, 'audio generation script should include Part 3 model answers');
-assert.doesNotMatch(audioGenerationScript, /part\.name === 'Part 1'[\s\S]*prompts\.push/, 'audio generation script should not generate Part 1 answer audio');
 
 function extractNamedFunction(source, name) {
   const start = source.indexOf(`function ${name}(`);
@@ -255,6 +255,30 @@ const importedBank = parseQuestionBankMarkdown(`
 `);
 
 const realImportedBank = parseQuestionBankMarkdown(questionBankMarkdown);
+const firstPart1ImportedPrompt = realImportedBank.parts[0].prompts[0];
+const firstPart1ImportedAudioKey = getModelAnswerAudioKey(
+  'Part 1',
+  firstPart1ImportedPrompt.question,
+  firstPart1ImportedPrompt.answer
+);
+const firstPart2ImportedPrompt = realImportedBank.parts[1].prompts[0];
+const firstPart2ImportedAudioKey = getModelAnswerAudioKey(
+  'Part 2',
+  firstPart2ImportedPrompt.question,
+  firstPart2ImportedPrompt.answer
+);
+assert.ok(
+  modelAnswerAudioManifest.items.some((item) => item.partName === 'Part 1'),
+  'generated model-answer audio manifest should include Part 1 items'
+);
+assert.ok(
+  modelAnswerAudioManifest.entries[firstPart1ImportedAudioKey],
+  'generated model-answer audio manifest should include imported Part 1 answers'
+);
+assert.ok(
+  modelAnswerAudioManifest.entries[firstPart2ImportedAudioKey],
+  'generated model-answer audio manifest should include imported Part 2 cue-card questions'
+);
 for (const part of realImportedBank.parts) {
   for (const prompt of part.prompts) {
     assert.ok(Array.isArray(prompt.keywords), `${part.name} imported prompt should include curated keywords`);

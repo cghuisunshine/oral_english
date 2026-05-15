@@ -48,15 +48,16 @@ function collectEmbeddedModelAnswers() {
   const prompts = [];
 
   for (const part of content.parts || []) {
-    if (part.name !== 'Part 2' && part.name !== 'Part 3') {
-      continue;
-    }
     for (const prompt of part.prompts || []) {
+      const answer = normalizeText(prompt.answer);
+      if (!answer) {
+        continue;
+      }
       prompts.push({
         source: 'embedded-html',
         partName: part.name,
         question: normalizeText(prompt.question),
-        answer: normalizeText(prompt.answer)
+        answer
       });
     }
   }
@@ -68,34 +69,65 @@ function collectMarkdownModelAnswers() {
   const markdown = readFileSync(MARKDOWN_PATH, 'utf8').replace(/\r\n?/g, '\n');
   const lines = markdown.split('\n');
   const prompts = [];
-  let inPart23Bank = false;
-  let currentPart2Question = '';
+  let section = '';
+  let currentQuestion = '';
 
   for (const line of lines) {
     const trimmed = line.trim();
-    if (/^##\s+Part 2 And Part 3 Cue-Card Bank/i.test(trimmed)) {
-      inPart23Bank = true;
+    if (/^##\s+Part 1 Quick Interview Bank/i.test(trimmed)) {
+      section = 'part1';
+      currentQuestion = '';
       continue;
     }
-    if (inPart23Bank && /^##\s+/i.test(trimmed)) {
+    if (/^##\s+Part 2 And Part 3 Cue-Card Bank/i.test(trimmed)) {
+      section = 'part23';
+      currentQuestion = '';
+      continue;
+    }
+    if (section && /^##\s+/i.test(trimmed)) {
       break;
     }
-    if (!inPart23Bank) {
+    if (!section) {
+      continue;
+    }
+
+    if (section === 'part1') {
+      const part1QuestionMatch = trimmed.match(/^Question:\s*(.+)$/i);
+      if (part1QuestionMatch) {
+        currentQuestion = normalizeText(part1QuestionMatch[1]);
+        continue;
+      }
+
+      const part1AnswerMatch = trimmed.match(/^Answer:\s*(.+)$/i);
+      if (part1AnswerMatch && currentQuestion) {
+        prompts.push({
+          source: 'markdown-bank',
+          partName: 'Part 1',
+          question: currentQuestion,
+          answer: normalizeText(part1AnswerMatch[1])
+        });
+      }
       continue;
     }
 
     const questionMatch = trimmed.match(/^\d+\.\s*(.+)$/);
     if (questionMatch) {
-      currentPart2Question = normalizeText(questionMatch[1]);
+      currentQuestion = '';
+      continue;
+    }
+
+    const cueCardMatch = trimmed.match(/^Cue card:\s*(.+)$/i);
+    if (cueCardMatch) {
+      currentQuestion = normalizeText(cueCardMatch[1]);
       continue;
     }
 
     const part2AnswerMatch = trimmed.match(/^Model answer:\s*(.+)$/i);
-    if (part2AnswerMatch && currentPart2Question) {
+    if (part2AnswerMatch && currentQuestion) {
       prompts.push({
         source: 'markdown-bank',
         partName: 'Part 2',
-        question: currentPart2Question,
+        question: currentQuestion,
         answer: normalizeText(part2AnswerMatch[1])
       });
       continue;
@@ -103,16 +135,16 @@ function collectMarkdownModelAnswers() {
 
     const part3QuestionMatch = trimmed.match(/^Part 3:\s*(.+)$/i);
     if (part3QuestionMatch) {
-      currentPart2Question = normalizeText(part3QuestionMatch[1]);
+      currentQuestion = normalizeText(part3QuestionMatch[1]);
       continue;
     }
 
     const part3AnswerMatch = trimmed.match(/^Answer:\s*(.+)$/i);
-    if (part3AnswerMatch && currentPart2Question) {
+    if (part3AnswerMatch && currentQuestion) {
       prompts.push({
         source: 'markdown-bank',
         partName: 'Part 3',
-        question: currentPart2Question,
+        question: currentQuestion,
         answer: normalizeText(part3AnswerMatch[1])
       });
     }
@@ -258,4 +290,4 @@ if (!dryRun) {
   writeEmbeddedManifest(manifest);
 }
 
-console.log(`${dryRun ? 'Found' : 'Generated manifest for'} ${prompts.length} Part 2/Part 3 model-answer audio items.`);
+console.log(`${dryRun ? 'Found' : 'Generated manifest for'} ${prompts.length} Part 1/Part 2/Part 3 model-answer audio items.`);
