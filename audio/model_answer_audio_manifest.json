@@ -1,0 +1,1539 @@
+{
+  "voice": "en-US-AriaNeural",
+  "generator": "edge-tts",
+  "generatedAt": "2026-05-15T01:03:26.019Z",
+  "entries": {
+    "answer-0488a7d3": "audio/model-answers/answer-0488a7d3.mp3",
+    "answer-050eafd1": "audio/model-answers/answer-050eafd1.mp3",
+    "answer-055a5971": "audio/model-answers/answer-055a5971.mp3",
+    "answer-080c4674": "audio/model-answers/answer-080c4674.mp3",
+    "answer-093e63a5": "audio/model-answers/answer-093e63a5.mp3",
+    "answer-09fdfe1a": "audio/model-answers/answer-09fdfe1a.mp3",
+    "answer-0be7b264": "audio/model-answers/answer-0be7b264.mp3",
+    "answer-0cd1645a": "audio/model-answers/answer-0cd1645a.mp3",
+    "answer-0e51a77b": "audio/model-answers/answer-0e51a77b.mp3",
+    "answer-104a0734": "audio/model-answers/answer-104a0734.mp3",
+    "answer-11504805": "audio/model-answers/answer-11504805.mp3",
+    "answer-11b40c39": "audio/model-answers/answer-11b40c39.mp3",
+    "answer-12e1772b": "audio/model-answers/answer-12e1772b.mp3",
+    "answer-13b1ba46": "audio/model-answers/answer-13b1ba46.mp3",
+    "answer-160c3840": "audio/model-answers/answer-160c3840.mp3",
+    "answer-16f3d693": "audio/model-answers/answer-16f3d693.mp3",
+    "answer-17ce2e32": "audio/model-answers/answer-17ce2e32.mp3",
+    "answer-1adb9c9b": "audio/model-answers/answer-1adb9c9b.mp3",
+    "answer-1caa0a3e": "audio/model-answers/answer-1caa0a3e.mp3",
+    "answer-1ee8d4e0": "audio/model-answers/answer-1ee8d4e0.mp3",
+    "answer-24a561ca": "audio/model-answers/answer-24a561ca.mp3",
+    "answer-26484043": "audio/model-answers/answer-26484043.mp3",
+    "answer-266e6d64": "audio/model-answers/answer-266e6d64.mp3",
+    "answer-2a3ba011": "audio/model-answers/answer-2a3ba011.mp3",
+    "answer-2d272718": "audio/model-answers/answer-2d272718.mp3",
+    "answer-2e11f8c9": "audio/model-answers/answer-2e11f8c9.mp3",
+    "answer-2e5be663": "audio/model-answers/answer-2e5be663.mp3",
+    "answer-2f355037": "audio/model-answers/answer-2f355037.mp3",
+    "answer-32cf231d": "audio/model-answers/answer-32cf231d.mp3",
+    "answer-330c08dc": "audio/model-answers/answer-330c08dc.mp3",
+    "answer-332d7dc3": "audio/model-answers/answer-332d7dc3.mp3",
+    "answer-3bce48e3": "audio/model-answers/answer-3bce48e3.mp3",
+    "answer-3cf86d40": "audio/model-answers/answer-3cf86d40.mp3",
+    "answer-3df675eb": "audio/model-answers/answer-3df675eb.mp3",
+    "answer-3e6ead28": "audio/model-answers/answer-3e6ead28.mp3",
+    "answer-3f73b05f": "audio/model-answers/answer-3f73b05f.mp3",
+    "answer-402c756b": "audio/model-answers/answer-402c756b.mp3",
+    "answer-40c8238e": "audio/model-answers/answer-40c8238e.mp3",
+    "answer-44631943": "audio/model-answers/answer-44631943.mp3",
+    "answer-455645d4": "audio/model-answers/answer-455645d4.mp3",
+    "answer-46172efc": "audio/model-answers/answer-46172efc.mp3",
+    "answer-49c4a082": "audio/model-answers/answer-49c4a082.mp3",
+    "answer-4dce55b3": "audio/model-answers/answer-4dce55b3.mp3",
+    "answer-4e6049ff": "audio/model-answers/answer-4e6049ff.mp3",
+    "answer-4efa1bdd": "audio/model-answers/answer-4efa1bdd.mp3",
+    "answer-5225ea64": "audio/model-answers/answer-5225ea64.mp3",
+    "answer-5278c566": "audio/model-answers/answer-5278c566.mp3",
+    "answer-53bb2bcf": "audio/model-answers/answer-53bb2bcf.mp3",
+    "answer-586a9805": "audio/model-answers/answer-586a9805.mp3",
+    "answer-58e1f5a2": "audio/model-answers/answer-58e1f5a2.mp3",
+    "answer-5aa1476f": "audio/model-answers/answer-5aa1476f.mp3",
+    "answer-5de477b7": "audio/model-answers/answer-5de477b7.mp3",
+    "answer-5e454cb9": "audio/model-answers/answer-5e454cb9.mp3",
+    "answer-5e85f332": "audio/model-answers/answer-5e85f332.mp3",
+    "answer-5ee67563": "audio/model-answers/answer-5ee67563.mp3",
+    "answer-608cef5b": "audio/model-answers/answer-608cef5b.mp3",
+    "answer-60d19873": "audio/model-answers/answer-60d19873.mp3",
+    "answer-62e634af": "audio/model-answers/answer-62e634af.mp3",
+    "answer-634efa6e": "audio/model-answers/answer-634efa6e.mp3",
+    "answer-63cb0670": "audio/model-answers/answer-63cb0670.mp3",
+    "answer-646fa0ca": "audio/model-answers/answer-646fa0ca.mp3",
+    "answer-64a0d1a3": "audio/model-answers/answer-64a0d1a3.mp3",
+    "answer-686cf967": "audio/model-answers/answer-686cf967.mp3",
+    "answer-6899787a": "audio/model-answers/answer-6899787a.mp3",
+    "answer-68a3e905": "audio/model-answers/answer-68a3e905.mp3",
+    "answer-6958449c": "audio/model-answers/answer-6958449c.mp3",
+    "answer-6b8dac0e": "audio/model-answers/answer-6b8dac0e.mp3",
+    "answer-6bf57a29": "audio/model-answers/answer-6bf57a29.mp3",
+    "answer-6c4c0afc": "audio/model-answers/answer-6c4c0afc.mp3",
+    "answer-6cf150a5": "audio/model-answers/answer-6cf150a5.mp3",
+    "answer-6d0bea26": "audio/model-answers/answer-6d0bea26.mp3",
+    "answer-6d7f7f5d": "audio/model-answers/answer-6d7f7f5d.mp3",
+    "answer-6ebc5763": "audio/model-answers/answer-6ebc5763.mp3",
+    "answer-707aa186": "audio/model-answers/answer-707aa186.mp3",
+    "answer-711d561c": "audio/model-answers/answer-711d561c.mp3",
+    "answer-720ad2d0": "audio/model-answers/answer-720ad2d0.mp3",
+    "answer-7263566b": "audio/model-answers/answer-7263566b.mp3",
+    "answer-737e1f09": "audio/model-answers/answer-737e1f09.mp3",
+    "answer-770e91f1": "audio/model-answers/answer-770e91f1.mp3",
+    "answer-79fae4bc": "audio/model-answers/answer-79fae4bc.mp3",
+    "answer-7e3e1d02": "audio/model-answers/answer-7e3e1d02.mp3",
+    "answer-7ec1d446": "audio/model-answers/answer-7ec1d446.mp3",
+    "answer-7f89e735": "audio/model-answers/answer-7f89e735.mp3",
+    "answer-819d82c1": "audio/model-answers/answer-819d82c1.mp3",
+    "answer-8227084a": "audio/model-answers/answer-8227084a.mp3",
+    "answer-82708e59": "audio/model-answers/answer-82708e59.mp3",
+    "answer-82801171": "audio/model-answers/answer-82801171.mp3",
+    "answer-8337712d": "audio/model-answers/answer-8337712d.mp3",
+    "answer-872748ab": "audio/model-answers/answer-872748ab.mp3",
+    "answer-8b6174e1": "audio/model-answers/answer-8b6174e1.mp3",
+    "answer-8c35e09f": "audio/model-answers/answer-8c35e09f.mp3",
+    "answer-8d097e56": "audio/model-answers/answer-8d097e56.mp3",
+    "answer-8e0ef9ef": "audio/model-answers/answer-8e0ef9ef.mp3",
+    "answer-8e99f9c6": "audio/model-answers/answer-8e99f9c6.mp3",
+    "answer-8f8af361": "audio/model-answers/answer-8f8af361.mp3",
+    "answer-905d484f": "audio/model-answers/answer-905d484f.mp3",
+    "answer-9143a313": "audio/model-answers/answer-9143a313.mp3",
+    "answer-91ad5546": "audio/model-answers/answer-91ad5546.mp3",
+    "answer-92840da4": "audio/model-answers/answer-92840da4.mp3",
+    "answer-939572e9": "audio/model-answers/answer-939572e9.mp3",
+    "answer-9533d83a": "audio/model-answers/answer-9533d83a.mp3",
+    "answer-970e1b26": "audio/model-answers/answer-970e1b26.mp3",
+    "answer-975a09e7": "audio/model-answers/answer-975a09e7.mp3",
+    "answer-9976c314": "audio/model-answers/answer-9976c314.mp3",
+    "answer-99cea23d": "audio/model-answers/answer-99cea23d.mp3",
+    "answer-9a0788ab": "audio/model-answers/answer-9a0788ab.mp3",
+    "answer-9c9b4e52": "audio/model-answers/answer-9c9b4e52.mp3",
+    "answer-9e0356fd": "audio/model-answers/answer-9e0356fd.mp3",
+    "answer-a187c36d": "audio/model-answers/answer-a187c36d.mp3",
+    "answer-a2c29af9": "audio/model-answers/answer-a2c29af9.mp3",
+    "answer-a4dbc623": "audio/model-answers/answer-a4dbc623.mp3",
+    "answer-a53db755": "audio/model-answers/answer-a53db755.mp3",
+    "answer-a5cf900a": "audio/model-answers/answer-a5cf900a.mp3",
+    "answer-a78fc874": "audio/model-answers/answer-a78fc874.mp3",
+    "answer-a8ea1ee9": "audio/model-answers/answer-a8ea1ee9.mp3",
+    "answer-aa067337": "audio/model-answers/answer-aa067337.mp3",
+    "answer-aa94ae33": "audio/model-answers/answer-aa94ae33.mp3",
+    "answer-b13d524f": "audio/model-answers/answer-b13d524f.mp3",
+    "answer-b2e72453": "audio/model-answers/answer-b2e72453.mp3",
+    "answer-b53a2cf0": "audio/model-answers/answer-b53a2cf0.mp3",
+    "answer-b741e547": "audio/model-answers/answer-b741e547.mp3",
+    "answer-b74fc274": "audio/model-answers/answer-b74fc274.mp3",
+    "answer-b7a883bd": "audio/model-answers/answer-b7a883bd.mp3",
+    "answer-b7b40459": "audio/model-answers/answer-b7b40459.mp3",
+    "answer-b94f240c": "audio/model-answers/answer-b94f240c.mp3",
+    "answer-bb00a002": "audio/model-answers/answer-bb00a002.mp3",
+    "answer-bcfddf01": "audio/model-answers/answer-bcfddf01.mp3",
+    "answer-bd1d8ed7": "audio/model-answers/answer-bd1d8ed7.mp3",
+    "answer-bfe16a37": "audio/model-answers/answer-bfe16a37.mp3",
+    "answer-c3370232": "audio/model-answers/answer-c3370232.mp3",
+    "answer-c4555626": "audio/model-answers/answer-c4555626.mp3",
+    "answer-c45b38a3": "audio/model-answers/answer-c45b38a3.mp3",
+    "answer-c5cbd839": "audio/model-answers/answer-c5cbd839.mp3",
+    "answer-c6078131": "audio/model-answers/answer-c6078131.mp3",
+    "answer-c64d83a5": "audio/model-answers/answer-c64d83a5.mp3",
+    "answer-c7d94a7e": "audio/model-answers/answer-c7d94a7e.mp3",
+    "answer-ca470606": "audio/model-answers/answer-ca470606.mp3",
+    "answer-caa09bbb": "audio/model-answers/answer-caa09bbb.mp3",
+    "answer-cbe651c1": "audio/model-answers/answer-cbe651c1.mp3",
+    "answer-cd236d74": "audio/model-answers/answer-cd236d74.mp3",
+    "answer-d05f48fd": "audio/model-answers/answer-d05f48fd.mp3",
+    "answer-d1692b6a": "audio/model-answers/answer-d1692b6a.mp3",
+    "answer-d244ee21": "audio/model-answers/answer-d244ee21.mp3",
+    "answer-d4056b03": "audio/model-answers/answer-d4056b03.mp3",
+    "answer-d87d9837": "audio/model-answers/answer-d87d9837.mp3",
+    "answer-dcb97931": "audio/model-answers/answer-dcb97931.mp3",
+    "answer-de3a6bc0": "audio/model-answers/answer-de3a6bc0.mp3",
+    "answer-e1aa165c": "audio/model-answers/answer-e1aa165c.mp3",
+    "answer-e2a87aeb": "audio/model-answers/answer-e2a87aeb.mp3",
+    "answer-e42ad8c5": "audio/model-answers/answer-e42ad8c5.mp3",
+    "answer-e4bc9189": "audio/model-answers/answer-e4bc9189.mp3",
+    "answer-e72835b6": "audio/model-answers/answer-e72835b6.mp3",
+    "answer-e8bb9eff": "audio/model-answers/answer-e8bb9eff.mp3",
+    "answer-ea66ab45": "audio/model-answers/answer-ea66ab45.mp3",
+    "answer-eaae3495": "audio/model-answers/answer-eaae3495.mp3",
+    "answer-eabc0b0e": "audio/model-answers/answer-eabc0b0e.mp3",
+    "answer-eca08ea7": "audio/model-answers/answer-eca08ea7.mp3",
+    "answer-edf66e87": "audio/model-answers/answer-edf66e87.mp3",
+    "answer-efde525a": "audio/model-answers/answer-efde525a.mp3",
+    "answer-f05af759": "audio/model-answers/answer-f05af759.mp3",
+    "answer-f2e1e93d": "audio/model-answers/answer-f2e1e93d.mp3",
+    "answer-f509b1ec": "audio/model-answers/answer-f509b1ec.mp3",
+    "answer-f5b32d35": "audio/model-answers/answer-f5b32d35.mp3",
+    "answer-f5dd9080": "audio/model-answers/answer-f5dd9080.mp3",
+    "answer-f80a983f": "audio/model-answers/answer-f80a983f.mp3",
+    "answer-faf10fc0": "audio/model-answers/answer-faf10fc0.mp3",
+    "answer-fc951362": "audio/model-answers/answer-fc951362.mp3",
+    "answer-fd55eb36": "audio/model-answers/answer-fd55eb36.mp3",
+    "answer-fe4f5b11": "audio/model-answers/answer-fe4f5b11.mp3",
+    "answer-ff580421": "audio/model-answers/answer-ff580421.mp3"
+  },
+  "items": [
+    {
+      "key": "answer-0488a7d3",
+      "partName": "Part 3",
+      "question": "Why are green spaces important in cities?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-0488a7d3.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-050eafd1",
+      "partName": "Part 2",
+      "question": "**An interesting decision made with friends**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-050eafd1.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-055a5971",
+      "partName": "Part 2",
+      "question": "**Breaking something**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-055a5971.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-080c4674",
+      "partName": "Part 3",
+      "question": "What are the risks of social media?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-080c4674.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-093e63a5",
+      "partName": "Part 3",
+      "question": "Should old buildings be protected?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-093e63a5.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-09fdfe1a",
+      "partName": "Part 2",
+      "question": "**A goal you tried hard to achieve**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-09fdfe1a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-0be7b264",
+      "partName": "Part 3",
+      "question": "Why do people forget things?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-0be7b264.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-0cd1645a",
+      "partName": "Part 3",
+      "question": "Can talent be learned?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-0cd1645a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-0e51a77b",
+      "partName": "Part 3",
+      "question": "What helps people overcome difficulties?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-0e51a77b.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-104a0734",
+      "partName": "Part 2",
+      "question": "**A place with many trees you want to visit**",
+      "words": 135,
+      "audio": "audio/model-answers/answer-104a0734.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-11504805",
+      "partName": "Part 2",
+      "question": "**Receiving money as a gift**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-11504805.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-11b40c39",
+      "partName": "Part 3",
+      "question": "What makes a place attractive to tourists?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-11b40c39.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-12e1772b",
+      "partName": "Part 3",
+      "question": "How can people build good habits?",
+      "words": 171,
+      "audio": "audio/model-answers/answer-12e1772b.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-13b1ba46",
+      "partName": "Part 3",
+      "question": "What makes a story interesting?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-13b1ba46.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-160c3840",
+      "partName": "Part 3",
+      "question": "Is creativity important at work?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-160c3840.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-16f3d693",
+      "partName": "Part 3",
+      "question": "Why is it hard for some people to apologize?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-16f3d693.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-17ce2e32",
+      "partName": "Part 3",
+      "question": "What is the difference between knowledge and intelligence?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-17ce2e32.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-1adb9c9b",
+      "partName": "Part 2",
+      "question": "**An argument with a friend**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-1adb9c9b.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-1caa0a3e",
+      "partName": "Part 3",
+      "question": "Should people be judged by their clothes?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-1caa0a3e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-1ee8d4e0",
+      "partName": "Part 2",
+      "question": "**A product advertisement you saw**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-1ee8d4e0.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-24a561ca",
+      "partName": "Part 2",
+      "question": "Describe a goal you want to achieve.",
+      "words": 133,
+      "audio": "audio/model-answers/answer-24a561ca.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-26484043",
+      "partName": "Part 2",
+      "question": "**An old object at home**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-26484043.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-266e6d64",
+      "partName": "Part 3",
+      "question": "Why should people protect wild animals?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-266e6d64.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-2a3ba011",
+      "partName": "Part 2",
+      "question": "**Telling a friend the truth**",
+      "words": 135,
+      "audio": "audio/model-answers/answer-2a3ba011.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-2d272718",
+      "partName": "Part 3",
+      "question": "Why do some traditions disappear over time?",
+      "words": 172,
+      "audio": "audio/model-answers/answer-2d272718.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-2e11f8c9",
+      "partName": "Part 3",
+      "question": "Is waiting difficult for modern people?",
+      "words": 161,
+      "audio": "audio/model-answers/answer-2e11f8c9.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-2e5be663",
+      "partName": "Part 2",
+      "question": "**An interesting building during a trip**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-2e5be663.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-2f355037",
+      "partName": "Part 3",
+      "question": "Why do people watch live sports?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-2f355037.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-32cf231d",
+      "partName": "Part 3",
+      "question": "Is beauty only about appearance?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-32cf231d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-330c08dc",
+      "partName": "Part 3",
+      "question": "What problems do online shoppers face?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-330c08dc.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-332d7dc3",
+      "partName": "Part 3",
+      "question": "Do you think people travel more now than in the past?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-332d7dc3.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-3bce48e3",
+      "partName": "Part 3",
+      "question": "Who should teach children public manners?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-3bce48e3.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-3cf86d40",
+      "partName": "Part 3",
+      "question": "How dependent are people on electricity?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-3cf86d40.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-3df675eb",
+      "partName": "Part 2",
+      "question": "**A dinner you enjoyed**",
+      "words": 128,
+      "audio": "audio/model-answers/answer-3df675eb.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-3e6ead28",
+      "partName": "Part 2",
+      "question": "**An experience you shared with others**",
+      "words": 128,
+      "audio": "audio/model-answers/answer-3e6ead28.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-3f73b05f",
+      "partName": "Part 3",
+      "question": "Why do families eat together?",
+      "words": 160,
+      "audio": "audio/model-answers/answer-3f73b05f.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-402c756b",
+      "partName": "Part 2",
+      "question": "Describe an important decision you made.",
+      "words": 141,
+      "audio": "audio/model-answers/answer-402c756b.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-40c8238e",
+      "partName": "Part 2",
+      "question": "**A science subject you are interested in**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-40c8238e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-44631943",
+      "partName": "Part 2",
+      "question": "**A creative person you admire**",
+      "words": 139,
+      "audio": "audio/model-answers/answer-44631943.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-455645d4",
+      "partName": "Part 3",
+      "question": "Why do first experiences matter?",
+      "words": 159,
+      "audio": "audio/model-answers/answer-455645d4.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-46172efc",
+      "partName": "Part 2",
+      "question": "**A water sport**",
+      "words": 134,
+      "audio": "audio/model-answers/answer-46172efc.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-49c4a082",
+      "partName": "Part 2",
+      "question": "**A well-dressed friend**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-49c4a082.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-4dce55b3",
+      "partName": "Part 2",
+      "question": "**A person who wears unusual clothes**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-4dce55b3.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-4e6049ff",
+      "partName": "Part 2",
+      "question": "**A film that made you laugh**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-4e6049ff.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-4efa1bdd",
+      "partName": "Part 3",
+      "question": "Why do people enjoy gardening?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-4efa1bdd.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5225ea64",
+      "partName": "Part 2",
+      "question": "**A childhood toy**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-5225ea64.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5278c566",
+      "partName": "Part 2",
+      "question": "**A friend who is good at music or singing**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-5278c566.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-53bb2bcf",
+      "partName": "Part 3",
+      "question": "Why do first impressions sometimes change?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-53bb2bcf.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-586a9805",
+      "partName": "Part 2",
+      "question": "**A shop you often visit**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-586a9805.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-58e1f5a2",
+      "partName": "Part 2",
+      "question": "**A smart person you know**",
+      "words": 137,
+      "audio": "audio/model-answers/answer-58e1f5a2.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5aa1476f",
+      "partName": "Part 3",
+      "question": "Is online health information reliable?",
+      "words": 170,
+      "audio": "audio/model-answers/answer-5aa1476f.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5de477b7",
+      "partName": "Part 2",
+      "question": "**A city you have visited and want to revisit**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-5de477b7.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5e454cb9",
+      "partName": "Part 3",
+      "question": "Should children learn science early?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-5e454cb9.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5e85f332",
+      "partName": "Part 3",
+      "question": "Should children be punished for accidents?",
+      "words": 159,
+      "audio": "audio/model-answers/answer-5e85f332.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5ee67563",
+      "partName": "Part 2",
+      "question": "Describe a time when you helped someone.",
+      "words": 134,
+      "audio": "audio/model-answers/answer-5ee67563.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-608cef5b",
+      "partName": "Part 2",
+      "question": "**Good service while shopping**",
+      "words": 127,
+      "audio": "audio/model-answers/answer-608cef5b.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-60d19873",
+      "partName": "Part 2",
+      "question": "**Deciding to wait for something**",
+      "words": 128,
+      "audio": "audio/model-answers/answer-60d19873.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-62e634af",
+      "partName": "Part 2",
+      "question": "**A problem while shopping online or in a store**",
+      "words": 150,
+      "audio": "audio/model-answers/answer-62e634af.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-634efa6e",
+      "partName": "Part 3",
+      "question": "Why is group planning sometimes difficult?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-634efa6e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-63cb0670",
+      "partName": "Part 3",
+      "question": "What makes customer service good?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-63cb0670.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-646fa0ca",
+      "partName": "Part 3",
+      "question": "How can governments encourage people to live healthier lives?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-646fa0ca.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-64a0d1a3",
+      "partName": "Part 2",
+      "question": "**Your first day at school**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-64a0d1a3.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-686cf967",
+      "partName": "Part 2",
+      "question": "**An exciting activity you tried for the first time**",
+      "words": 134,
+      "audio": "audio/model-answers/answer-686cf967.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6899787a",
+      "partName": "Part 3",
+      "question": "What are the disadvantages of long-distance travel?",
+      "words": 159,
+      "audio": "audio/model-answers/answer-6899787a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-68a3e905",
+      "partName": "Part 2",
+      "question": "**Giving a speech**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-68a3e905.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6958449c",
+      "partName": "Part 2",
+      "question": "**An important good friend**",
+      "words": 139,
+      "audio": "audio/model-answers/answer-6958449c.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6b8dac0e",
+      "partName": "Part 3",
+      "question": "Why do people enjoy music?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-6b8dac0e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6bf57a29",
+      "partName": "Part 2",
+      "question": "**A trip you want to take again**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-6bf57a29.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6c4c0afc",
+      "partName": "Part 3",
+      "question": "Why do people enjoy travelling?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-6c4c0afc.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6cf150a5",
+      "partName": "Part 3",
+      "question": "What kinds of jobs may become more important in the future?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-6cf150a5.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-6d0bea26",
+      "partName": "Part 2",
+      "question": "**A website you often visit**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-6d0bea26.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6d7f7f5d",
+      "partName": "Part 2",
+      "question": "**A photo you are proud of**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-6d7f7f5d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6ebc5763",
+      "partName": "Part 2",
+      "question": "**A skill you can teach others**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-6ebc5763.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-707aa186",
+      "partName": "Part 3",
+      "question": "Why are public speaking skills useful?",
+      "words": 159,
+      "audio": "audio/model-answers/answer-707aa186.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-711d561c",
+      "partName": "Part 3",
+      "question": "Why are some public places noisy?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-711d561c.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-720ad2d0",
+      "partName": "Part 2",
+      "question": "**An impressive English lesson**",
+      "words": 128,
+      "audio": "audio/model-answers/answer-720ad2d0.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-7263566b",
+      "partName": "Part 2",
+      "question": "**A friend you disliked at first but later liked**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-7263566b.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-737e1f09",
+      "partName": "Part 3",
+      "question": "Why do people revisit places?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-737e1f09.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-770e91f1",
+      "partName": "Part 3",
+      "question": "What makes a friendship last?",
+      "words": 169,
+      "audio": "audio/model-answers/answer-770e91f1.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-79fae4bc",
+      "partName": "Part 3",
+      "question": "What qualities make a good teammate?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-79fae4bc.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-7e3e1d02",
+      "partName": "Part 2",
+      "question": "**A health article you read online or in a magazine**",
+      "words": 135,
+      "audio": "audio/model-answers/answer-7e3e1d02.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-7ec1d446",
+      "partName": "Part 3",
+      "question": "Is it better to travel with a plan?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-7ec1d446.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-7f89e735",
+      "partName": "Part 3",
+      "question": "Why should people try new activities?",
+      "words": 160,
+      "audio": "audio/model-answers/answer-7f89e735.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-819d82c1",
+      "partName": "Part 2",
+      "question": "**A useful book**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-819d82c1.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8227084a",
+      "partName": "Part 2",
+      "question": "**Using a foreign language for the first time**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-8227084a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-82708e59",
+      "partName": "Part 3",
+      "question": "Why do people care about appearance?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-82708e59.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-82801171",
+      "partName": "Part 2",
+      "question": "**A place where people do sports**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-82801171.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8337712d",
+      "partName": "Part 3",
+      "question": "What are the advantages of family businesses?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-8337712d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-872748ab",
+      "partName": "Part 3",
+      "question": "Are childhood friendships different from adult friendships?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-872748ab.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8b6174e1",
+      "partName": "Part 3",
+      "question": "Why do people keep old things?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-8b6174e1.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8c35e09f",
+      "partName": "Part 2",
+      "question": "Describe a place you visited and would like to visit again.",
+      "words": 127,
+      "audio": "audio/model-answers/answer-8c35e09f.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-8d097e56",
+      "partName": "Part 2",
+      "question": "**An interesting social media experience**",
+      "words": 127,
+      "audio": "audio/model-answers/answer-8d097e56.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8e0ef9ef",
+      "partName": "Part 3",
+      "question": "Are printed books still important?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-8e0ef9ef.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8e99f9c6",
+      "partName": "Part 3",
+      "question": "How can plastic waste be reduced?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-8e99f9c6.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8f8af361",
+      "partName": "Part 3",
+      "question": "How has the internet changed learning?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-8f8af361.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-905d484f",
+      "partName": "Part 3",
+      "question": "Is persuasion always positive?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-905d484f.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-9143a313",
+      "partName": "Part 2",
+      "question": "**A person who encouraged you to do something interesting**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-9143a313.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-91ad5546",
+      "partName": "Part 3",
+      "question": "Why do people rewatch films?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-91ad5546.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-92840da4",
+      "partName": "Part 2",
+      "question": "**An interesting story or novel**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-92840da4.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-939572e9",
+      "partName": "Part 3",
+      "question": "Why are some people popular?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-939572e9.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-9533d83a",
+      "partName": "Part 3",
+      "question": "Why do some people give up their goals?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-9533d83a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-970e1b26",
+      "partName": "Part 3",
+      "question": "Why do shared experiences strengthen relationships?",
+      "words": 161,
+      "audio": "audio/model-answers/answer-970e1b26.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-975a09e7",
+      "partName": "Part 2",
+      "question": "**Forgetting an appointment**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-975a09e7.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-9976c314",
+      "partName": "Part 3",
+      "question": "Why do people resist change?",
+      "words": 161,
+      "audio": "audio/model-answers/answer-9976c314.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-99cea23d",
+      "partName": "Part 2",
+      "question": "**A person who likes growing plants**",
+      "words": 140,
+      "audio": "audio/model-answers/answer-99cea23d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-9a0788ab",
+      "partName": "Part 3",
+      "question": "Why do some people prefer living in cities rather than small towns?",
+      "words": 175,
+      "audio": "audio/model-answers/answer-9a0788ab.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-9c9b4e52",
+      "partName": "Part 3",
+      "question": "What are the advantages of learning practical skills at school?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-9c9b4e52.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-9e0356fd",
+      "partName": "Part 2",
+      "question": "**Waiting for something special**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-9e0356fd.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a187c36d",
+      "partName": "Part 3",
+      "question": "What skills should schools teach?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-a187c36d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a2c29af9",
+      "partName": "Part 2",
+      "question": "**An activity planned with several people**",
+      "words": 126,
+      "audio": "audio/model-answers/answer-a2c29af9.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a4dbc623",
+      "partName": "Part 3",
+      "question": "Are advertisements always honest?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-a4dbc623.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a53db755",
+      "partName": "Part 2",
+      "question": "**Someone gave you something you really wanted**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-a53db755.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a5cf900a",
+      "partName": "Part 3",
+      "question": "What makes a conversation meaningful?",
+      "words": 160,
+      "audio": "audio/model-answers/answer-a5cf900a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a78fc874",
+      "partName": "Part 2",
+      "question": "**A positive change in your life**",
+      "words": 125,
+      "audio": "audio/model-answers/answer-a78fc874.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a8ea1ee9",
+      "partName": "Part 3",
+      "question": "How should people handle disagreements?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-a8ea1ee9.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-aa067337",
+      "partName": "Part 3",
+      "question": "How has technology changed the way people learn?",
+      "words": 171,
+      "audio": "audio/model-answers/answer-aa067337.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-aa94ae33",
+      "partName": "Part 2",
+      "question": "**A wild animal you want to know more about**",
+      "words": 135,
+      "audio": "audio/model-answers/answer-aa94ae33.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b13d524f",
+      "partName": "Part 2",
+      "question": "**A popular person**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-b13d524f.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b2e72453",
+      "partName": "Part 2",
+      "question": "**A traditional story**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-b2e72453.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b53a2cf0",
+      "partName": "Part 3",
+      "question": "Is honesty always the best policy?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-b53a2cf0.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b741e547",
+      "partName": "Part 2",
+      "question": "Describe an object you use every day.",
+      "words": 135,
+      "audio": "audio/model-answers/answer-b741e547.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-b74fc274",
+      "partName": "Part 2",
+      "question": "Describe a person who has influenced you.",
+      "words": 136,
+      "audio": "audio/model-answers/answer-b74fc274.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-b7a883bd",
+      "partName": "Part 2",
+      "question": "**A live sports event you watched**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-b7a883bd.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b7b40459",
+      "partName": "Part 3",
+      "question": "Should parents encourage children to try new activities?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-b7b40459.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b94f240c",
+      "partName": "Part 3",
+      "question": "What makes a language lesson effective?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-b94f240c.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-bb00a002",
+      "partName": "Part 2",
+      "question": "**A long journey**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-bb00a002.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-bcfddf01",
+      "partName": "Part 3",
+      "question": "What is the best way to learn a language?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-bcfddf01.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-bd1d8ed7",
+      "partName": "Part 2",
+      "question": "**Looking up at the sky**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-bd1d8ed7.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-bfe16a37",
+      "partName": "Part 2",
+      "question": "Describe a useful skill you learned.",
+      "words": 142,
+      "audio": "audio/model-answers/answer-bfe16a37.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-c3370232",
+      "partName": "Part 2",
+      "question": "**A friend with good habits**",
+      "words": 140,
+      "audio": "audio/model-answers/answer-c3370232.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c4555626",
+      "partName": "Part 2",
+      "question": "**Someone apologized to you**",
+      "words": 127,
+      "audio": "audio/model-answers/answer-c4555626.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c45b38a3",
+      "partName": "Part 2",
+      "question": "**Completing something difficult**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-c45b38a3.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c5cbd839",
+      "partName": "Part 3",
+      "question": "Why do people still shop in small stores?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-c5cbd839.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c6078131",
+      "partName": "Part 2",
+      "question": "**Someone you would like to work or study with**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-c6078131.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c64d83a5",
+      "partName": "Part 3",
+      "question": "Why is cultural exchange useful?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-c64d83a5.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c7d94a7e",
+      "partName": "Part 2",
+      "question": "**A decision made with someone else's help**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-c7d94a7e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-ca470606",
+      "partName": "Part 2",
+      "question": "**A person who runs a family business**",
+      "words": 138,
+      "audio": "audio/model-answers/answer-ca470606.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-caa09bbb",
+      "partName": "Part 2",
+      "question": "**A person from a different culture**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-caa09bbb.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-cbe651c1",
+      "partName": "Part 2",
+      "question": "**Children behaving badly in public**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-cbe651c1.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-cd236d74",
+      "partName": "Part 2",
+      "question": "**A talent you want to improve**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-cd236d74.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-d05f48fd",
+      "partName": "Part 3",
+      "question": "How can cities encourage exercise?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-d05f48fd.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-d1692b6a",
+      "partName": "Part 3",
+      "question": "What makes a gift meaningful?",
+      "words": 160,
+      "audio": "audio/model-answers/answer-d1692b6a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-d244ee21",
+      "partName": "Part 3",
+      "question": "Why do some people enjoy risky sports?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-d244ee21.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-d4056b03",
+      "partName": "Part 2",
+      "question": "**A sudden power cut**",
+      "words": 128,
+      "audio": "audio/model-answers/answer-d4056b03.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-d87d9837",
+      "partName": "Part 2",
+      "question": "**A second-hand shopping website**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-d87d9837.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-dcb97931",
+      "partName": "Part 3",
+      "question": "Is school the only place to learn?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-dcb97931.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-de3a6bc0",
+      "partName": "Part 2",
+      "question": "**An impressive conversation**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-de3a6bc0.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-e1aa165c",
+      "partName": "Part 3",
+      "question": "Should children be encouraged to make decisions for themselves?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-e1aa165c.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-e2a87aeb",
+      "partName": "Part 3",
+      "question": "Why do people like taking photos?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-e2a87aeb.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-e42ad8c5",
+      "partName": "Part 3",
+      "question": "Why is second-hand shopping popular?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-e42ad8c5.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-e4bc9189",
+      "partName": "Part 3",
+      "question": "Are people less patient today?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-e4bc9189.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-e72835b6",
+      "partName": "Part 2",
+      "question": "**A noisy place you have been to**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-e72835b6.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-e8bb9eff",
+      "partName": "Part 2",
+      "question": "**A favorite childhood friend**",
+      "words": 134,
+      "audio": "audio/model-answers/answer-e8bb9eff.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-ea66ab45",
+      "partName": "Part 3",
+      "question": "Is money a good gift?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-ea66ab45.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-eaae3495",
+      "partName": "Part 2",
+      "question": "**Getting lost**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-eaae3495.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-eabc0b0e",
+      "partName": "Part 3",
+      "question": "What toys are good for children?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-eabc0b0e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-eca08ea7",
+      "partName": "Part 2",
+      "question": "Describe a book, film, or program you enjoyed.",
+      "words": 134,
+      "audio": "audio/model-answers/answer-eca08ea7.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-edf66e87",
+      "partName": "Part 2",
+      "question": "**A person who persuaded you to do something**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-edf66e87.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-efde525a",
+      "partName": "Part 2",
+      "question": "**A place you would recommend to travelers**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-efde525a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f05af759",
+      "partName": "Part 2",
+      "question": "**A film you recently watched and want to watch again**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-f05af759.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f2e1e93d",
+      "partName": "Part 2",
+      "question": "**A beautiful object**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-f2e1e93d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f509b1ec",
+      "partName": "Part 3",
+      "question": "Why are traditional stories important?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-f509b1ec.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f5b32d35",
+      "partName": "Part 3",
+      "question": "Why are people interested in stars?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-f5b32d35.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f5dd9080",
+      "partName": "Part 3",
+      "question": "Why do friends argue?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-f5dd9080.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f80a983f",
+      "partName": "Part 2",
+      "question": "**A place with a lot of plastic waste**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-f80a983f.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-faf10fc0",
+      "partName": "Part 3",
+      "question": "Why do people enjoy comedy?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-faf10fc0.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-fc951362",
+      "partName": "Part 2",
+      "question": "**A disagreement with someone**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-fc951362.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-fd55eb36",
+      "partName": "Part 2",
+      "question": "**Something important you learned outside school**",
+      "words": 127,
+      "audio": "audio/model-answers/answer-fd55eb36.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-fe4f5b11",
+      "partName": "Part 3",
+      "question": "Should people make decisions alone?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-fe4f5b11.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-ff580421",
+      "partName": "Part 3",
+      "question": "Why do people get lost less often now?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-ff580421.mp3",
+      "source": "markdown-bank"
+    }
+  ]
+}

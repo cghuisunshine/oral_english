@@ -135,21 +135,6 @@
       transition: width 0.2s ease;
     }
 
-    .timer-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .timer {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary-strong);
-      font-variant-numeric: tabular-nums;
-    }
-
     .button-row {
       display: flex;
       gap: 8px;
@@ -276,12 +261,28 @@
       margin: 8px 0 0;
     }
 
+    .answer-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .answer-heading h3 {
+      margin: 0;
+    }
+
     .cue-card {
-      margin-top: 14px;
+      margin-bottom: 14px;
       padding: 14px;
       border: 1px solid var(--warning-border);
       border-radius: 8px;
       background: var(--warning-soft);
+    }
+
+    .cue-card p {
+      margin: 0 0 8px;
+      font-weight: 600;
     }
 
     .cue-card ul,
@@ -440,14 +441,78 @@
       "time": "4-5 minutes",
       "focus": "Short, natural answers about familiar topics. Aim for two or three sentences.",
       "prompts": [
-        "Do you work or are you a student?",
-        "What do you usually do on weekends?",
-        "Do you prefer reading books or watching films?",
-        "What kind of weather do you like?",
-        "How often do you use public transport?",
-        "Did you enjoy science classes at school?",
-        "What is your favorite room in your home?",
-        "Do you like making plans for the future?"
+        {
+          "question": "Do you work or are you a student?",
+          "cuePoints": [
+            "your current role",
+            "what you do most days",
+            "one thing you like or find difficult"
+          ],
+          "answer": "I am a student at the moment. Most days I spend time in class, review my notes, and practise English because I want to speak more naturally. The most challenging part is managing my time, but I like learning something new every week."
+        },
+        {
+          "question": "What do you usually do on weekends?",
+          "cuePoints": [
+            "your usual activities",
+            "who you spend time with",
+            "why you enjoy it"
+          ],
+          "answer": "On weekends I usually slow down a little and catch up on things I could not finish during the week. I might go for a walk, watch a film, or call my family. I enjoy weekends because they give me time to relax and reset."
+        },
+        {
+          "question": "Do you prefer reading books or watching films?",
+          "cuePoints": [
+            "your preference",
+            "when you do it",
+            "one reason or example"
+          ],
+          "answer": "I usually prefer watching films because they are easier to enjoy when I am tired. A good film can show emotions, music, and scenery at the same time. However, when I want to study seriously, reading is better because it helps me focus."
+        },
+        {
+          "question": "What kind of weather do you like?",
+          "cuePoints": [
+            "the weather you like",
+            "what you do in that weather",
+            "how it affects your mood"
+          ],
+          "answer": "I like mild and sunny weather, especially when it is not too hot. In that kind of weather I can walk outside, meet friends, or study in a cafe. It also improves my mood because the day feels brighter and more energetic."
+        },
+        {
+          "question": "How often do you use public transport?",
+          "cuePoints": [
+            "how often you use it",
+            "where you usually go",
+            "what is convenient or inconvenient"
+          ],
+          "answer": "I use public transport several times a week, mainly when I go to class or visit places in the city. It is convenient because I do not need to worry about parking. The only problem is that it can be crowded during busy hours."
+        },
+        {
+          "question": "Did you enjoy science classes at school?",
+          "cuePoints": [
+            "whether you enjoyed them",
+            "a topic or experiment you remember",
+            "why it was easy or difficult"
+          ],
+          "answer": "Yes, I enjoyed science classes, especially when the teacher showed us experiments. I remember learning simple ideas through real examples, which made the lessons easier to understand. Some topics were difficult, but they were interesting because they explained how the world works."
+        },
+        {
+          "question": "What is your favorite room in your home?",
+          "cuePoints": [
+            "which room it is",
+            "what you do there",
+            "why it feels comfortable"
+          ],
+          "answer": "My favorite room is my bedroom because it is the quietest place at home. I use it for sleeping, studying, and sometimes watching videos. It feels comfortable because I can arrange everything in my own way and have some private time."
+        },
+        {
+          "question": "Do you like making plans for the future?",
+          "cuePoints": [
+            "whether you like planning",
+            "what you usually plan",
+            "why planning helps or limits you"
+          ],
+          "answer": "Yes, I like making plans, but I try not to make them too strict. I usually plan my study schedule and a few personal goals. Planning helps me stay focused, although I also need to be flexible when things change."
+        }
       ]
     },
     {
@@ -456,20 +521,86 @@
       "time": "1 minute preparation, then 1-2 minutes speaking",
       "focus": "Build a clear story with past details, specific examples, and a short reflection.",
       "prompts": [
-        "Describe a person who has influenced you.",
-        "Describe a place you visited and would like to visit again.",
-        "Describe a useful skill you learned.",
-        "Describe an important decision you made.",
-        "Describe a time when you helped someone.",
-        "Describe an object you use every day.",
-        "Describe a book, film, or program you enjoyed.",
-        "Describe a goal you want to achieve."
-      ],
-      "cuePoints": [
-        "what it was",
-        "when and where it happened",
-        "who was involved",
-        "why it was important to you"
+        {
+          "question": "Describe a person who has influenced you.",
+          "cuePoints": [
+            "who this person is",
+            "how you know this person",
+            "what they did or said",
+            "why they influenced you"
+          ],
+          "answer": "I would like to talk about one of my teachers, who influenced me a lot when I was younger. She was patient, but she also expected students to work hard. I remember she often told us that improvement comes from small daily habits, not from one big effort. That idea affected the way I study now. When I find something difficult, I try to practise a little every day instead of giving up. She influenced me because she gave me confidence and also taught me how to be more disciplined. To make the answer more complete, I would give one or two concrete details instead of speaking about this topic in a general way. For example, I would mention the background, describe what happened step by step, and explain why that moment stayed in my mind."
+        },
+        {
+          "question": "Describe a place you visited and would like to visit again.",
+          "cuePoints": [
+            "where the place is",
+            "when you went there",
+            "what you did there",
+            "why you want to go back"
+          ],
+          "answer": "I would like to describe a coastal city I visited during a short holiday. I went there with my family, and we spent most of our time walking near the water and trying local food. The place was not very crowded, so it felt peaceful. I especially remember the evening view because the sky changed color over the sea. I would like to visit again because it helped me relax, and I think I could explore it more slowly next time. To make the answer more complete, I would give one or two concrete details instead of speaking about this topic in a general way. For example, I would mention the background, describe what happened step by step, and explain why that moment stayed in my mind."
+        },
+        {
+          "question": "Describe a useful skill you learned.",
+          "cuePoints": [
+            "what the skill is",
+            "how you learned it",
+            "how often you use it",
+            "why it is useful"
+          ],
+          "answer": "A useful skill I learned is organizing my study notes clearly. At first, my notes were messy, and I often wasted time looking for information. Later, I learned to group ideas by topic and write short summaries after each lesson. I use this skill almost every week. It is useful because it saves time before exams or practice sessions, and it also helps me understand what I have learned instead of just copying information. To make the answer more complete, I would give one or two concrete details instead of speaking about this topic in a general way. For example, I would mention the background, describe what happened step by step, and explain why that moment stayed in my mind. I would also include some simple feelings, such as surprise, pressure, relief, or pride, because emotions make the story easier to follow."
+        },
+        {
+          "question": "Describe an important decision you made.",
+          "cuePoints": [
+            "what the decision was",
+            "when you made it",
+            "why it was difficult",
+            "what happened afterwards"
+          ],
+          "answer": "One important decision I made was to spend more time improving my English speaking. I made this decision when I realized that I could understand many things but could not express myself smoothly. It was difficult because speaking practice takes patience, and progress is not always obvious. After I made the decision, I started practising short answers and recording myself. It has helped me become more confident and more aware of my mistakes. To make the answer more complete, I would give one or two concrete details instead of speaking about this topic in a general way. For example, I would mention the background, describe what happened step by step, and explain why that moment stayed in my mind. I would also include some simple feelings, such as surprise, pressure, relief, or pride, because emotions make the story easier to follow."
+        },
+        {
+          "question": "Describe a time when you helped someone.",
+          "cuePoints": [
+            "who you helped",
+            "what problem they had",
+            "what you did",
+            "how you felt afterwards"
+          ],
+          "answer": "I remember helping a classmate who was confused about an assignment. We met after class, and I explained the instructions step by step. I did not do the work for him, but I helped him understand how to start. Afterwards, he seemed much less stressed, and he thanked me. I felt happy because it was a small thing for me, but it made his day easier. To make the answer more complete, I would give one or two concrete details instead of speaking about this topic in a general way. For example, I would mention the background, describe what happened step by step, and explain why that moment stayed in my mind. I would also include some simple feelings, such as surprise, pressure, relief, or pride, because emotions make the story easier to follow."
+        },
+        {
+          "question": "Describe an object you use every day.",
+          "cuePoints": [
+            "what the object is",
+            "how long you have had it",
+            "how you use it",
+            "why it is important"
+          ],
+          "answer": "An object I use every day is my phone. I have had my current phone for a while, and I use it for communication, study, maps, and reminders. It is especially useful when I need to check information quickly or listen to English practice materials. I know it can be distracting, but if I use it carefully, it helps me manage many parts of my daily life. To make the answer more complete, I would give one or two concrete details instead of speaking about this topic in a general way. For example, I would mention the background, describe what happened step by step, and explain why that moment stayed in my mind. I would also include some simple feelings, such as surprise, pressure, relief, or pride, because emotions make the story easier to follow."
+        },
+        {
+          "question": "Describe a book, film, or program you enjoyed.",
+          "cuePoints": [
+            "what it was",
+            "when you watched or read it",
+            "what it was about",
+            "why you enjoyed it"
+          ],
+          "answer": "I enjoyed a film about a person trying to overcome a difficult situation. I watched it at home one evening when I wanted something meaningful rather than just entertaining. The story was about persistence, friendship, and learning from failure. I enjoyed it because the characters felt realistic, and the message was encouraging without being too simple. It made me think about how people grow through challenges. To make the answer more complete, I would give one or two concrete details instead of speaking about this topic in a general way. For example, I would mention the background, describe what happened step by step, and explain why that moment stayed in my mind. I would also include some simple feelings, such as surprise, pressure, relief, or pride, because emotions make the story easier to follow."
+        },
+        {
+          "question": "Describe a goal you want to achieve.",
+          "cuePoints": [
+            "what the goal is",
+            "why you want it",
+            "what you are doing now",
+            "how you will feel if you achieve it"
+          ],
+          "answer": "A goal I want to achieve is speaking English more fluently and naturally. I want this because English is useful for study, work, and communication with people from different places. At the moment, I practise by answering IELTS-style questions and recording my voice. If I achieve this goal, I will feel proud because it will show that my daily effort has made a real difference. To make the answer more complete, I would give one or two concrete details instead of speaking about this topic in a general way. For example, I would mention the background, describe what happened step by step, and explain why that moment stayed in my mind. I would also include some simple feelings, such as surprise, pressure, relief, or pride, because emotions make the story easier to follow."
+        }
       ]
     },
     {
@@ -478,14 +609,78 @@
       "time": "4-5 minutes",
       "focus": "Give opinions, compare groups, explain causes, and mention possible future changes.",
       "prompts": [
-        "Why do some people prefer living in cities rather than small towns?",
-        "How has technology changed the way people learn?",
-        "Should children be encouraged to make decisions for themselves?",
-        "What are the advantages of learning practical skills at school?",
-        "Do you think people travel more now than in the past?",
-        "How can governments encourage people to live healthier lives?",
-        "Why do some traditions disappear over time?",
-        "What kinds of jobs may become more important in the future?"
+        {
+          "question": "Why do some people prefer living in cities rather than small towns?",
+          "cuePoints": [
+            "your main reason",
+            "a comparison with small towns",
+            "one example"
+          ],
+          "answer": "Some people prefer cities because there are more opportunities for work, education, and entertainment. Compared with small towns, cities usually offer better public transport and more choices in daily life. For example, a young person may move to a city because it is easier to find a job and meet people with similar interests. I think this question is connected to everyday choices because it depends on people's habits, values, and circumstances. For example, young people and older people may see it differently, and people in big cities may not have the same experience as people in smaller places. Another point worth considering is that individual choices and social conditions usually influence each other. If schools, families, companies, or governments create the right environment, people find it easier to make sensible choices. At the same time, personal responsibility still matters, because rules and opportunities cannot solve every problem. For that reason, I would answer this question by comparing different groups, giving a practical example, and ending with a balanced conclusion rather than an extreme view."
+        },
+        {
+          "question": "How has technology changed the way people learn?",
+          "cuePoints": [
+            "one major change",
+            "a benefit",
+            "a possible problem"
+          ],
+          "answer": "Technology has made learning more flexible. People can watch lessons online, use learning apps, and search for explanations whenever they need help. This is useful because students are not limited to one classroom or one teacher. However, it can also be distracting, so learners need discipline to use technology effectively. I think this question is connected to everyday choices because it depends on people's habits, values, and circumstances. For example, young people and older people may see it differently, and people in big cities may not have the same experience as people in smaller places. Another point worth considering is that individual choices and social conditions usually influence each other. If schools, families, companies, or governments create the right environment, people find it easier to make sensible choices. At the same time, personal responsibility still matters, because rules and opportunities cannot solve every problem. For that reason, I would answer this question by comparing different groups, giving a practical example, and ending with a balanced conclusion rather than an extreme view."
+        },
+        {
+          "question": "Should children be encouraged to make decisions for themselves?",
+          "cuePoints": [
+            "your opinion",
+            "what kind of decisions",
+            "why adult guidance still matters"
+          ],
+          "answer": "Yes, children should be encouraged to make some decisions for themselves, especially small ones like choosing hobbies or managing simple tasks. This helps them build confidence and responsibility. At the same time, adults still need to guide them because children may not understand long-term consequences. I think this question is connected to everyday choices because it depends on people's habits, values, and circumstances. For example, young people and older people may see it differently, and people in big cities may not have the same experience as people in smaller places. Another point worth considering is that individual choices and social conditions usually influence each other. If schools, families, companies, or governments create the right environment, people find it easier to make sensible choices. At the same time, personal responsibility still matters, because rules and opportunities cannot solve every problem. For that reason, I would answer this question by comparing different groups, giving a practical example, and ending with a balanced conclusion rather than an extreme view."
+        },
+        {
+          "question": "What are the advantages of learning practical skills at school?",
+          "cuePoints": [
+            "one practical skill",
+            "how it helps students",
+            "how it connects to adult life"
+          ],
+          "answer": "Learning practical skills at school is useful because students can apply them in real life. Skills such as cooking, budgeting, basic repairs, or communication can make young people more independent. Academic knowledge is important, but practical skills prepare students for everyday problems they will face as adults. I think this question is connected to everyday choices because it depends on people's habits, values, and circumstances. For example, young people and older people may see it differently, and people in big cities may not have the same experience as people in smaller places. Another point worth considering is that individual choices and social conditions usually influence each other. If schools, families, companies, or governments create the right environment, people find it easier to make sensible choices. At the same time, personal responsibility still matters, because rules and opportunities cannot solve every problem. For that reason, I would answer this question by comparing different groups, giving a practical example, and ending with a balanced conclusion rather than an extreme view."
+        },
+        {
+          "question": "Do you think people travel more now than in the past?",
+          "cuePoints": [
+            "your opinion",
+            "why travel has changed",
+            "one limitation"
+          ],
+          "answer": "Yes, I think many people travel more now because transport is faster and information is easier to find online. People can compare prices, book hotels, and plan routes by themselves. However, not everyone can travel often because it still depends on money, time, and personal responsibilities. I think this question is connected to everyday choices because it depends on people's habits, values, and circumstances. For example, young people and older people may see it differently, and people in big cities may not have the same experience as people in smaller places. Another point worth considering is that individual choices and social conditions usually influence each other. If schools, families, companies, or governments create the right environment, people find it easier to make sensible choices. At the same time, personal responsibility still matters, because rules and opportunities cannot solve every problem. For that reason, I would answer this question by comparing different groups, giving a practical example, and ending with a balanced conclusion rather than an extreme view."
+        },
+        {
+          "question": "How can governments encourage people to live healthier lives?",
+          "cuePoints": [
+            "one government action",
+            "how it changes behavior",
+            "why personal choice still matters"
+          ],
+          "answer": "Governments can encourage healthier lives by making sports facilities and public health information more accessible. For example, parks, walking paths, and affordable exercise programs can help people become more active. Still, personal choice matters because the government can create opportunities, but individuals must decide to use them. I think this question is connected to everyday choices because it depends on people's habits, values, and circumstances. For example, young people and older people may see it differently, and people in big cities may not have the same experience as people in smaller places. Another point worth considering is that individual choices and social conditions usually influence each other. If schools, families, companies, or governments create the right environment, people find it easier to make sensible choices. At the same time, personal responsibility still matters, because rules and opportunities cannot solve every problem. For that reason, I would answer this question by comparing different groups, giving a practical example, and ending with a balanced conclusion rather than an extreme view."
+        },
+        {
+          "question": "Why do some traditions disappear over time?",
+          "cuePoints": [
+            "one cause",
+            "how modern life affects traditions",
+            "whether this is always negative"
+          ],
+          "answer": "Some traditions disappear because lifestyles change. When people move to cities, work longer hours, or communicate in different ways, they may have less time for old customs. This is not always completely negative because cultures naturally develop, but it can be a loss if people forget the meaning behind important traditions. I think this question is connected to everyday choices because it depends on people's habits, values, and circumstances. For example, young people and older people may see it differently, and people in big cities may not have the same experience as people in smaller places. Another point worth considering is that individual choices and social conditions usually influence each other. If schools, families, companies, or governments create the right environment, people find it easier to make sensible choices. At the same time, personal responsibility still matters, because rules and opportunities cannot solve every problem. For that reason, I would answer this question by comparing different groups, giving a practical example, and ending with a balanced conclusion rather than an extreme view."
+        },
+        {
+          "question": "What kinds of jobs may become more important in the future?",
+          "cuePoints": [
+            "one type of job",
+            "why demand may grow",
+            "what skills people will need"
+          ],
+          "answer": "Jobs related to technology, healthcare, and environmental protection may become more important in the future. These areas are growing because societies need digital systems, care for older populations, and solutions to environmental problems. People will need both technical skills and soft skills, such as communication and problem-solving. I think this question is connected to everyday choices because it depends on people's habits, values, and circumstances. For example, young people and older people may see it differently, and people in big cities may not have the same experience as people in smaller places. Another point worth considering is that individual choices and social conditions usually influence each other. If schools, families, companies, or governments create the right environment, people find it easier to make sensible choices. At the same time, personal responsibility still matters, because rules and opportunities cannot solve every problem. For that reason, I would answer this question by comparing different groups, giving a practical example, and ending with a balanced conclusion rather than an extreme view."
+        }
       ]
     }
   ],
@@ -508,19 +703,1582 @@
     "I suppose another way to look at it is..."
   ],
   "weeklyPlan": [
-    ["Day 1", "Part 1: work or studies, home, daily routine"],
-    ["Day 2", "Part 1: hobbies, weather, transport"],
-    ["Day 3", "Part 2: people and relationships"],
-    ["Day 4", "Part 2: places, travel, and events"],
-    ["Day 5", "Part 3: education and technology"],
-    ["Day 6", "Part 3: society, health, and environment"],
-    ["Day 7", "Full mock test: Parts 1, 2, and 3"]
+    [
+      "Day 1",
+      "Part 1: work or studies, home, daily routine"
+    ],
+    [
+      "Day 2",
+      "Part 1: hobbies, weather, transport"
+    ],
+    [
+      "Day 3",
+      "Part 2: people and relationships"
+    ],
+    [
+      "Day 4",
+      "Part 2: places, travel, and events"
+    ],
+    [
+      "Day 5",
+      "Part 3: education and technology"
+    ],
+    [
+      "Day 6",
+      "Part 3: society, health, and environment"
+    ],
+    [
+      "Day 7",
+      "Full mock test: Parts 1, 2, and 3"
+    ]
   ],
   "reviewQuestions": [
     "Did I answer the question directly?",
     "Did I speak without long silent pauses?",
     "Did I use examples instead of memorized sentences?",
     "Did I correct one pronunciation or grammar habit?"
+  ]
+}
+  </script>
+
+  <script id="model-answer-audio-manifest" type="application/json">
+{
+  "voice": "en-US-AriaNeural",
+  "generator": "edge-tts",
+  "generatedAt": "2026-05-15T01:03:26.019Z",
+  "entries": {
+    "answer-0488a7d3": "audio/model-answers/answer-0488a7d3.mp3",
+    "answer-050eafd1": "audio/model-answers/answer-050eafd1.mp3",
+    "answer-055a5971": "audio/model-answers/answer-055a5971.mp3",
+    "answer-080c4674": "audio/model-answers/answer-080c4674.mp3",
+    "answer-093e63a5": "audio/model-answers/answer-093e63a5.mp3",
+    "answer-09fdfe1a": "audio/model-answers/answer-09fdfe1a.mp3",
+    "answer-0be7b264": "audio/model-answers/answer-0be7b264.mp3",
+    "answer-0cd1645a": "audio/model-answers/answer-0cd1645a.mp3",
+    "answer-0e51a77b": "audio/model-answers/answer-0e51a77b.mp3",
+    "answer-104a0734": "audio/model-answers/answer-104a0734.mp3",
+    "answer-11504805": "audio/model-answers/answer-11504805.mp3",
+    "answer-11b40c39": "audio/model-answers/answer-11b40c39.mp3",
+    "answer-12e1772b": "audio/model-answers/answer-12e1772b.mp3",
+    "answer-13b1ba46": "audio/model-answers/answer-13b1ba46.mp3",
+    "answer-160c3840": "audio/model-answers/answer-160c3840.mp3",
+    "answer-16f3d693": "audio/model-answers/answer-16f3d693.mp3",
+    "answer-17ce2e32": "audio/model-answers/answer-17ce2e32.mp3",
+    "answer-1adb9c9b": "audio/model-answers/answer-1adb9c9b.mp3",
+    "answer-1caa0a3e": "audio/model-answers/answer-1caa0a3e.mp3",
+    "answer-1ee8d4e0": "audio/model-answers/answer-1ee8d4e0.mp3",
+    "answer-24a561ca": "audio/model-answers/answer-24a561ca.mp3",
+    "answer-26484043": "audio/model-answers/answer-26484043.mp3",
+    "answer-266e6d64": "audio/model-answers/answer-266e6d64.mp3",
+    "answer-2a3ba011": "audio/model-answers/answer-2a3ba011.mp3",
+    "answer-2d272718": "audio/model-answers/answer-2d272718.mp3",
+    "answer-2e11f8c9": "audio/model-answers/answer-2e11f8c9.mp3",
+    "answer-2e5be663": "audio/model-answers/answer-2e5be663.mp3",
+    "answer-2f355037": "audio/model-answers/answer-2f355037.mp3",
+    "answer-32cf231d": "audio/model-answers/answer-32cf231d.mp3",
+    "answer-330c08dc": "audio/model-answers/answer-330c08dc.mp3",
+    "answer-332d7dc3": "audio/model-answers/answer-332d7dc3.mp3",
+    "answer-3bce48e3": "audio/model-answers/answer-3bce48e3.mp3",
+    "answer-3cf86d40": "audio/model-answers/answer-3cf86d40.mp3",
+    "answer-3df675eb": "audio/model-answers/answer-3df675eb.mp3",
+    "answer-3e6ead28": "audio/model-answers/answer-3e6ead28.mp3",
+    "answer-3f73b05f": "audio/model-answers/answer-3f73b05f.mp3",
+    "answer-402c756b": "audio/model-answers/answer-402c756b.mp3",
+    "answer-40c8238e": "audio/model-answers/answer-40c8238e.mp3",
+    "answer-44631943": "audio/model-answers/answer-44631943.mp3",
+    "answer-455645d4": "audio/model-answers/answer-455645d4.mp3",
+    "answer-46172efc": "audio/model-answers/answer-46172efc.mp3",
+    "answer-49c4a082": "audio/model-answers/answer-49c4a082.mp3",
+    "answer-4dce55b3": "audio/model-answers/answer-4dce55b3.mp3",
+    "answer-4e6049ff": "audio/model-answers/answer-4e6049ff.mp3",
+    "answer-4efa1bdd": "audio/model-answers/answer-4efa1bdd.mp3",
+    "answer-5225ea64": "audio/model-answers/answer-5225ea64.mp3",
+    "answer-5278c566": "audio/model-answers/answer-5278c566.mp3",
+    "answer-53bb2bcf": "audio/model-answers/answer-53bb2bcf.mp3",
+    "answer-586a9805": "audio/model-answers/answer-586a9805.mp3",
+    "answer-58e1f5a2": "audio/model-answers/answer-58e1f5a2.mp3",
+    "answer-5aa1476f": "audio/model-answers/answer-5aa1476f.mp3",
+    "answer-5de477b7": "audio/model-answers/answer-5de477b7.mp3",
+    "answer-5e454cb9": "audio/model-answers/answer-5e454cb9.mp3",
+    "answer-5e85f332": "audio/model-answers/answer-5e85f332.mp3",
+    "answer-5ee67563": "audio/model-answers/answer-5ee67563.mp3",
+    "answer-608cef5b": "audio/model-answers/answer-608cef5b.mp3",
+    "answer-60d19873": "audio/model-answers/answer-60d19873.mp3",
+    "answer-62e634af": "audio/model-answers/answer-62e634af.mp3",
+    "answer-634efa6e": "audio/model-answers/answer-634efa6e.mp3",
+    "answer-63cb0670": "audio/model-answers/answer-63cb0670.mp3",
+    "answer-646fa0ca": "audio/model-answers/answer-646fa0ca.mp3",
+    "answer-64a0d1a3": "audio/model-answers/answer-64a0d1a3.mp3",
+    "answer-686cf967": "audio/model-answers/answer-686cf967.mp3",
+    "answer-6899787a": "audio/model-answers/answer-6899787a.mp3",
+    "answer-68a3e905": "audio/model-answers/answer-68a3e905.mp3",
+    "answer-6958449c": "audio/model-answers/answer-6958449c.mp3",
+    "answer-6b8dac0e": "audio/model-answers/answer-6b8dac0e.mp3",
+    "answer-6bf57a29": "audio/model-answers/answer-6bf57a29.mp3",
+    "answer-6c4c0afc": "audio/model-answers/answer-6c4c0afc.mp3",
+    "answer-6cf150a5": "audio/model-answers/answer-6cf150a5.mp3",
+    "answer-6d0bea26": "audio/model-answers/answer-6d0bea26.mp3",
+    "answer-6d7f7f5d": "audio/model-answers/answer-6d7f7f5d.mp3",
+    "answer-6ebc5763": "audio/model-answers/answer-6ebc5763.mp3",
+    "answer-707aa186": "audio/model-answers/answer-707aa186.mp3",
+    "answer-711d561c": "audio/model-answers/answer-711d561c.mp3",
+    "answer-720ad2d0": "audio/model-answers/answer-720ad2d0.mp3",
+    "answer-7263566b": "audio/model-answers/answer-7263566b.mp3",
+    "answer-737e1f09": "audio/model-answers/answer-737e1f09.mp3",
+    "answer-770e91f1": "audio/model-answers/answer-770e91f1.mp3",
+    "answer-79fae4bc": "audio/model-answers/answer-79fae4bc.mp3",
+    "answer-7e3e1d02": "audio/model-answers/answer-7e3e1d02.mp3",
+    "answer-7ec1d446": "audio/model-answers/answer-7ec1d446.mp3",
+    "answer-7f89e735": "audio/model-answers/answer-7f89e735.mp3",
+    "answer-819d82c1": "audio/model-answers/answer-819d82c1.mp3",
+    "answer-8227084a": "audio/model-answers/answer-8227084a.mp3",
+    "answer-82708e59": "audio/model-answers/answer-82708e59.mp3",
+    "answer-82801171": "audio/model-answers/answer-82801171.mp3",
+    "answer-8337712d": "audio/model-answers/answer-8337712d.mp3",
+    "answer-872748ab": "audio/model-answers/answer-872748ab.mp3",
+    "answer-8b6174e1": "audio/model-answers/answer-8b6174e1.mp3",
+    "answer-8c35e09f": "audio/model-answers/answer-8c35e09f.mp3",
+    "answer-8d097e56": "audio/model-answers/answer-8d097e56.mp3",
+    "answer-8e0ef9ef": "audio/model-answers/answer-8e0ef9ef.mp3",
+    "answer-8e99f9c6": "audio/model-answers/answer-8e99f9c6.mp3",
+    "answer-8f8af361": "audio/model-answers/answer-8f8af361.mp3",
+    "answer-905d484f": "audio/model-answers/answer-905d484f.mp3",
+    "answer-9143a313": "audio/model-answers/answer-9143a313.mp3",
+    "answer-91ad5546": "audio/model-answers/answer-91ad5546.mp3",
+    "answer-92840da4": "audio/model-answers/answer-92840da4.mp3",
+    "answer-939572e9": "audio/model-answers/answer-939572e9.mp3",
+    "answer-9533d83a": "audio/model-answers/answer-9533d83a.mp3",
+    "answer-970e1b26": "audio/model-answers/answer-970e1b26.mp3",
+    "answer-975a09e7": "audio/model-answers/answer-975a09e7.mp3",
+    "answer-9976c314": "audio/model-answers/answer-9976c314.mp3",
+    "answer-99cea23d": "audio/model-answers/answer-99cea23d.mp3",
+    "answer-9a0788ab": "audio/model-answers/answer-9a0788ab.mp3",
+    "answer-9c9b4e52": "audio/model-answers/answer-9c9b4e52.mp3",
+    "answer-9e0356fd": "audio/model-answers/answer-9e0356fd.mp3",
+    "answer-a187c36d": "audio/model-answers/answer-a187c36d.mp3",
+    "answer-a2c29af9": "audio/model-answers/answer-a2c29af9.mp3",
+    "answer-a4dbc623": "audio/model-answers/answer-a4dbc623.mp3",
+    "answer-a53db755": "audio/model-answers/answer-a53db755.mp3",
+    "answer-a5cf900a": "audio/model-answers/answer-a5cf900a.mp3",
+    "answer-a78fc874": "audio/model-answers/answer-a78fc874.mp3",
+    "answer-a8ea1ee9": "audio/model-answers/answer-a8ea1ee9.mp3",
+    "answer-aa067337": "audio/model-answers/answer-aa067337.mp3",
+    "answer-aa94ae33": "audio/model-answers/answer-aa94ae33.mp3",
+    "answer-b13d524f": "audio/model-answers/answer-b13d524f.mp3",
+    "answer-b2e72453": "audio/model-answers/answer-b2e72453.mp3",
+    "answer-b53a2cf0": "audio/model-answers/answer-b53a2cf0.mp3",
+    "answer-b741e547": "audio/model-answers/answer-b741e547.mp3",
+    "answer-b74fc274": "audio/model-answers/answer-b74fc274.mp3",
+    "answer-b7a883bd": "audio/model-answers/answer-b7a883bd.mp3",
+    "answer-b7b40459": "audio/model-answers/answer-b7b40459.mp3",
+    "answer-b94f240c": "audio/model-answers/answer-b94f240c.mp3",
+    "answer-bb00a002": "audio/model-answers/answer-bb00a002.mp3",
+    "answer-bcfddf01": "audio/model-answers/answer-bcfddf01.mp3",
+    "answer-bd1d8ed7": "audio/model-answers/answer-bd1d8ed7.mp3",
+    "answer-bfe16a37": "audio/model-answers/answer-bfe16a37.mp3",
+    "answer-c3370232": "audio/model-answers/answer-c3370232.mp3",
+    "answer-c4555626": "audio/model-answers/answer-c4555626.mp3",
+    "answer-c45b38a3": "audio/model-answers/answer-c45b38a3.mp3",
+    "answer-c5cbd839": "audio/model-answers/answer-c5cbd839.mp3",
+    "answer-c6078131": "audio/model-answers/answer-c6078131.mp3",
+    "answer-c64d83a5": "audio/model-answers/answer-c64d83a5.mp3",
+    "answer-c7d94a7e": "audio/model-answers/answer-c7d94a7e.mp3",
+    "answer-ca470606": "audio/model-answers/answer-ca470606.mp3",
+    "answer-caa09bbb": "audio/model-answers/answer-caa09bbb.mp3",
+    "answer-cbe651c1": "audio/model-answers/answer-cbe651c1.mp3",
+    "answer-cd236d74": "audio/model-answers/answer-cd236d74.mp3",
+    "answer-d05f48fd": "audio/model-answers/answer-d05f48fd.mp3",
+    "answer-d1692b6a": "audio/model-answers/answer-d1692b6a.mp3",
+    "answer-d244ee21": "audio/model-answers/answer-d244ee21.mp3",
+    "answer-d4056b03": "audio/model-answers/answer-d4056b03.mp3",
+    "answer-d87d9837": "audio/model-answers/answer-d87d9837.mp3",
+    "answer-dcb97931": "audio/model-answers/answer-dcb97931.mp3",
+    "answer-de3a6bc0": "audio/model-answers/answer-de3a6bc0.mp3",
+    "answer-e1aa165c": "audio/model-answers/answer-e1aa165c.mp3",
+    "answer-e2a87aeb": "audio/model-answers/answer-e2a87aeb.mp3",
+    "answer-e42ad8c5": "audio/model-answers/answer-e42ad8c5.mp3",
+    "answer-e4bc9189": "audio/model-answers/answer-e4bc9189.mp3",
+    "answer-e72835b6": "audio/model-answers/answer-e72835b6.mp3",
+    "answer-e8bb9eff": "audio/model-answers/answer-e8bb9eff.mp3",
+    "answer-ea66ab45": "audio/model-answers/answer-ea66ab45.mp3",
+    "answer-eaae3495": "audio/model-answers/answer-eaae3495.mp3",
+    "answer-eabc0b0e": "audio/model-answers/answer-eabc0b0e.mp3",
+    "answer-eca08ea7": "audio/model-answers/answer-eca08ea7.mp3",
+    "answer-edf66e87": "audio/model-answers/answer-edf66e87.mp3",
+    "answer-efde525a": "audio/model-answers/answer-efde525a.mp3",
+    "answer-f05af759": "audio/model-answers/answer-f05af759.mp3",
+    "answer-f2e1e93d": "audio/model-answers/answer-f2e1e93d.mp3",
+    "answer-f509b1ec": "audio/model-answers/answer-f509b1ec.mp3",
+    "answer-f5b32d35": "audio/model-answers/answer-f5b32d35.mp3",
+    "answer-f5dd9080": "audio/model-answers/answer-f5dd9080.mp3",
+    "answer-f80a983f": "audio/model-answers/answer-f80a983f.mp3",
+    "answer-faf10fc0": "audio/model-answers/answer-faf10fc0.mp3",
+    "answer-fc951362": "audio/model-answers/answer-fc951362.mp3",
+    "answer-fd55eb36": "audio/model-answers/answer-fd55eb36.mp3",
+    "answer-fe4f5b11": "audio/model-answers/answer-fe4f5b11.mp3",
+    "answer-ff580421": "audio/model-answers/answer-ff580421.mp3"
+  },
+  "items": [
+    {
+      "key": "answer-0488a7d3",
+      "partName": "Part 3",
+      "question": "Why are green spaces important in cities?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-0488a7d3.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-050eafd1",
+      "partName": "Part 2",
+      "question": "**An interesting decision made with friends**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-050eafd1.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-055a5971",
+      "partName": "Part 2",
+      "question": "**Breaking something**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-055a5971.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-080c4674",
+      "partName": "Part 3",
+      "question": "What are the risks of social media?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-080c4674.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-093e63a5",
+      "partName": "Part 3",
+      "question": "Should old buildings be protected?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-093e63a5.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-09fdfe1a",
+      "partName": "Part 2",
+      "question": "**A goal you tried hard to achieve**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-09fdfe1a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-0be7b264",
+      "partName": "Part 3",
+      "question": "Why do people forget things?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-0be7b264.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-0cd1645a",
+      "partName": "Part 3",
+      "question": "Can talent be learned?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-0cd1645a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-0e51a77b",
+      "partName": "Part 3",
+      "question": "What helps people overcome difficulties?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-0e51a77b.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-104a0734",
+      "partName": "Part 2",
+      "question": "**A place with many trees you want to visit**",
+      "words": 135,
+      "audio": "audio/model-answers/answer-104a0734.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-11504805",
+      "partName": "Part 2",
+      "question": "**Receiving money as a gift**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-11504805.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-11b40c39",
+      "partName": "Part 3",
+      "question": "What makes a place attractive to tourists?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-11b40c39.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-12e1772b",
+      "partName": "Part 3",
+      "question": "How can people build good habits?",
+      "words": 171,
+      "audio": "audio/model-answers/answer-12e1772b.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-13b1ba46",
+      "partName": "Part 3",
+      "question": "What makes a story interesting?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-13b1ba46.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-160c3840",
+      "partName": "Part 3",
+      "question": "Is creativity important at work?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-160c3840.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-16f3d693",
+      "partName": "Part 3",
+      "question": "Why is it hard for some people to apologize?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-16f3d693.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-17ce2e32",
+      "partName": "Part 3",
+      "question": "What is the difference between knowledge and intelligence?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-17ce2e32.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-1adb9c9b",
+      "partName": "Part 2",
+      "question": "**An argument with a friend**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-1adb9c9b.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-1caa0a3e",
+      "partName": "Part 3",
+      "question": "Should people be judged by their clothes?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-1caa0a3e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-1ee8d4e0",
+      "partName": "Part 2",
+      "question": "**A product advertisement you saw**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-1ee8d4e0.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-24a561ca",
+      "partName": "Part 2",
+      "question": "Describe a goal you want to achieve.",
+      "words": 133,
+      "audio": "audio/model-answers/answer-24a561ca.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-26484043",
+      "partName": "Part 2",
+      "question": "**An old object at home**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-26484043.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-266e6d64",
+      "partName": "Part 3",
+      "question": "Why should people protect wild animals?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-266e6d64.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-2a3ba011",
+      "partName": "Part 2",
+      "question": "**Telling a friend the truth**",
+      "words": 135,
+      "audio": "audio/model-answers/answer-2a3ba011.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-2d272718",
+      "partName": "Part 3",
+      "question": "Why do some traditions disappear over time?",
+      "words": 172,
+      "audio": "audio/model-answers/answer-2d272718.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-2e11f8c9",
+      "partName": "Part 3",
+      "question": "Is waiting difficult for modern people?",
+      "words": 161,
+      "audio": "audio/model-answers/answer-2e11f8c9.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-2e5be663",
+      "partName": "Part 2",
+      "question": "**An interesting building during a trip**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-2e5be663.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-2f355037",
+      "partName": "Part 3",
+      "question": "Why do people watch live sports?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-2f355037.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-32cf231d",
+      "partName": "Part 3",
+      "question": "Is beauty only about appearance?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-32cf231d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-330c08dc",
+      "partName": "Part 3",
+      "question": "What problems do online shoppers face?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-330c08dc.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-332d7dc3",
+      "partName": "Part 3",
+      "question": "Do you think people travel more now than in the past?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-332d7dc3.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-3bce48e3",
+      "partName": "Part 3",
+      "question": "Who should teach children public manners?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-3bce48e3.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-3cf86d40",
+      "partName": "Part 3",
+      "question": "How dependent are people on electricity?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-3cf86d40.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-3df675eb",
+      "partName": "Part 2",
+      "question": "**A dinner you enjoyed**",
+      "words": 128,
+      "audio": "audio/model-answers/answer-3df675eb.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-3e6ead28",
+      "partName": "Part 2",
+      "question": "**An experience you shared with others**",
+      "words": 128,
+      "audio": "audio/model-answers/answer-3e6ead28.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-3f73b05f",
+      "partName": "Part 3",
+      "question": "Why do families eat together?",
+      "words": 160,
+      "audio": "audio/model-answers/answer-3f73b05f.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-402c756b",
+      "partName": "Part 2",
+      "question": "Describe an important decision you made.",
+      "words": 141,
+      "audio": "audio/model-answers/answer-402c756b.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-40c8238e",
+      "partName": "Part 2",
+      "question": "**A science subject you are interested in**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-40c8238e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-44631943",
+      "partName": "Part 2",
+      "question": "**A creative person you admire**",
+      "words": 139,
+      "audio": "audio/model-answers/answer-44631943.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-455645d4",
+      "partName": "Part 3",
+      "question": "Why do first experiences matter?",
+      "words": 159,
+      "audio": "audio/model-answers/answer-455645d4.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-46172efc",
+      "partName": "Part 2",
+      "question": "**A water sport**",
+      "words": 134,
+      "audio": "audio/model-answers/answer-46172efc.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-49c4a082",
+      "partName": "Part 2",
+      "question": "**A well-dressed friend**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-49c4a082.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-4dce55b3",
+      "partName": "Part 2",
+      "question": "**A person who wears unusual clothes**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-4dce55b3.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-4e6049ff",
+      "partName": "Part 2",
+      "question": "**A film that made you laugh**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-4e6049ff.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-4efa1bdd",
+      "partName": "Part 3",
+      "question": "Why do people enjoy gardening?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-4efa1bdd.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5225ea64",
+      "partName": "Part 2",
+      "question": "**A childhood toy**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-5225ea64.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5278c566",
+      "partName": "Part 2",
+      "question": "**A friend who is good at music or singing**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-5278c566.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-53bb2bcf",
+      "partName": "Part 3",
+      "question": "Why do first impressions sometimes change?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-53bb2bcf.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-586a9805",
+      "partName": "Part 2",
+      "question": "**A shop you often visit**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-586a9805.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-58e1f5a2",
+      "partName": "Part 2",
+      "question": "**A smart person you know**",
+      "words": 137,
+      "audio": "audio/model-answers/answer-58e1f5a2.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5aa1476f",
+      "partName": "Part 3",
+      "question": "Is online health information reliable?",
+      "words": 170,
+      "audio": "audio/model-answers/answer-5aa1476f.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5de477b7",
+      "partName": "Part 2",
+      "question": "**A city you have visited and want to revisit**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-5de477b7.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5e454cb9",
+      "partName": "Part 3",
+      "question": "Should children learn science early?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-5e454cb9.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5e85f332",
+      "partName": "Part 3",
+      "question": "Should children be punished for accidents?",
+      "words": 159,
+      "audio": "audio/model-answers/answer-5e85f332.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-5ee67563",
+      "partName": "Part 2",
+      "question": "Describe a time when you helped someone.",
+      "words": 134,
+      "audio": "audio/model-answers/answer-5ee67563.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-608cef5b",
+      "partName": "Part 2",
+      "question": "**Good service while shopping**",
+      "words": 127,
+      "audio": "audio/model-answers/answer-608cef5b.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-60d19873",
+      "partName": "Part 2",
+      "question": "**Deciding to wait for something**",
+      "words": 128,
+      "audio": "audio/model-answers/answer-60d19873.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-62e634af",
+      "partName": "Part 2",
+      "question": "**A problem while shopping online or in a store**",
+      "words": 150,
+      "audio": "audio/model-answers/answer-62e634af.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-634efa6e",
+      "partName": "Part 3",
+      "question": "Why is group planning sometimes difficult?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-634efa6e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-63cb0670",
+      "partName": "Part 3",
+      "question": "What makes customer service good?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-63cb0670.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-646fa0ca",
+      "partName": "Part 3",
+      "question": "How can governments encourage people to live healthier lives?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-646fa0ca.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-64a0d1a3",
+      "partName": "Part 2",
+      "question": "**Your first day at school**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-64a0d1a3.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-686cf967",
+      "partName": "Part 2",
+      "question": "**An exciting activity you tried for the first time**",
+      "words": 134,
+      "audio": "audio/model-answers/answer-686cf967.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6899787a",
+      "partName": "Part 3",
+      "question": "What are the disadvantages of long-distance travel?",
+      "words": 159,
+      "audio": "audio/model-answers/answer-6899787a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-68a3e905",
+      "partName": "Part 2",
+      "question": "**Giving a speech**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-68a3e905.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6958449c",
+      "partName": "Part 2",
+      "question": "**An important good friend**",
+      "words": 139,
+      "audio": "audio/model-answers/answer-6958449c.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6b8dac0e",
+      "partName": "Part 3",
+      "question": "Why do people enjoy music?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-6b8dac0e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6bf57a29",
+      "partName": "Part 2",
+      "question": "**A trip you want to take again**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-6bf57a29.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6c4c0afc",
+      "partName": "Part 3",
+      "question": "Why do people enjoy travelling?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-6c4c0afc.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6cf150a5",
+      "partName": "Part 3",
+      "question": "What kinds of jobs may become more important in the future?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-6cf150a5.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-6d0bea26",
+      "partName": "Part 2",
+      "question": "**A website you often visit**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-6d0bea26.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6d7f7f5d",
+      "partName": "Part 2",
+      "question": "**A photo you are proud of**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-6d7f7f5d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-6ebc5763",
+      "partName": "Part 2",
+      "question": "**A skill you can teach others**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-6ebc5763.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-707aa186",
+      "partName": "Part 3",
+      "question": "Why are public speaking skills useful?",
+      "words": 159,
+      "audio": "audio/model-answers/answer-707aa186.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-711d561c",
+      "partName": "Part 3",
+      "question": "Why are some public places noisy?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-711d561c.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-720ad2d0",
+      "partName": "Part 2",
+      "question": "**An impressive English lesson**",
+      "words": 128,
+      "audio": "audio/model-answers/answer-720ad2d0.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-7263566b",
+      "partName": "Part 2",
+      "question": "**A friend you disliked at first but later liked**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-7263566b.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-737e1f09",
+      "partName": "Part 3",
+      "question": "Why do people revisit places?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-737e1f09.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-770e91f1",
+      "partName": "Part 3",
+      "question": "What makes a friendship last?",
+      "words": 169,
+      "audio": "audio/model-answers/answer-770e91f1.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-79fae4bc",
+      "partName": "Part 3",
+      "question": "What qualities make a good teammate?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-79fae4bc.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-7e3e1d02",
+      "partName": "Part 2",
+      "question": "**A health article you read online or in a magazine**",
+      "words": 135,
+      "audio": "audio/model-answers/answer-7e3e1d02.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-7ec1d446",
+      "partName": "Part 3",
+      "question": "Is it better to travel with a plan?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-7ec1d446.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-7f89e735",
+      "partName": "Part 3",
+      "question": "Why should people try new activities?",
+      "words": 160,
+      "audio": "audio/model-answers/answer-7f89e735.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-819d82c1",
+      "partName": "Part 2",
+      "question": "**A useful book**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-819d82c1.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8227084a",
+      "partName": "Part 2",
+      "question": "**Using a foreign language for the first time**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-8227084a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-82708e59",
+      "partName": "Part 3",
+      "question": "Why do people care about appearance?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-82708e59.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-82801171",
+      "partName": "Part 2",
+      "question": "**A place where people do sports**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-82801171.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8337712d",
+      "partName": "Part 3",
+      "question": "What are the advantages of family businesses?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-8337712d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-872748ab",
+      "partName": "Part 3",
+      "question": "Are childhood friendships different from adult friendships?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-872748ab.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8b6174e1",
+      "partName": "Part 3",
+      "question": "Why do people keep old things?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-8b6174e1.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8c35e09f",
+      "partName": "Part 2",
+      "question": "Describe a place you visited and would like to visit again.",
+      "words": 127,
+      "audio": "audio/model-answers/answer-8c35e09f.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-8d097e56",
+      "partName": "Part 2",
+      "question": "**An interesting social media experience**",
+      "words": 127,
+      "audio": "audio/model-answers/answer-8d097e56.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8e0ef9ef",
+      "partName": "Part 3",
+      "question": "Are printed books still important?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-8e0ef9ef.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8e99f9c6",
+      "partName": "Part 3",
+      "question": "How can plastic waste be reduced?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-8e99f9c6.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-8f8af361",
+      "partName": "Part 3",
+      "question": "How has the internet changed learning?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-8f8af361.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-905d484f",
+      "partName": "Part 3",
+      "question": "Is persuasion always positive?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-905d484f.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-9143a313",
+      "partName": "Part 2",
+      "question": "**A person who encouraged you to do something interesting**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-9143a313.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-91ad5546",
+      "partName": "Part 3",
+      "question": "Why do people rewatch films?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-91ad5546.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-92840da4",
+      "partName": "Part 2",
+      "question": "**An interesting story or novel**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-92840da4.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-939572e9",
+      "partName": "Part 3",
+      "question": "Why are some people popular?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-939572e9.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-9533d83a",
+      "partName": "Part 3",
+      "question": "Why do some people give up their goals?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-9533d83a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-970e1b26",
+      "partName": "Part 3",
+      "question": "Why do shared experiences strengthen relationships?",
+      "words": 161,
+      "audio": "audio/model-answers/answer-970e1b26.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-975a09e7",
+      "partName": "Part 2",
+      "question": "**Forgetting an appointment**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-975a09e7.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-9976c314",
+      "partName": "Part 3",
+      "question": "Why do people resist change?",
+      "words": 161,
+      "audio": "audio/model-answers/answer-9976c314.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-99cea23d",
+      "partName": "Part 2",
+      "question": "**A person who likes growing plants**",
+      "words": 140,
+      "audio": "audio/model-answers/answer-99cea23d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-9a0788ab",
+      "partName": "Part 3",
+      "question": "Why do some people prefer living in cities rather than small towns?",
+      "words": 175,
+      "audio": "audio/model-answers/answer-9a0788ab.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-9c9b4e52",
+      "partName": "Part 3",
+      "question": "What are the advantages of learning practical skills at school?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-9c9b4e52.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-9e0356fd",
+      "partName": "Part 2",
+      "question": "**Waiting for something special**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-9e0356fd.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a187c36d",
+      "partName": "Part 3",
+      "question": "What skills should schools teach?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-a187c36d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a2c29af9",
+      "partName": "Part 2",
+      "question": "**An activity planned with several people**",
+      "words": 126,
+      "audio": "audio/model-answers/answer-a2c29af9.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a4dbc623",
+      "partName": "Part 3",
+      "question": "Are advertisements always honest?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-a4dbc623.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a53db755",
+      "partName": "Part 2",
+      "question": "**Someone gave you something you really wanted**",
+      "words": 131,
+      "audio": "audio/model-answers/answer-a53db755.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a5cf900a",
+      "partName": "Part 3",
+      "question": "What makes a conversation meaningful?",
+      "words": 160,
+      "audio": "audio/model-answers/answer-a5cf900a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a78fc874",
+      "partName": "Part 2",
+      "question": "**A positive change in your life**",
+      "words": 125,
+      "audio": "audio/model-answers/answer-a78fc874.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-a8ea1ee9",
+      "partName": "Part 3",
+      "question": "How should people handle disagreements?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-a8ea1ee9.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-aa067337",
+      "partName": "Part 3",
+      "question": "How has technology changed the way people learn?",
+      "words": 171,
+      "audio": "audio/model-answers/answer-aa067337.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-aa94ae33",
+      "partName": "Part 2",
+      "question": "**A wild animal you want to know more about**",
+      "words": 135,
+      "audio": "audio/model-answers/answer-aa94ae33.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b13d524f",
+      "partName": "Part 2",
+      "question": "**A popular person**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-b13d524f.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b2e72453",
+      "partName": "Part 2",
+      "question": "**A traditional story**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-b2e72453.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b53a2cf0",
+      "partName": "Part 3",
+      "question": "Is honesty always the best policy?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-b53a2cf0.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b741e547",
+      "partName": "Part 2",
+      "question": "Describe an object you use every day.",
+      "words": 135,
+      "audio": "audio/model-answers/answer-b741e547.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-b74fc274",
+      "partName": "Part 2",
+      "question": "Describe a person who has influenced you.",
+      "words": 136,
+      "audio": "audio/model-answers/answer-b74fc274.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-b7a883bd",
+      "partName": "Part 2",
+      "question": "**A live sports event you watched**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-b7a883bd.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b7b40459",
+      "partName": "Part 3",
+      "question": "Should parents encourage children to try new activities?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-b7b40459.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-b94f240c",
+      "partName": "Part 3",
+      "question": "What makes a language lesson effective?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-b94f240c.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-bb00a002",
+      "partName": "Part 2",
+      "question": "**A long journey**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-bb00a002.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-bcfddf01",
+      "partName": "Part 3",
+      "question": "What is the best way to learn a language?",
+      "words": 162,
+      "audio": "audio/model-answers/answer-bcfddf01.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-bd1d8ed7",
+      "partName": "Part 2",
+      "question": "**Looking up at the sky**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-bd1d8ed7.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-bfe16a37",
+      "partName": "Part 2",
+      "question": "Describe a useful skill you learned.",
+      "words": 142,
+      "audio": "audio/model-answers/answer-bfe16a37.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-c3370232",
+      "partName": "Part 2",
+      "question": "**A friend with good habits**",
+      "words": 140,
+      "audio": "audio/model-answers/answer-c3370232.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c4555626",
+      "partName": "Part 2",
+      "question": "**Someone apologized to you**",
+      "words": 127,
+      "audio": "audio/model-answers/answer-c4555626.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c45b38a3",
+      "partName": "Part 2",
+      "question": "**Completing something difficult**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-c45b38a3.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c5cbd839",
+      "partName": "Part 3",
+      "question": "Why do people still shop in small stores?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-c5cbd839.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c6078131",
+      "partName": "Part 2",
+      "question": "**Someone you would like to work or study with**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-c6078131.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c64d83a5",
+      "partName": "Part 3",
+      "question": "Why is cultural exchange useful?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-c64d83a5.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-c7d94a7e",
+      "partName": "Part 2",
+      "question": "**A decision made with someone else's help**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-c7d94a7e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-ca470606",
+      "partName": "Part 2",
+      "question": "**A person who runs a family business**",
+      "words": 138,
+      "audio": "audio/model-answers/answer-ca470606.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-caa09bbb",
+      "partName": "Part 2",
+      "question": "**A person from a different culture**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-caa09bbb.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-cbe651c1",
+      "partName": "Part 2",
+      "question": "**Children behaving badly in public**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-cbe651c1.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-cd236d74",
+      "partName": "Part 2",
+      "question": "**A talent you want to improve**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-cd236d74.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-d05f48fd",
+      "partName": "Part 3",
+      "question": "How can cities encourage exercise?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-d05f48fd.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-d1692b6a",
+      "partName": "Part 3",
+      "question": "What makes a gift meaningful?",
+      "words": 160,
+      "audio": "audio/model-answers/answer-d1692b6a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-d244ee21",
+      "partName": "Part 3",
+      "question": "Why do some people enjoy risky sports?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-d244ee21.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-d4056b03",
+      "partName": "Part 2",
+      "question": "**A sudden power cut**",
+      "words": 128,
+      "audio": "audio/model-answers/answer-d4056b03.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-d87d9837",
+      "partName": "Part 2",
+      "question": "**A second-hand shopping website**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-d87d9837.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-dcb97931",
+      "partName": "Part 3",
+      "question": "Is school the only place to learn?",
+      "words": 163,
+      "audio": "audio/model-answers/answer-dcb97931.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-de3a6bc0",
+      "partName": "Part 2",
+      "question": "**An impressive conversation**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-de3a6bc0.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-e1aa165c",
+      "partName": "Part 3",
+      "question": "Should children be encouraged to make decisions for themselves?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-e1aa165c.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-e2a87aeb",
+      "partName": "Part 3",
+      "question": "Why do people like taking photos?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-e2a87aeb.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-e42ad8c5",
+      "partName": "Part 3",
+      "question": "Why is second-hand shopping popular?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-e42ad8c5.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-e4bc9189",
+      "partName": "Part 3",
+      "question": "Are people less patient today?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-e4bc9189.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-e72835b6",
+      "partName": "Part 2",
+      "question": "**A noisy place you have been to**",
+      "words": 132,
+      "audio": "audio/model-answers/answer-e72835b6.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-e8bb9eff",
+      "partName": "Part 2",
+      "question": "**A favorite childhood friend**",
+      "words": 134,
+      "audio": "audio/model-answers/answer-e8bb9eff.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-ea66ab45",
+      "partName": "Part 3",
+      "question": "Is money a good gift?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-ea66ab45.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-eaae3495",
+      "partName": "Part 2",
+      "question": "**Getting lost**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-eaae3495.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-eabc0b0e",
+      "partName": "Part 3",
+      "question": "What toys are good for children?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-eabc0b0e.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-eca08ea7",
+      "partName": "Part 2",
+      "question": "Describe a book, film, or program you enjoyed.",
+      "words": 134,
+      "audio": "audio/model-answers/answer-eca08ea7.mp3",
+      "source": "embedded-html"
+    },
+    {
+      "key": "answer-edf66e87",
+      "partName": "Part 2",
+      "question": "**A person who persuaded you to do something**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-edf66e87.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-efde525a",
+      "partName": "Part 2",
+      "question": "**A place you would recommend to travelers**",
+      "words": 130,
+      "audio": "audio/model-answers/answer-efde525a.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f05af759",
+      "partName": "Part 2",
+      "question": "**A film you recently watched and want to watch again**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-f05af759.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f2e1e93d",
+      "partName": "Part 2",
+      "question": "**A beautiful object**",
+      "words": 136,
+      "audio": "audio/model-answers/answer-f2e1e93d.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f509b1ec",
+      "partName": "Part 3",
+      "question": "Why are traditional stories important?",
+      "words": 168,
+      "audio": "audio/model-answers/answer-f509b1ec.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f5b32d35",
+      "partName": "Part 3",
+      "question": "Why are people interested in stars?",
+      "words": 164,
+      "audio": "audio/model-answers/answer-f5b32d35.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f5dd9080",
+      "partName": "Part 3",
+      "question": "Why do friends argue?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-f5dd9080.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-f80a983f",
+      "partName": "Part 2",
+      "question": "**A place with a lot of plastic waste**",
+      "words": 129,
+      "audio": "audio/model-answers/answer-f80a983f.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-faf10fc0",
+      "partName": "Part 3",
+      "question": "Why do people enjoy comedy?",
+      "words": 165,
+      "audio": "audio/model-answers/answer-faf10fc0.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-fc951362",
+      "partName": "Part 2",
+      "question": "**A disagreement with someone**",
+      "words": 133,
+      "audio": "audio/model-answers/answer-fc951362.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-fd55eb36",
+      "partName": "Part 2",
+      "question": "**Something important you learned outside school**",
+      "words": 127,
+      "audio": "audio/model-answers/answer-fd55eb36.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-fe4f5b11",
+      "partName": "Part 3",
+      "question": "Should people make decisions alone?",
+      "words": 167,
+      "audio": "audio/model-answers/answer-fe4f5b11.mp3",
+      "source": "markdown-bank"
+    },
+    {
+      "key": "answer-ff580421",
+      "partName": "Part 3",
+      "question": "Why do people get lost less often now?",
+      "words": 166,
+      "audio": "audio/model-answers/answer-ff580421.mp3",
+      "source": "markdown-bank"
+    }
   ]
 }
   </script>
@@ -541,21 +2299,6 @@
     </section>
 
     <section class="card">
-      <h2>Practice Timer</h2>
-      <div class="timer-row">
-        <div>
-          <p class="muted">Use the 2-minute timer for Part 2. Use the 5-minute timer for Part 1 or Part 3 drills.</p>
-          <div class="timer" id="timer">02:00</div>
-        </div>
-        <div class="button-row">
-          <button type="button" onclick="startTimer(120)">2-Minute Speaking</button>
-          <button type="button" onclick="startTimer(300)">5-Minute Practice</button>
-          <button type="button" class="secondary" onclick="resetTimer()">Reset</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
       <h2>IELTS Speaking Prompt</h2>
       <div class="part-tabs" id="partTabs"></div>
       <div class="exam-layout">
@@ -563,12 +2306,19 @@
           <div class="prompt-box">
             <span class="prompt-label" id="partMeta"></span>
             <p class="prompt-text" id="promptText"></p>
-            <div class="cue-card" id="cueCard" hidden>
-              <h3>You should say:</h3>
-              <ul id="cuePoints"></ul>
-            </div>
             <div class="answer-box" id="answerBox" hidden>
-              <h3>Model answer</h3>
+              <div class="cue-card" id="cueCard" hidden>
+                <h3>Cue card</h3>
+                <p id="cueCardQuestion"></p>
+                <span class="prompt-label">You should say:</span>
+                <ul id="cuePoints"></ul>
+              </div>
+              <div class="answer-heading">
+                <h3>Model answer</h3>
+                <button type="button" class="secondary icon-button" id="readModelAnswerButton" aria-label="Read model answer" title="Read model answer">
+                  <span class="play-icon" aria-hidden="true"></span>
+                </button>
+              </div>
               <p id="modelAnswer"></p>
             </div>
           </div>
@@ -640,6 +2390,7 @@
     const practiceContent = JSON.parse(document.getElementById('practice-content').textContent);
     const CURRENT_GITHUB_REPOSITORY = { owner: 'cghuisunshine', repo: 'oral_english', branch: 'main' };
     const SAVED_QUESTION_BANK_STORAGE_KEY = 'dailySpeakingPractice.latestQuestionBank';
+    const MODEL_ANSWER_AUDIO_MANIFEST_URL = 'audio/model_answer_audio_manifest.json';
     const state = {
       partIndex: 0,
       promptIndex: 0,
@@ -648,6 +2399,8 @@
     const promptRecordings = new Map();
     let recordingSession = null;
     let playbackAudio = null;
+    let lastAutoFilledNotesText = '';
+    let modelAnswerAudioManifest = { entries: {} };
 
     const progressText = document.getElementById('progressText');
     const progressFill = document.getElementById('progressFill');
@@ -687,6 +2440,148 @@
 
     function getPromptAnswer(prompt) {
       return typeof prompt === 'string' ? '' : prompt.answer || '';
+    }
+
+    function getModelAnswerAudioKey(partName, question, answer) {
+      const source = `${partName}\n${question}\n${answer}`;
+      let hash = 2166136261;
+      for (let index = 0; index < source.length; index++) {
+        hash ^= source.charCodeAt(index);
+        hash = Math.imul(hash, 16777619);
+      }
+      return `answer-${(hash >>> 0).toString(16).padStart(8, '0')}`;
+    }
+
+    function getEmbeddedModelAnswerAudioManifest() {
+      const manifestElement = document.getElementById('model-answer-audio-manifest');
+      if (!manifestElement || !manifestElement.textContent.trim()) {
+        return null;
+      }
+      try {
+        const manifest = JSON.parse(manifestElement.textContent);
+        return manifest && manifest.entries ? manifest : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    async function loadModelAnswerAudioManifest() {
+      const embeddedManifest = getEmbeddedModelAnswerAudioManifest();
+      if (embeddedManifest) {
+        modelAnswerAudioManifest = embeddedManifest;
+      }
+      if (window.location.protocol === 'file:') {
+        return;
+      }
+      try {
+        const response = await fetch(MODEL_ANSWER_AUDIO_MANIFEST_URL, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const manifest = await response.json();
+        modelAnswerAudioManifest = manifest && manifest.entries ? manifest : { entries: {} };
+      } catch (error) {
+        modelAnswerAudioManifest = embeddedManifest || { entries: {} };
+      }
+    }
+
+    function getDefaultCuePoints(part) {
+      if (part.name === 'Part 2') {
+        return ['what it was', 'when and where it happened', 'who was involved', 'why it was important to you'];
+      }
+      if (part.name === 'Part 3') {
+        return ['your opinion', 'one reason', 'an example or comparison'];
+      }
+      return ['your direct answer', 'one reason or detail', 'a short example'];
+    }
+
+    function getPromptCuePoints(prompt, part) {
+      if (prompt && typeof prompt === 'object' && Array.isArray(prompt.cuePoints) && prompt.cuePoints.length > 0) {
+        return prompt.cuePoints;
+      }
+      if (Array.isArray(part.cuePoints) && part.cuePoints.length > 0) {
+        return part.cuePoints;
+      }
+      return getDefaultCuePoints(part);
+    }
+
+    function getCueCardNotesText(question, cuePoints) {
+      return ['Cue card:', question, '', 'You should say:']
+        .concat(cuePoints.map((point) => `- ${point}`))
+        .join('\n');
+    }
+
+    function getModelAnswerKeywordNotesText(answer) {
+      const keywordPhrases = [];
+      const addKeywordPhrase = (phrase) => {
+        const normalized = String(phrase || '')
+          .replace(/^[\s,.;:!?-]+|[\s,.;:!?-]+$/g, '')
+          .replace(/^(?:i|we|they|he|she)\s+/i, '')
+          .replace(/^(?:it|this|that)\s+is\s+/i, '')
+          .replace(/^(?:it|this|that)\s+/i, '')
+          .replace(/^(?:the|a|an)\s+/i, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+        if (normalized && !keywordPhrases.includes(normalized)) {
+          keywordPhrases.push(normalized);
+        }
+      };
+
+      String(answer || '')
+        .replace(/[.?!]+/g, ',')
+        .split(/\b(?:because|but|so|and)\b|[,;:]+/i)
+        .map((fragment) => fragment.trim())
+        .filter(Boolean)
+        .forEach((fragment) => {
+          const locationMatch = fragment.match(/^(?:I|We)\s+(.+?)\s+(?:in|at|on)\s+(.+)$/i);
+          if (locationMatch) {
+            addKeywordPhrase(locationMatch[1]);
+            addKeywordPhrase(locationMatch[2]);
+            return;
+          }
+          addKeywordPhrase(fragment);
+        });
+
+      return ['Model answer keywords:']
+        .concat(keywordPhrases.slice(0, 5).map((phrase) => `- ${phrase}`))
+        .join('\n');
+    }
+
+    function getPromptKeywordNotesText(prompt) {
+      if (prompt && typeof prompt === 'object' && Array.isArray(prompt.keywords) && prompt.keywords.length > 0) {
+        return ['Model answer keywords:']
+          .concat(prompt.keywords.map((phrase) => `- ${phrase}`))
+          .join('\n');
+      }
+      return getModelAnswerKeywordNotesText(getPromptAnswer(prompt));
+    }
+
+    function fillCueCardNotesTextarea() {
+      const notes = document.getElementById('notes');
+      const part = practiceContent.parts[state.partIndex];
+      const prompt = part.prompts[state.promptIndex];
+      const cueCardNotes = getCueCardNotesText(getPromptQuestion(prompt), getPromptCuePoints(prompt, part));
+      if (!notes.value.trim() || notes.value === lastAutoFilledNotesText) {
+        notes.value = cueCardNotes;
+        lastAutoFilledNotesText = cueCardNotes;
+      }
+    }
+
+    function fillModelAnswerKeywordNotesTextarea() {
+      const notes = document.getElementById('notes');
+      const part = practiceContent.parts[state.partIndex];
+      const prompt = part.prompts[state.promptIndex];
+      const modelAnswerKeywordNotes = getPromptKeywordNotesText(prompt);
+      if (!notes.value.trim() || notes.value === lastAutoFilledNotesText) {
+        notes.value = modelAnswerKeywordNotes;
+        lastAutoFilledNotesText = modelAnswerKeywordNotes;
+      }
+    }
+
+    function resetNotesTextarea() {
+      const notes = document.getElementById('notes');
+      notes.value = '';
+      lastAutoFilledNotesText = '';
     }
 
     function getQuestionBankSourceName(sourceLabel) {
@@ -732,12 +2627,12 @@
 
       const cueCard = document.getElementById('cueCard');
       const cuePoints = document.getElementById('cuePoints');
-      if (part.cuePoints) {
-        cuePoints.innerHTML = part.cuePoints.map((point) => `<li>${point}</li>`).join('');
-        cueCard.hidden = false;
+      const promptCuePoints = getPromptCuePoints(prompt, part);
+      document.getElementById('cueCardQuestion').textContent = getPromptQuestion(prompt);
+      if (promptCuePoints.length > 0) {
+        cuePoints.innerHTML = promptCuePoints.map((point) => `<li>${point}</li>`).join('');
       } else {
         cuePoints.innerHTML = '';
-        cueCard.hidden = true;
       }
 
       const answerToggle = document.getElementById('answerToggle');
@@ -745,6 +2640,7 @@
       document.getElementById('modelAnswer').textContent = answer;
       answerToggle.hidden = !answer;
       answerBox.hidden = !answer || !state.answerVisible;
+      cueCard.hidden = !answer || !state.answerVisible || promptCuePoints.length === 0;
       answerToggle.textContent = state.answerVisible ? 'Hide Model Answer' : 'Show Model Answer';
       renderRecordingControls();
     }
@@ -768,6 +2664,7 @@
       state.partIndex = index;
       state.promptIndex = 0;
       state.answerVisible = false;
+      resetNotesTextarea();
       renderPartTabs();
       renderPrompt();
     }
@@ -776,6 +2673,7 @@
       stopActiveRecording();
       state.promptIndex = index;
       state.answerVisible = false;
+      resetNotesTextarea();
       renderPrompt();
     }
 
@@ -792,6 +2690,7 @@
         state.promptIndex = nextIndex;
       }
       state.answerVisible = false;
+      resetNotesTextarea();
       renderPrompt();
     }
 
@@ -805,8 +2704,40 @@
       return `${part.name}:${getPromptQuestion(prompt)}`;
     }
 
+    function getCurrentPromptModelAnswer() {
+      const part = practiceContent.parts[state.partIndex];
+      const prompt = part.prompts[state.promptIndex];
+      return getPromptAnswer(prompt);
+    }
+
+    function getCurrentModelAnswerAudioKey() {
+      const part = practiceContent.parts[state.partIndex];
+      const prompt = part.prompts[state.promptIndex];
+      return getModelAnswerAudioKey(part.name, getPromptQuestion(prompt), getPromptAnswer(prompt));
+    }
+
     function isRecordingPrompt() {
       return Boolean(recordingSession && recordingSession.mediaRecorder.state === 'recording');
+    }
+
+    function formatRecordingElapsedTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+    }
+
+    function getCurrentRecordingTargetSeconds() {
+      const part = practiceContent.parts[state.partIndex];
+      return part.name === 'Part 2' ? 120 : 300;
+    }
+
+    function updateRecordingElapsedTime() {
+      if (!recordingSession) {
+        return;
+      }
+      const elapsedSeconds = Math.floor((Date.now() - recordingSession.startedAt) / 1000);
+      const remainingSeconds = Math.max(recordingSession.targetSeconds - elapsedSeconds, 0);
+      document.getElementById('recordingStatus').textContent = `Recording ${formatRecordingElapsedTime(elapsedSeconds)} · ${formatRecordingElapsedTime(remainingSeconds)} left`;
     }
 
     function renderRecordingControls() {
@@ -821,10 +2752,19 @@
       recordButton.setAttribute('aria-label', isRecording ? 'Stop recording' : 'Record answer');
       recordButton.title = isRecording ? 'Stop recording' : 'Record answer';
       playButton.disabled = isRecording || !promptRecordings.has(getCurrentPromptRecordingKey());
+      playButton.setAttribute('aria-label', 'Play recording');
+      playButton.title = 'Play recording';
     }
 
     function stopRecordingStream(stream) {
       stream.getTracks().forEach((track) => track.stop());
+    }
+
+    function stopRecordingElapsedTimer() {
+      if (recordingSession && recordingSession.timer) {
+        clearInterval(recordingSession.timer);
+        recordingSession.timer = null;
+      }
     }
 
     function stopActiveRecording() {
@@ -832,8 +2772,10 @@
         return;
       }
       if (recordingSession.mediaRecorder.state === 'recording') {
+        stopRecordingElapsedTimer();
         recordingSession.mediaRecorder.stop();
       } else {
+        stopRecordingElapsedTimer();
         stopRecordingStream(recordingSession.stream);
         recordingSession = null;
         renderRecordingControls();
@@ -856,7 +2798,7 @@
         const mediaRecorder = new MediaRecorder(stream);
         const chunks = [];
         const recordingKey = getCurrentPromptRecordingKey();
-        recordingSession = { mediaRecorder, stream, chunks, recordingKey };
+        recordingSession = { mediaRecorder, stream, chunks, recordingKey, startedAt: Date.now(), targetSeconds: getCurrentRecordingTargetSeconds(), timer: null };
 
         mediaRecorder.addEventListener('dataavailable', (event) => {
           if (event.data && event.data.size > 0) {
@@ -885,9 +2827,11 @@
         });
 
         mediaRecorder.start();
-        document.getElementById('recordingStatus').textContent = 'Recording...';
+        updateRecordingElapsedTime();
+        recordingSession.timer = setInterval(updateRecordingElapsedTime, 1000);
         renderRecordingControls();
       } catch (error) {
+        stopRecordingElapsedTimer();
         document.getElementById('recordingStatus').textContent = 'Microphone access was not available.';
       }
     }
@@ -914,9 +2858,66 @@
       }
     }
 
+    async function playGeneratedModelAnswerAudio(modelAnswer) {
+      const audioPath = modelAnswerAudioManifest.entries[getCurrentModelAnswerAudioKey()];
+      if (!audioPath) {
+        return false;
+      }
+      if (playbackAudio) {
+        playbackAudio.pause();
+        playbackAudio.currentTime = 0;
+      }
+      playbackAudio = new Audio(audioPath);
+      playbackAudio.addEventListener('ended', () => {
+        document.getElementById('recordingStatus').textContent = 'Model answer reading finished.';
+      });
+      try {
+        document.getElementById('recordingStatus').textContent = 'Playing AI-generated model answer...';
+        await playbackAudio.play();
+        return true;
+      } catch (error) {
+        document.getElementById('recordingStatus').textContent = 'AI audio unavailable. Using browser voice...';
+        return false;
+      }
+    }
+
+    async function readModelAnswerAloud() {
+      const modelAnswer = getCurrentPromptModelAnswer();
+      if (!modelAnswer) {
+        document.getElementById('recordingStatus').textContent = 'No model answer to read.';
+        return;
+      }
+      if (await playGeneratedModelAnswerAudio(modelAnswer)) {
+        return;
+      }
+      if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+        document.getElementById('recordingStatus').textContent = 'Reading aloud is not supported in this browser.';
+        return;
+      }
+      if (playbackAudio) {
+        playbackAudio.pause();
+        playbackAudio.currentTime = 0;
+      }
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(modelAnswer);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      utterance.addEventListener('end', () => {
+        document.getElementById('recordingStatus').textContent = 'Model answer reading finished.';
+      });
+      utterance.addEventListener('error', () => {
+        document.getElementById('recordingStatus').textContent = 'Could not read the model answer.';
+      });
+      document.getElementById('recordingStatus').textContent = 'Reading model answer...';
+      speechSynthesis.speak(utterance);
+    }
+
     function toggleModelAnswer() {
       state.answerVisible = !state.answerVisible;
       renderPrompt();
+      if (state.answerVisible) {
+        fillModelAnswerKeywordNotesTextarea();
+      }
     }
 
     function parseQuestionBankMarkdown(markdown) {
@@ -947,17 +2948,35 @@
       let section = '';
       let currentTopic = '';
       let currentCue = '';
+      let lastPrompt = null;
       const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
       const clean = (value) => value.replace(/\*\*/g, '').trim();
+      const parseKeywords = (value) => clean(value)
+        .split(/\s*;\s*/)
+        .map((keyword) => keyword.trim())
+        .filter(Boolean);
+      const getImportedCuePoints = (part) => {
+        if (part.name === 'Part 2') {
+          return ['what it was', 'when and where it happened', 'who was involved', 'why it was important to you'];
+        }
+        if (part.name === 'Part 3') {
+          return ['your opinion', 'one reason', 'an example or comparison'];
+        }
+        return ['your direct answer', 'one reason or detail', 'a short example'];
+      };
       const addPrompt = (partIndex, question, answer, topic) => {
         const normalizedQuestion = clean(question);
         const normalizedAnswer = clean(answer);
         if (normalizedQuestion && normalizedAnswer) {
-          partMeta[partIndex].prompts.push({
+          const part = partMeta[partIndex];
+          const prompt = {
             question: normalizedQuestion,
             answer: normalizedAnswer,
-            topic: clean(topic || normalizedQuestion)
-          });
+            topic: clean(topic || normalizedQuestion),
+            cuePoints: getImportedCuePoints(part)
+          };
+          partMeta[partIndex].prompts.push(prompt);
+          lastPrompt = prompt;
           }
         };
       for (const rawLine of lines) {
@@ -977,6 +2996,13 @@
         if (topicMatch) {
           currentTopic = topicMatch[1];
           currentCue = '';
+          lastPrompt = null;
+          continue;
+          }
+        if (/^Keywords:/i.test(line)) {
+          if (lastPrompt) {
+            lastPrompt.keywords = parseKeywords(line.replace(/^Keywords:\s*/i, ''));
+            }
           continue;
           }
         if (section === 'part1') {
@@ -1261,35 +3287,6 @@
       progressFill.style.width = percent + '%';
     }
 
-    let countdown;
-    let remainingSeconds = 120;
-
-    function displayTime(seconds) {
-      const min = String(Math.floor(seconds / 60)).padStart(2, '0');
-      const sec = String(seconds % 60).padStart(2, '0');
-      document.getElementById('timer').textContent = min + ':' + sec;
-    }
-
-    function startTimer(seconds) {
-      clearInterval(countdown);
-      remainingSeconds = seconds;
-      displayTime(remainingSeconds);
-      countdown = setInterval(() => {
-        remainingSeconds--;
-        displayTime(remainingSeconds);
-        if (remainingSeconds <= 0) {
-          clearInterval(countdown);
-          alert('Time is up. Listen back and review one specific thing.');
-        }
-      }, 1000);
-    }
-
-    function resetTimer() {
-      clearInterval(countdown);
-      remainingSeconds = 120;
-      displayTime(remainingSeconds);
-    }
-
     document.getElementById('questionBankImport').addEventListener('change', handleQuestionBankImport);
     document.getElementById('questionBankUrl').addEventListener('input', scheduleQuestionBankUrlOptionsDiscovery);
     document.getElementById('questionBankUrl').addEventListener('change', discoverQuestionBankUrlOptions);
@@ -1297,7 +3294,9 @@
     document.getElementById('questionBankUrlImport').addEventListener('click', handleQuestionBankUrlImport);
     document.getElementById('recordPromptButton').addEventListener('click', togglePromptRecording);
     document.getElementById('playPromptRecordingButton').addEventListener('click', playPromptRecording);
+    document.getElementById('readModelAnswerButton').addEventListener('click', readModelAnswerAloud);
     renderExamContent();
+    loadModelAnswerAudioManifest();
     const savedQuestionBankLoaded = loadSavedQuestionBank();
     discoverCurrentGitHubMarkdownOptions({ preserveStatus: savedQuestionBankLoaded });
   </script>
