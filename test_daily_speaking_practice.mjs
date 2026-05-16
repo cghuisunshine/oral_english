@@ -103,6 +103,58 @@ assert.doesNotMatch(
   'Part 2 Markdown answers should have concrete endings instead of generic lesson advice'
 );
 
+function extractQuestionBankPracticeAnswers(lines) {
+  const answers = [];
+  let nextAnswerType = null;
+  for (const line of lines) {
+    if (/^\s*Cue card:/i.test(line)) {
+      nextAnswerType = 'Part 2';
+    }
+    if (/^\s*Part 3:/i.test(line)) {
+      nextAnswerType = 'Part 3';
+    }
+    const part2Answer = nextAnswerType === 'Part 2' && line.match(/^\s*Model answer:\s*(.*)$/i);
+    const part3Answer = nextAnswerType === 'Part 3' && line.match(/^\s*Answer:\s*(.*)$/i);
+    if (part2Answer || part3Answer) {
+      answers.push((part2Answer || part3Answer)[1]);
+      nextAnswerType = null;
+    }
+  }
+  return answers;
+}
+
+const embeddedPracticeAnswers = content.parts
+  .filter((part) => part.name === 'Part 2' || part.name === 'Part 3')
+  .flatMap((part) => part.prompts.map((prompt) => prompt.answer));
+const questionBankPracticeAnswers = extractQuestionBankPracticeAnswers(questionBankLines);
+const modelAnswerMetaPattern =
+  /This gives the answer enough detail|If I were answering|This example is useful|This is a good example|answer sound organized|real speaking test|speaking practice|A good way to explain it|The example is concrete|My conclusion|That makes the answer|affect the answer|I would explain|However, I would add|model answer|a good answer should include|The strongest answer|I would therefore answer|I would describe the quality/;
+
+for (const answer of questionBankPracticeAnswers) {
+  assert.doesNotMatch(
+    answer,
+    modelAnswerMetaPattern,
+    'Part 2 and Part 3 Markdown answers should be answers only, not evaluation or answer-writing advice'
+  );
+}
+for (const answer of embeddedPracticeAnswers) {
+  assert.doesNotMatch(
+    answer,
+    modelAnswerMetaPattern,
+    'embedded Part 2 and Part 3 answers should be answers only, not evaluation or answer-writing advice'
+  );
+}
+assert.doesNotMatch(
+  questionBankMarkdown,
+  /This gives the answer enough detail|If I were answering|This example is useful|This is a good example|answer sound organized|real speaking test|I would describe the quality|The strongest answer|I would therefore answer|a good answer should include/,
+  'Part 2 and Part 3 Markdown answers should be answers only, not evaluation or answer-writing advice'
+);
+assert.doesNotMatch(
+  html,
+  /This gives the answer enough detail|If I were answering|This example is useful|This is a good example|answer sound organized|real speaking test|I would describe the quality|The strongest answer|I would therefore answer|a good answer should include/,
+  'embedded Part 2 and Part 3 answers should be answers only, not evaluation or answer-writing advice'
+);
+
 assert.match(html, /id="questionBankImport"/, 'page should include a Markdown question-bank import input');
 assert.match(html, /id="questionBankUrl"/, 'page should include a GitHub Markdown URL input');
 assert.match(html, /id="questionBankUrlOptions"/, 'page should include a dropdown for sibling GitHub Markdown files');
