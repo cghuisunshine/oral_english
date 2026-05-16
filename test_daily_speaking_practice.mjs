@@ -87,6 +87,21 @@ assert.doesNotMatch(
   /For that reason, I would answer this question by comparing different groups/,
   'Part 3 Markdown answers should have concrete endings instead of generic answer advice'
 );
+assert.doesNotMatch(
+  questionBankMarkdown,
+  /To make the answer more complete, I would give one or two concrete details/,
+  'Part 2 Markdown answers should not reuse the old generic completion advice'
+);
+assert.doesNotMatch(
+  html,
+  /To make the answer more complete, I would give one or two concrete details/,
+  'embedded Part 2 answers should not reuse the old generic completion advice'
+);
+assert.doesNotMatch(
+  questionBankMarkdown,
+  /The main reason this example works for me is that it connects a personal memory with a clear lesson/,
+  'Part 2 Markdown answers should have concrete endings instead of generic lesson advice'
+);
 
 assert.match(html, /id="questionBankImport"/, 'page should include a Markdown question-bank import input');
 assert.match(html, /id="questionBankUrl"/, 'page should include a GitHub Markdown URL input');
