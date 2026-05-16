@@ -3483,6 +3483,14 @@
       resetModelAnswerPlaybackTime();
       clearModelAnswerSentenceHighlight();
       playbackAudio = new Audio(recording.url);
+      const updateRecordingPlaybackStatus = () => {
+        if (Number.isFinite(playbackAudio.duration) && playbackAudio.duration > 0) {
+          document.getElementById('recordingStatus').textContent =
+            `Playing recording ${formatModelAnswerPlaybackTime(playbackAudio.currentTime)} / ${formatModelAnswerPlaybackTime(playbackAudio.duration)}`;
+        }
+      };
+      playbackAudio.addEventListener('loadedmetadata', updateRecordingPlaybackStatus);
+      playbackAudio.addEventListener('timeupdate', updateRecordingPlaybackStatus);
       playbackAudio.addEventListener('ended', () => {
         document.getElementById('recordingStatus').textContent = 'Playback finished.';
       });

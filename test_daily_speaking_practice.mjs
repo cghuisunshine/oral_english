@@ -545,6 +545,11 @@ assert.match(
   'prompt recording playback should clear any model-answer sentence highlight'
 );
 assert.match(
+  extractNamedFunction(html, 'playPromptRecording'),
+  /Playing recording \$\{formatModelAnswerPlaybackTime\(playbackAudio\.currentTime\)\} \/ \$\{formatModelAnswerPlaybackTime\(playbackAudio\.duration\)\}/,
+  'prompt recording playback should show elapsed and total duration'
+);
+assert.match(
   extractNamedFunction(html, 'readModelAnswerAloud'),
   /await playGeneratedModelAnswerAudio\(modelAnswer\)/,
   'model answer read button should try generated audio before browser speech synthesis'
