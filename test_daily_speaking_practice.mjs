@@ -192,8 +192,11 @@ assert.match(html, /function\s+fillModelAnswerKeywordNotesTextarea\(/, 'page sho
 assert.match(html, /function\s+togglePromptRecording\(/, 'page should toggle recording for the current prompt');
 assert.match(html, /function\s+playPromptRecording\(/, 'page should play the current prompt recording');
 assert.match(html, /id="readModelAnswerButton"/, 'model answer section should include a dedicated read-aloud button');
+assert.match(html, /id="modelAnswerPlaybackTime"/, 'model answer section should include a playback timer');
 assert.match(html, /function\s+getCurrentPromptModelAnswer\(/, 'page should read the current prompt model answer');
 assert.match(html, /function\s+readModelAnswerAloud\(/, 'page should read model answers aloud');
+assert.match(html, /function\s+formatModelAnswerPlaybackTime\(/, 'page should format model-answer playback time');
+assert.match(html, /function\s+renderModelAnswerPlaybackTime\(/, 'page should render model-answer playback time');
 assert.match(html, /function\s+renderRecordingControls\(/, 'page should update recording control state per prompt');
 assert.match(html, /function\s+formatRecordingElapsedTime\(/, 'page should format elapsed recording time');
 assert.match(html, /function\s+getCurrentRecordingTargetSeconds\(/, 'page should choose a recording target for each IELTS part');
@@ -511,6 +514,11 @@ assert.match(
   /String\(minutes\)\.padStart\(2, '0'\)/,
   'recording elapsed time should use a stable mm:ss format'
 );
+const formatModelAnswerPlaybackTime = Function(
+  `${extractNamedFunction(html, 'formatModelAnswerPlaybackTime')}; return formatModelAnswerPlaybackTime;`
+)();
+assert.equal(formatModelAnswerPlaybackTime(12), '0:12', 'model-answer elapsed time should use m:ss format');
+assert.equal(formatModelAnswerPlaybackTime(72), '1:12', 'model-answer elapsed time should roll over minutes');
 assert.match(
   extractNamedFunction(html, 'updateRecordingElapsedTime'),
   /Recording \$\{formatRecordingElapsedTime\(elapsedSeconds\)\} · \$\{formatRecordingElapsedTime\(remainingSeconds\)\} left/,

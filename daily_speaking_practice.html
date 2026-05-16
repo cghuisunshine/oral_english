@@ -282,6 +282,19 @@
       margin: 0;
     }
 
+    .model-answer-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .model-answer-playback-time {
+      min-width: 4ch;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: right;
+    }
+
     .cue-card {
       margin-bottom: 14px;
       padding: 14px;
@@ -2820,9 +2833,12 @@
               </div>
               <div class="answer-heading">
                 <h3>Model answer</h3>
-                <button type="button" class="secondary icon-button" id="readModelAnswerButton" aria-label="Read model answer" title="Read model answer">
-                  <span class="play-icon" aria-hidden="true"></span>
-                </button>
+                <div class="model-answer-controls">
+                  <span class="model-answer-playback-time" id="modelAnswerPlaybackTime" aria-live="polite">0:00</span>
+                  <button type="button" class="secondary icon-button" id="readModelAnswerButton" aria-label="Read model answer" title="Read model answer">
+                    <span class="play-icon" aria-hidden="true"></span>
+                  </button>
+                </div>
               </div>
               <p id="modelAnswer"></p>
             </div>
@@ -2904,6 +2920,8 @@
     const promptRecordings = new Map();
     let recordingSession = null;
     let playbackAudio = null;
+    let modelAnswerPlaybackTimer = null;
+    let modelAnswerPlaybackStartedAt = null;
     let lastAutoFilledNotesText = '';
     let modelAnswerAudioManifest = { entries: {} };
     let currentModelAnswerSentences = [];
@@ -3213,6 +3231,7 @@
       answerBox.hidden = !answer || !state.answerVisible;
       cueCard.hidden = !answer || !state.answerVisible || promptCuePoints.length === 0;
       answerToggle.textContent = state.answerVisible ? 'Hide Model Answer' : 'Show Model Answer';
+      resetModelAnswerPlaybackTime();
       renderRecordingControls();
     }
 
@@ -3232,6 +3251,7 @@
 
     function selectPart(index) {
       stopActiveRecording();
+      stopModelAnswerPlaybackTimer();
       state.partIndex = index;
       state.promptIndex = 0;
       state.answerVisible = false;
@@ -3242,6 +3262,7 @@
 
     function selectPromptFromBank(index) {
       stopActiveRecording();
+      stopModelAnswerPlaybackTimer();
       state.promptIndex = index;
       state.answerVisible = false;
       resetNotesTextarea();
@@ -3250,6 +3271,7 @@
 
     function newPrompt() {
       stopActiveRecording();
+      stopModelAnswerPlaybackTimer();
       const part = practiceContent.parts[state.partIndex];
       if (part.prompts.length <= 1) {
         state.promptIndex = 0;
@@ -3295,6 +3317,46 @@
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = seconds % 60;
       return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+    }
+
+    function formatModelAnswerPlaybackTime(seconds) {
+      const safeSeconds = Math.max(0, Math.floor(Number(seconds) || 0));
+      const minutes = Math.floor(safeSeconds / 60);
+      const remainingSeconds = safeSeconds % 60;
+      return `${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
+    }
+
+    function renderModelAnswerPlaybackTime(elapsedSeconds, totalSeconds = null) {
+      const target = document.getElementById('modelAnswerPlaybackTime');
+      if (!target) {
+        return;
+      }
+      const elapsedText = formatModelAnswerPlaybackTime(elapsedSeconds);
+      const hasTotal = Number.isFinite(totalSeconds) && totalSeconds > 0;
+      target.textContent = hasTotal
+        ? `${elapsedText} / ${formatModelAnswerPlaybackTime(totalSeconds)}`
+        : elapsedText;
+    }
+
+    function resetModelAnswerPlaybackTime() {
+      renderModelAnswerPlaybackTime(0);
+    }
+
+    function stopModelAnswerPlaybackTimer() {
+      if (modelAnswerPlaybackTimer) {
+        clearInterval(modelAnswerPlaybackTimer);
+        modelAnswerPlaybackTimer = null;
+      }
+      modelAnswerPlaybackStartedAt = null;
+    }
+
+    function startModelAnswerPlaybackTimer() {
+      stopModelAnswerPlaybackTimer();
+      modelAnswerPlaybackStartedAt = Date.now();
+      modelAnswerPlaybackTimer = setInterval(() => {
+        const elapsedSeconds = Math.floor((Date.now() - modelAnswerPlaybackStartedAt) / 1000);
+        renderModelAnswerPlaybackTime(elapsedSeconds);
+      }, 1000);
     }
 
     function getCurrentRecordingTargetSeconds() {
@@ -3417,6 +3479,8 @@
         playbackAudio.pause();
         playbackAudio.currentTime = 0;
       }
+      stopModelAnswerPlaybackTimer();
+      resetModelAnswerPlaybackTime();
       clearModelAnswerSentenceHighlight();
       playbackAudio = new Audio(recording.url);
       playbackAudio.addEventListener('ended', () => {
@@ -3440,14 +3504,19 @@
         playbackAudio.currentTime = 0;
       }
       playbackAudio = new Audio(audioPath);
+      playbackAudio.addEventListener('loadedmetadata', () => {
+        renderModelAnswerPlaybackTime(playbackAudio.currentTime, playbackAudio.duration);
+      });
       playbackAudio.addEventListener('timeupdate', () => {
         const sentenceIndex = getModelAnswerSentenceIndexAtTime(currentModelAnswerSentences, playbackAudio.currentTime, playbackAudio.duration);
         if (sentenceIndex >= 0) {
           highlightModelAnswerSentence(sentenceIndex);
         }
+        renderModelAnswerPlaybackTime(playbackAudio.currentTime, playbackAudio.duration);
       });
       playbackAudio.addEventListener('ended', () => {
         clearModelAnswerSentenceHighlight();
+        stopModelAnswerPlaybackTimer();
         document.getElementById('recordingStatus').textContent = 'Model answer reading finished.';
       });
       try {
@@ -3457,6 +3526,7 @@
         return true;
       } catch (error) {
         clearModelAnswerSentenceHighlight();
+        resetModelAnswerPlaybackTime();
         document.getElementById('recordingStatus').textContent = 'AI audio unavailable. Using browser voice...';
         return false;
       }
@@ -3480,6 +3550,7 @@
         playbackAudio.pause();
         playbackAudio.currentTime = 0;
       }
+      stopModelAnswerPlaybackTimer();
       speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(modelAnswer);
       utterance.lang = 'en-US';
@@ -3492,14 +3563,19 @@
       });
       utterance.addEventListener('end', () => {
         clearModelAnswerSentenceHighlight();
+        stopModelAnswerPlaybackTimer();
         document.getElementById('recordingStatus').textContent = 'Model answer reading finished.';
       });
       utterance.addEventListener('error', () => {
         clearModelAnswerSentenceHighlight();
+        stopModelAnswerPlaybackTimer();
+        resetModelAnswerPlaybackTime();
         document.getElementById('recordingStatus').textContent = 'Could not read the model answer.';
       });
       document.getElementById('recordingStatus').textContent = 'Reading model answer...';
       highlightModelAnswerSentence(0);
+      resetModelAnswerPlaybackTime();
+      startModelAnswerPlaybackTimer();
       speechSynthesis.speak(utterance);
     }
 
