@@ -72,6 +72,21 @@ for (let index = 0; index < questionBankLines.length; index++) {
   }
 }
 assert.equal(questionBankAnswerCount, 201, 'question bank should still contain all answer entries');
+assert.doesNotMatch(
+  questionBankMarkdown,
+  /I think this question is connected to everyday choices because it depends on people's habits, values, and circumstances/,
+  'Part 3 Markdown answers should not reuse the old generic boilerplate'
+);
+assert.doesNotMatch(
+  html,
+  /I think this question is connected to everyday choices because it depends on people's habits, values, and circumstances/,
+  'embedded Part 3 answers should not reuse the old generic boilerplate'
+);
+assert.doesNotMatch(
+  questionBankMarkdown,
+  /For that reason, I would answer this question by comparing different groups/,
+  'Part 3 Markdown answers should have concrete endings instead of generic answer advice'
+);
 
 assert.match(html, /id="questionBankImport"/, 'page should include a Markdown question-bank import input');
 assert.match(html, /id="questionBankUrl"/, 'page should include a GitHub Markdown URL input');
