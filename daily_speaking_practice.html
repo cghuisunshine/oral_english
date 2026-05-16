@@ -3709,6 +3709,10 @@
       };
     }
 
+    function getMarkdownItemUrl(item) {
+      return item.download_url || normalizeQuestionBankUrl(item.html_url || '');
+    }
+
     function renderQuestionBankUrlOptions(items) {
       const select = document.getElementById('questionBankUrlOptions');
       const escapeOption = (value) => String(value)
@@ -3723,16 +3727,17 @@
         select.hidden = true;
         select.disabled = true;
         select.innerHTML = '<option value="">Markdown files in this GitHub folder</option>';
-        return;
+        return markdownItems;
       }
       select.innerHTML = '<option value="">Markdown files in this GitHub folder</option>' + markdownItems
         .map((item) => {
-          const url = item.download_url || normalizeQuestionBankUrl(item.html_url || '');
+          const url = getMarkdownItemUrl(item);
           return `<option value="${escapeOption(url)}">${escapeOption(item.name)}</option>`;
         })
         .join('');
       select.hidden = false;
       select.disabled = false;
+      return markdownItems;
     }
 
     function renderCurrentGitHubMarkdownOptions(payload) {
@@ -3747,7 +3752,30 @@
             download_url: `https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(branch)}/${encodedPath}`
           };
         });
-      renderQuestionBankUrlOptions(files);
+      return renderQuestionBankUrlOptions(files);
+    }
+
+    async function importQuestionBankFromUrl(url, sourceLabel) {
+      document.getElementById('importStatus').textContent = 'Importing link...';
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Could not import link. HTTP ${response.status}.`);
+      }
+      applyImportedQuestionBank(await response.text(), sourceLabel || url);
+    }
+
+    function autoLoadSingleMarkdownOption(items) {
+      const markdownItems = Array.isArray(items) ? items : [];
+      if (markdownItems.length !== 1) {
+        return false;
+      }
+      const item = markdownItems[0];
+      const url = getMarkdownItemUrl(item);
+      if (!url) {
+        return false;
+      }
+      document.getElementById('questionBankUrl').value = url;
+      return importQuestionBankFromUrl(url, item.name || url).then(() => true);
     }
 
     async function discoverCurrentGitHubMarkdownOptions(options) {
@@ -3764,10 +3792,11 @@
           throw new Error(`Could not search this GitHub repository. HTTP ${response.status}.`);
         }
         const payload = await response.json();
-        renderCurrentGitHubMarkdownOptions(payload);
-        const markdownCount = payload && Array.isArray(payload.tree)
-          ? payload.tree.filter((item) => item.type === 'blob' && /\.md$/i.test(item.path || '')).length
-          : 0;
+        const markdownItems = renderCurrentGitHubMarkdownOptions(payload);
+        const markdownCount = markdownItems.length;
+        if (!discoveryOptions.preserveStatus && await autoLoadSingleMarkdownOption(markdownItems)) {
+          return;
+        }
         if (!discoveryOptions.preserveStatus) {
           document.getElementById('importStatus').textContent = markdownCount > 0
             ? `Found ${markdownCount} Markdown file${markdownCount === 1 ? '' : 's'} in this GitHub repository.`
@@ -3803,10 +3832,11 @@
           throw new Error(`Could not list this GitHub folder. HTTP ${response.status}.`);
         }
         const items = await response.json();
-        renderQuestionBankUrlOptions(items);
-        const markdownCount = Array.isArray(items)
-          ? items.filter((item) => (!item.type || item.type === 'file') && /\.md$/i.test(item.name || item.path || '')).length
-          : 0;
+        const markdownItems = renderQuestionBankUrlOptions(items);
+        const markdownCount = markdownItems.length;
+        if (await autoLoadSingleMarkdownOption(markdownItems)) {
+          return;
+        }
         document.getElementById('importStatus').textContent = markdownCount > 0
           ? `Found ${markdownCount} Markdown file${markdownCount === 1 ? '' : 's'} in this GitHub folder.`
           : 'No Markdown files were found in this GitHub folder.';
@@ -3859,12 +3889,7 @@
       }
       try {
         const url = normalizeQuestionBankUrl(source);
-        document.getElementById('importStatus').textContent = 'Importing link...';
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Could not import link. HTTP ${response.status}.`);
-        }
-        applyImportedQuestionBank(await response.text(), source);
+        await importQuestionBankFromUrl(url, source);
       } catch (error) {
         document.getElementById('importStatus').textContent = error.message;
       }

@@ -125,6 +125,7 @@ assert.match(html, /function\s+getCurrentGitHubMarkdownSearch\(/, 'page should s
 assert.match(html, /function\s+renderCurrentGitHubMarkdownOptions\(/, 'page should render Markdown files from the current GitHub repository');
 assert.match(html, /function\s+getGitHubMarkdownDirectory\(/, 'page should derive the GitHub directory for sibling Markdown discovery');
 assert.match(html, /function\s+renderQuestionBankUrlOptions\(/, 'page should render sibling GitHub Markdown files into the dropdown');
+assert.match(html, /function\s+autoLoadSingleMarkdownOption\(/, 'page should automatically load a single discovered Markdown file');
 assert.match(html, /function\s+handleQuestionBankUrlImport\(/, 'page should import Markdown question banks from URLs');
 assert.match(
   html,
@@ -209,6 +210,7 @@ const renderQuestionBankUrlOptions = Function(`
     }
   };
   ${extractNamedFunction(html, 'normalizeQuestionBankUrl')}
+  ${extractNamedFunction(html, 'getMarkdownItemUrl')}
   ${extractNamedFunction(html, 'renderQuestionBankUrlOptions')}
   return { renderQuestionBankUrlOptions, select };
 `)();
@@ -229,9 +231,29 @@ const renderCurrentGitHubMarkdownOptions = Function(`
   };
   const CURRENT_GITHUB_REPOSITORY = ${currentRepositoryMatch[1]};
   ${extractNamedFunction(html, 'normalizeQuestionBankUrl')}
+  ${extractNamedFunction(html, 'getMarkdownItemUrl')}
   ${extractNamedFunction(html, 'renderQuestionBankUrlOptions')}
   ${extractNamedFunction(html, 'renderCurrentGitHubMarkdownOptions')}
   return { renderCurrentGitHubMarkdownOptions, select };
+`)();
+const autoLoadSingleMarkdownOption = Function(`
+  const imported = [];
+  const document = {
+    elements: {
+      questionBankUrl: { value: '' },
+      importStatus: { textContent: '' }
+    },
+    getElementById(id) {
+      return this.elements[id];
+    }
+  };
+  async function importQuestionBankFromUrl(url, sourceLabel) {
+    imported.push({ url, sourceLabel });
+  }
+  ${extractNamedFunction(html, 'normalizeQuestionBankUrl')}
+  ${extractNamedFunction(html, 'getMarkdownItemUrl')}
+  ${extractNamedFunction(html, 'autoLoadSingleMarkdownOption')}
+  return { autoLoadSingleMarkdownOption, document, imported };
 `)();
 const importedBank = parseQuestionBankMarkdown(`
 ## Part 1 Quick Interview Bank
@@ -624,4 +646,32 @@ assert.match(
   /https:\/\/raw\.githubusercontent\.com\/cghuisunshine\/oral_english\/main\/docs\/extra_bank\.md/
 );
 assert.doesNotMatch(renderCurrentGitHubMarkdownOptions.select.innerHTML, /content\.html/);
+assert.equal(
+  await autoLoadSingleMarkdownOption.autoLoadSingleMarkdownOption([
+    {
+      name: 'ielts_2025_sep_dec_question_bank.md',
+      download_url: 'https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'
+    }
+  ]),
+  true,
+  'a single discovered Markdown file should be imported automatically'
+);
+assert.equal(
+  autoLoadSingleMarkdownOption.document.elements.questionBankUrl.value,
+  'https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md'
+);
+assert.deepEqual(autoLoadSingleMarkdownOption.imported, [
+  {
+    url: 'https://raw.githubusercontent.com/example/oral_english/main/ielts_2025_sep_dec_question_bank.md',
+    sourceLabel: 'ielts_2025_sep_dec_question_bank.md'
+  }
+]);
+assert.equal(
+  await autoLoadSingleMarkdownOption.autoLoadSingleMarkdownOption([
+    { name: 'first.md', download_url: 'https://raw.githubusercontent.com/example/oral_english/main/first.md' },
+    { name: 'second.md', download_url: 'https://raw.githubusercontent.com/example/oral_english/main/second.md' }
+  ]),
+  false,
+  'multiple discovered Markdown files should not auto-import'
+);
 assert.match(html, /discoverCurrentGitHubMarkdownOptions\(\{ preserveStatus: savedQuestionBankLoaded \}\);/, 'page should search the current GitHub repository on startup');
