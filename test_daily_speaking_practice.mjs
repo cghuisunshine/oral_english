@@ -221,6 +221,7 @@ assert.doesNotMatch(html, /\.mobile-prompt-scroll/, 'removed mobile prompt scrol
 assert.match(html, /\.icon-button/, 'recording controls should use icon button styling');
 assert.match(html, /\.record-icon/, 'record button should use a record icon');
 assert.match(html, /\.play-icon/, 'play button should use a play icon');
+assert.match(html, /\.pause-icon/, 'playback buttons should support a pause icon');
 assert.ok(modelAnswerManifestExists, 'generated model-answer audio manifest should exist');
 assert.ok(modelAnswerAudioManifest && typeof modelAnswerAudioManifest === 'object', 'generated model-answer audio manifest should be JSON');
 assert.equal(modelAnswerAudioManifest.voice, 'en-US-AriaNeural', 'generated audio should use the planned free TTS voice');
@@ -550,6 +551,21 @@ assert.match(
   'prompt recording playback should show elapsed and total duration'
 );
 assert.match(
+  html,
+  /function\s+renderPlaybackButtonState\(/,
+  'page should render playback button state from a shared helper'
+);
+assert.match(
+  html,
+  /function\s+togglePromptRecordingPlayback\(/,
+  'page should expose a prompt-recording playback toggle'
+);
+assert.match(
+  extractNamedFunction(html, 'togglePromptRecordingPlayback'),
+  /pause\(\)[\s\S]*?renderPlaybackButtonState/,
+  'prompt-recording toggle should pause active playback and refresh its button state'
+);
+assert.match(
   extractNamedFunction(html, 'readModelAnswerAloud'),
   /await playGeneratedModelAnswerAudio\(modelAnswer\)/,
   'model answer read button should try generated audio before browser speech synthesis'
@@ -595,14 +611,29 @@ assert.match(
   'model answer read button should speak the model answer text'
 );
 assert.match(
+  html,
+  /function\s+toggleModelAnswerPlayback\(/,
+  'page should expose a model-answer playback toggle'
+);
+assert.match(
+  extractNamedFunction(html, 'toggleModelAnswerPlayback'),
+  /speechSynthesis\.pause\(\)|playbackAudio\.pause\(\)/,
+  'model-answer toggle should pause active playback'
+);
+assert.match(
   extractNamedFunction(html, 'readModelAnswerAloud'),
   /boundary[\s\S]*?highlightModelAnswerSentence/,
   'browser speech synthesis should highlight the sentence reported by boundary events'
 );
 assert.match(
   html,
-  /readModelAnswerButton'\)\.addEventListener\('click', readModelAnswerAloud\)/,
-  'model answer read button should call the read-aloud handler'
+  /readModelAnswerButton'\)\.addEventListener\('click', toggleModelAnswerPlayback\)/,
+  'model answer read button should call the toggle handler'
+);
+assert.match(
+  html,
+  /playPromptRecordingButton'\)\.addEventListener\('click', togglePromptRecordingPlayback\)/,
+  'prompt-recording play button should call the toggle handler'
 );
 assert.deepEqual(
   splitModelAnswerSentences('First sentence. Second sentence? Third sentence!'),

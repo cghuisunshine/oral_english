@@ -196,6 +196,13 @@
       border-left: 12px solid currentColor;
     }
 
+    .pause-icon {
+      width: 12px;
+      height: 14px;
+      border-left: 4px solid currentColor;
+      border-right: 4px solid currentColor;
+    }
+
     .recording-status {
       min-height: 1.4em;
       margin: 8px 0 0;
@@ -2920,8 +2927,11 @@
     const promptRecordings = new Map();
     let recordingSession = null;
     let playbackAudio = null;
+    let activePlaybackSource = null;
+    let activeSpeechUtterance = null;
     let modelAnswerPlaybackTimer = null;
     let modelAnswerPlaybackStartedAt = null;
+    let modelAnswerPlaybackElapsedBeforePause = 0;
     let lastAutoFilledNotesText = '';
     let modelAnswerAudioManifest = { entries: {} };
     let currentModelAnswerSentences = [];
@@ -3342,6 +3352,21 @@
       renderModelAnswerPlaybackTime(0);
     }
 
+    function renderPlaybackButtonState(buttonId, isPlaying, playLabel, pauseLabel) {
+      const button = document.getElementById(buttonId);
+      if (!button) {
+        return;
+      }
+      button.innerHTML = `<span class="${isPlaying ? 'pause-icon' : 'play-icon'}" aria-hidden="true"></span>`;
+      button.setAttribute('aria-label', isPlaying ? pauseLabel : playLabel);
+      button.title = isPlaying ? pauseLabel : playLabel;
+    }
+
+    function resetPlaybackButtonStates() {
+      renderPlaybackButtonState('playPromptRecordingButton', false, 'Play recording', 'Pause recording');
+      renderPlaybackButtonState('readModelAnswerButton', false, 'Read model answer', 'Pause model answer');
+    }
+
     function stopModelAnswerPlaybackTimer() {
       if (modelAnswerPlaybackTimer) {
         clearInterval(modelAnswerPlaybackTimer);
@@ -3352,7 +3377,7 @@
 
     function startModelAnswerPlaybackTimer() {
       stopModelAnswerPlaybackTimer();
-      modelAnswerPlaybackStartedAt = Date.now();
+      modelAnswerPlaybackStartedAt = Date.now() - (modelAnswerPlaybackElapsedBeforePause * 1000);
       modelAnswerPlaybackTimer = setInterval(() => {
         const elapsedSeconds = Math.floor((Date.now() - modelAnswerPlaybackStartedAt) / 1000);
         renderModelAnswerPlaybackTime(elapsedSeconds);
@@ -3385,8 +3410,7 @@
       recordButton.setAttribute('aria-label', isRecording ? 'Stop recording' : 'Record answer');
       recordButton.title = isRecording ? 'Stop recording' : 'Record answer';
       playButton.disabled = isRecording || !promptRecordings.has(getCurrentPromptRecordingKey());
-      playButton.setAttribute('aria-label', 'Play recording');
-      playButton.title = 'Play recording';
+      renderPlaybackButtonState('playPromptRecordingButton', activePlaybackSource === 'recording' && playbackAudio && !playbackAudio.paused, 'Play recording', 'Pause recording');
     }
 
     function stopRecordingStream(stream) {
@@ -3479,6 +3503,12 @@
         playbackAudio.pause();
         playbackAudio.currentTime = 0;
       }
+      activePlaybackSource = 'recording';
+      if (activeSpeechUtterance && 'speechSynthesis' in window) {
+        speechSynthesis.cancel();
+        activeSpeechUtterance = null;
+      }
+      renderPlaybackButtonState('readModelAnswerButton', false, 'Read model answer', 'Pause model answer');
       stopModelAnswerPlaybackTimer();
       resetModelAnswerPlaybackTime();
       clearModelAnswerSentenceHighlight();
@@ -3491,15 +3521,53 @@
       };
       playbackAudio.addEventListener('loadedmetadata', updateRecordingPlaybackStatus);
       playbackAudio.addEventListener('timeupdate', updateRecordingPlaybackStatus);
+      playbackAudio.addEventListener('play', () => {
+        if (activePlaybackSource === 'recording') {
+          renderPlaybackButtonState('playPromptRecordingButton', true, 'Play recording', 'Pause recording');
+        }
+      });
+      playbackAudio.addEventListener('pause', () => {
+        if (activePlaybackSource === 'recording') {
+          renderPlaybackButtonState('playPromptRecordingButton', false, 'Play recording', 'Pause recording');
+        }
+      });
       playbackAudio.addEventListener('ended', () => {
+        activePlaybackSource = null;
+        renderPlaybackButtonState('playPromptRecordingButton', false, 'Play recording', 'Pause recording');
         document.getElementById('recordingStatus').textContent = 'Playback finished.';
       });
       try {
         document.getElementById('recordingStatus').textContent = 'Playing recording...';
         await playbackAudio.play();
+        renderPlaybackButtonState('playPromptRecordingButton', true, 'Play recording', 'Pause recording');
       } catch (error) {
+        activePlaybackSource = null;
+        renderPlaybackButtonState('playPromptRecordingButton', false, 'Play recording', 'Pause recording');
         document.getElementById('recordingStatus').textContent = 'Could not play this recording.';
       }
+    }
+
+    async function togglePromptRecordingPlayback() {
+      if (activePlaybackSource === 'recording' && playbackAudio) {
+        if (!playbackAudio.paused) {
+          playbackAudio.pause();
+          renderPlaybackButtonState('playPromptRecordingButton', false, 'Play recording', 'Pause recording');
+          document.getElementById('recordingStatus').textContent = 'Playback paused.';
+          return;
+        }
+        try {
+          await playbackAudio.play();
+          renderPlaybackButtonState('playPromptRecordingButton', true, 'Play recording', 'Pause recording');
+          document.getElementById('recordingStatus').textContent = 'Playing recording...';
+          return;
+        } catch (error) {
+          activePlaybackSource = null;
+          renderPlaybackButtonState('playPromptRecordingButton', false, 'Play recording', 'Pause recording');
+          document.getElementById('recordingStatus').textContent = 'Could not resume this recording.';
+          return;
+        }
+      }
+      await playPromptRecording();
     }
 
     async function playGeneratedModelAnswerAudio(modelAnswer) {
@@ -3511,9 +3579,22 @@
         playbackAudio.pause();
         playbackAudio.currentTime = 0;
       }
+      activePlaybackSource = 'model-answer-audio';
+      activeSpeechUtterance = null;
+      renderPlaybackButtonState('playPromptRecordingButton', false, 'Play recording', 'Pause recording');
       playbackAudio = new Audio(audioPath);
       playbackAudio.addEventListener('loadedmetadata', () => {
         renderModelAnswerPlaybackTime(playbackAudio.currentTime, playbackAudio.duration);
+      });
+      playbackAudio.addEventListener('play', () => {
+        if (activePlaybackSource === 'model-answer-audio') {
+          renderPlaybackButtonState('readModelAnswerButton', true, 'Read model answer', 'Pause model answer');
+        }
+      });
+      playbackAudio.addEventListener('pause', () => {
+        if (activePlaybackSource === 'model-answer-audio') {
+          renderPlaybackButtonState('readModelAnswerButton', false, 'Read model answer', 'Pause model answer');
+        }
       });
       playbackAudio.addEventListener('timeupdate', () => {
         const sentenceIndex = getModelAnswerSentenceIndexAtTime(currentModelAnswerSentences, playbackAudio.currentTime, playbackAudio.duration);
@@ -3523,18 +3604,23 @@
         renderModelAnswerPlaybackTime(playbackAudio.currentTime, playbackAudio.duration);
       });
       playbackAudio.addEventListener('ended', () => {
+        activePlaybackSource = null;
         clearModelAnswerSentenceHighlight();
         stopModelAnswerPlaybackTimer();
+        renderPlaybackButtonState('readModelAnswerButton', false, 'Read model answer', 'Pause model answer');
         document.getElementById('recordingStatus').textContent = 'Model answer reading finished.';
       });
       try {
         document.getElementById('recordingStatus').textContent = 'Playing AI-generated model answer...';
         highlightModelAnswerSentence(0);
         await playbackAudio.play();
+        renderPlaybackButtonState('readModelAnswerButton', true, 'Read model answer', 'Pause model answer');
         return true;
       } catch (error) {
+        activePlaybackSource = null;
         clearModelAnswerSentenceHighlight();
         resetModelAnswerPlaybackTime();
+        renderPlaybackButtonState('readModelAnswerButton', false, 'Read model answer', 'Pause model answer');
         document.getElementById('recordingStatus').textContent = 'AI audio unavailable. Using browser voice...';
         return false;
       }
@@ -3559,8 +3645,11 @@
         playbackAudio.currentTime = 0;
       }
       stopModelAnswerPlaybackTimer();
+      modelAnswerPlaybackElapsedBeforePause = 0;
       speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(modelAnswer);
+      activePlaybackSource = 'model-answer-speech';
+      activeSpeechUtterance = utterance;
       utterance.lang = 'en-US';
       utterance.rate = 0.9;
       utterance.addEventListener('boundary', (event) => {
@@ -3570,21 +3659,68 @@
         }
       });
       utterance.addEventListener('end', () => {
+        activePlaybackSource = null;
+        activeSpeechUtterance = null;
         clearModelAnswerSentenceHighlight();
         stopModelAnswerPlaybackTimer();
+        renderPlaybackButtonState('readModelAnswerButton', false, 'Read model answer', 'Pause model answer');
         document.getElementById('recordingStatus').textContent = 'Model answer reading finished.';
       });
       utterance.addEventListener('error', () => {
+        activePlaybackSource = null;
+        activeSpeechUtterance = null;
         clearModelAnswerSentenceHighlight();
         stopModelAnswerPlaybackTimer();
         resetModelAnswerPlaybackTime();
+        renderPlaybackButtonState('readModelAnswerButton', false, 'Read model answer', 'Pause model answer');
         document.getElementById('recordingStatus').textContent = 'Could not read the model answer.';
       });
       document.getElementById('recordingStatus').textContent = 'Reading model answer...';
       highlightModelAnswerSentence(0);
       resetModelAnswerPlaybackTime();
       startModelAnswerPlaybackTimer();
+      renderPlaybackButtonState('readModelAnswerButton', true, 'Read model answer', 'Pause model answer');
       speechSynthesis.speak(utterance);
+    }
+
+    async function toggleModelAnswerPlayback() {
+      if (activePlaybackSource === 'model-answer-audio' && playbackAudio) {
+        if (!playbackAudio.paused) {
+          playbackAudio.pause();
+          renderPlaybackButtonState('readModelAnswerButton', false, 'Read model answer', 'Pause model answer');
+          document.getElementById('recordingStatus').textContent = 'Model answer paused.';
+          return;
+        }
+        try {
+          await playbackAudio.play();
+          renderPlaybackButtonState('readModelAnswerButton', true, 'Read model answer', 'Pause model answer');
+          document.getElementById('recordingStatus').textContent = 'Playing AI-generated model answer...';
+          return;
+        } catch (error) {
+          activePlaybackSource = null;
+          renderPlaybackButtonState('readModelAnswerButton', false, 'Read model answer', 'Pause model answer');
+          document.getElementById('recordingStatus').textContent = 'Could not resume the model answer.';
+          return;
+        }
+      }
+      if (activePlaybackSource === 'model-answer-speech' && 'speechSynthesis' in window && activeSpeechUtterance) {
+        if (!speechSynthesis.paused) {
+          modelAnswerPlaybackElapsedBeforePause = modelAnswerPlaybackStartedAt
+            ? Math.floor((Date.now() - modelAnswerPlaybackStartedAt) / 1000)
+            : modelAnswerPlaybackElapsedBeforePause;
+          speechSynthesis.pause();
+          stopModelAnswerPlaybackTimer();
+          renderPlaybackButtonState('readModelAnswerButton', false, 'Read model answer', 'Pause model answer');
+          document.getElementById('recordingStatus').textContent = 'Model answer paused.';
+          return;
+        }
+        speechSynthesis.resume();
+        startModelAnswerPlaybackTimer();
+        renderPlaybackButtonState('readModelAnswerButton', true, 'Read model answer', 'Pause model answer');
+        document.getElementById('recordingStatus').textContent = 'Reading model answer...';
+        return;
+      }
+      await readModelAnswerAloud();
     }
 
     function toggleModelAnswer() {
@@ -3993,8 +4129,9 @@
     document.getElementById('questionBankUrlOptions').addEventListener('change', handleQuestionBankUrlOptionChange);
     document.getElementById('questionBankUrlImport').addEventListener('click', handleQuestionBankUrlImport);
     document.getElementById('recordPromptButton').addEventListener('click', togglePromptRecording);
-    document.getElementById('playPromptRecordingButton').addEventListener('click', playPromptRecording);
-    document.getElementById('readModelAnswerButton').addEventListener('click', readModelAnswerAloud);
+    document.getElementById('playPromptRecordingButton').addEventListener('click', togglePromptRecordingPlayback);
+    document.getElementById('readModelAnswerButton').addEventListener('click', toggleModelAnswerPlayback);
+    resetPlaybackButtonStates();
     renderExamContent();
     loadModelAnswerAudioManifest();
     const savedQuestionBankLoaded = loadSavedQuestionBank();
