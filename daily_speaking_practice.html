@@ -2918,12 +2918,15 @@
     const practiceContent = JSON.parse(document.getElementById('practice-content').textContent);
     const CURRENT_GITHUB_REPOSITORY = { owner: 'cghuisunshine', repo: 'oral_english', branch: 'main' };
     const SAVED_QUESTION_BANK_STORAGE_KEY = 'dailySpeakingPractice.latestQuestionBank';
+    const PROMPT_PROGRESS_STORAGE_KEY = 'dailySpeakingPractice.promptProgress';
     const MODEL_ANSWER_AUDIO_MANIFEST_URL = 'audio/model_answer_audio_manifest.json';
     const state = {
       partIndex: 0,
       promptIndex: 0,
-      answerVisible: false
+      answerVisible: false,
+      promptIndices: [0, 0, 0]
     };
+    let currentQuestionBankProgressId = getQuestionBankProgressId(practiceContent.parts, 'built-in');
     const promptRecordings = new Map();
     let recordingSession = null;
     let playbackAudio = null;
@@ -3182,6 +3185,82 @@
       lastAutoFilledNotesText = '';
     }
 
+    function getStableHash(value) {
+      const source = String(value || '');
+      let hash = 2166136261;
+      for (let index = 0; index < source.length; index++) {
+        hash ^= source.charCodeAt(index);
+        hash = Math.imul(hash, 16777619);
+      }
+      return (hash >>> 0).toString(16).padStart(8, '0');
+    }
+
+    function getQuestionBankProgressId(parts, sourceLabel) {
+      const source = [sourceLabel || 'built-in']
+        .concat((parts || []).flatMap((part) => [
+          part.name,
+          ...part.prompts.map((prompt) => `${getPromptQuestion(prompt)}\n${getPromptAnswer(prompt)}`)
+        ]))
+        .join('\n');
+      return getStableHash(source);
+    }
+
+    function getCurrentQuestionBankProgressKey() {
+      return `${PROMPT_PROGRESS_STORAGE_KEY}:${currentQuestionBankProgressId}`;
+    }
+
+    function clampPromptIndex(partIndex, promptIndex) {
+      const prompts = practiceContent.parts[partIndex]?.prompts || [];
+      const parsedIndex = Number(promptIndex);
+      if (!Number.isInteger(parsedIndex) || parsedIndex < 0) {
+        return 0;
+      }
+      return Math.min(parsedIndex, Math.max(prompts.length - 1, 0));
+    }
+
+    function clampPartIndex(partIndex) {
+      const parsedIndex = Number(partIndex);
+      if (!Number.isInteger(parsedIndex) || parsedIndex < 0) {
+        return 0;
+      }
+      return Math.min(parsedIndex, Math.max(practiceContent.parts.length - 1, 0));
+    }
+
+    function getPromptProgressSnapshot() {
+      const promptIndices = practiceContent.parts.map((part, index) => {
+        const promptIndex = index === state.partIndex ? state.promptIndex : state.promptIndices[index];
+        return clampPromptIndex(index, promptIndex);
+      });
+      return {
+        partIndex: clampPartIndex(state.partIndex),
+        promptIndices
+      };
+    }
+
+    function savePromptProgress() {
+      try {
+        localStorage.setItem(getCurrentQuestionBankProgressKey(), JSON.stringify(getPromptProgressSnapshot()));
+      } catch (error) {
+        console.warn('Could not save prompt progress.', error);
+      }
+    }
+
+    function restorePromptProgress() {
+      state.promptIndices = practiceContent.parts.map(() => 0);
+      state.partIndex = 0;
+      state.promptIndex = 0;
+      try {
+        const saved = JSON.parse(localStorage.getItem(getCurrentQuestionBankProgressKey()) || 'null');
+        if (saved && Array.isArray(saved.promptIndices)) {
+          state.partIndex = clampPartIndex(saved.partIndex);
+          state.promptIndices = practiceContent.parts.map((part, index) => clampPromptIndex(index, saved.promptIndices[index]));
+          state.promptIndex = state.promptIndices[state.partIndex];
+        }
+      } catch (error) {
+        console.warn('Could not read prompt progress.', error);
+      }
+    }
+
     function getQuestionBankSourceName(sourceLabel) {
       const fallback = 'question bank';
       const source = String(sourceLabel || '').trim();
@@ -3260,28 +3339,27 @@
     }
 
     function selectPart(index) {
-      stopActiveRecording();
-      stopModelAnswerPlaybackTimer();
-      state.partIndex = index;
-      state.promptIndex = 0;
+      resetPromptRelatedState();
+      state.promptIndices[state.partIndex] = state.promptIndex;
+      state.partIndex = clampPartIndex(index);
+      state.promptIndex = state.promptIndices[state.partIndex];
       state.answerVisible = false;
-      resetNotesTextarea();
+      savePromptProgress();
       renderPartTabs();
       renderPrompt();
     }
 
     function selectPromptFromBank(index) {
-      stopActiveRecording();
-      stopModelAnswerPlaybackTimer();
-      state.promptIndex = index;
+      resetPromptRelatedState();
+      state.promptIndex = clampPromptIndex(state.partIndex, index);
+      state.promptIndices[state.partIndex] = state.promptIndex;
       state.answerVisible = false;
-      resetNotesTextarea();
+      savePromptProgress();
       renderPrompt();
     }
 
     function newPrompt() {
-      stopActiveRecording();
-      stopModelAnswerPlaybackTimer();
+      resetPromptRelatedState();
       const part = practiceContent.parts[state.partIndex];
       if (part.prompts.length <= 1) {
         state.promptIndex = 0;
@@ -3292,8 +3370,9 @@
         }
         state.promptIndex = nextIndex;
       }
+      state.promptIndices[state.partIndex] = state.promptIndex;
       state.answerVisible = false;
-      resetNotesTextarea();
+      savePromptProgress();
       renderPrompt();
     }
 
@@ -3375,6 +3454,31 @@
       modelAnswerPlaybackStartedAt = null;
     }
 
+    function stopActivePlayback() {
+      if (playbackAudio) {
+        playbackAudio.pause();
+        playbackAudio.currentTime = 0;
+        playbackAudio = null;
+      }
+      if (activeSpeechUtterance && 'speechSynthesis' in window) {
+        speechSynthesis.cancel();
+      }
+      activePlaybackSource = null;
+      activeSpeechUtterance = null;
+      modelAnswerPlaybackElapsedBeforePause = 0;
+      stopModelAnswerPlaybackTimer();
+      resetModelAnswerPlaybackTime();
+      clearModelAnswerSentenceHighlight();
+      resetPlaybackButtonStates();
+    }
+
+    function resetPromptRelatedState() {
+      stopActiveRecording({ clearStatusOnStop: true });
+      stopActivePlayback();
+      resetNotesTextarea();
+      document.getElementById('recordingStatus').textContent = '';
+    }
+
     function startModelAnswerPlaybackTimer() {
       stopModelAnswerPlaybackTimer();
       modelAnswerPlaybackStartedAt = Date.now() - (modelAnswerPlaybackElapsedBeforePause * 1000);
@@ -3424,10 +3528,11 @@
       }
     }
 
-    function stopActiveRecording() {
+    function stopActiveRecording({ clearStatusOnStop = false } = {}) {
       if (!recordingSession) {
         return;
       }
+      recordingSession.clearStatusOnStop = clearStatusOnStop;
       if (recordingSession.mediaRecorder.state === 'recording') {
         stopRecordingElapsedTimer();
         recordingSession.mediaRecorder.stop();
@@ -3470,14 +3575,15 @@
           if (previous) {
             URL.revokeObjectURL(previous.url);
           }
+          const shouldClearStatus = recordingSession && recordingSession.clearStatusOnStop;
           if (blob.size > 0) {
             promptRecordings.set(recordingKey, {
               blob,
               url: URL.createObjectURL(blob)
             });
-            document.getElementById('recordingStatus').textContent = 'Recording saved for this prompt.';
+            document.getElementById('recordingStatus').textContent = shouldClearStatus ? '' : 'Recording saved for this prompt.';
           } else {
-            document.getElementById('recordingStatus').textContent = 'No audio was captured.';
+            document.getElementById('recordingStatus').textContent = shouldClearStatus ? '' : 'No audio was captured.';
           }
           recordingSession = null;
           renderRecordingControls();
@@ -3857,9 +3963,10 @@
       if (totalPrompts === 0) {
         throw new Error('No questions were found in this Markdown file.');
       }
+      resetPromptRelatedState();
       practiceContent.parts = imported.parts;
-      state.partIndex = 0;
-      state.promptIndex = 0;
+      currentQuestionBankProgressId = getQuestionBankProgressId(practiceContent.parts, sourceLabel);
+      restorePromptProgress();
       state.answerVisible = false;
       renderPartTabs();
       renderPrompt();
@@ -4132,6 +4239,7 @@
     document.getElementById('playPromptRecordingButton').addEventListener('click', togglePromptRecordingPlayback);
     document.getElementById('readModelAnswerButton').addEventListener('click', toggleModelAnswerPlayback);
     resetPlaybackButtonStates();
+    restorePromptProgress();
     renderExamContent();
     loadModelAnswerAudioManifest();
     const savedQuestionBankLoaded = loadSavedQuestionBank();

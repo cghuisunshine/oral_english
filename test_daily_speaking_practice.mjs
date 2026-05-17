@@ -261,6 +261,9 @@ const getModelAnswerAudioKey = Function(`${extractNamedFunction(html, 'getModelA
 const storageKeyMatch = html.match(/const SAVED_QUESTION_BANK_STORAGE_KEY = '([^']+)'/);
 assert.ok(storageKeyMatch, 'saved question bank storage key should be readable by tests');
 assert.equal(storageKeyMatch[1], 'dailySpeakingPractice.latestQuestionBank');
+const promptProgressStorageKeyMatch = html.match(/const PROMPT_PROGRESS_STORAGE_KEY = '([^']+)'/);
+assert.ok(promptProgressStorageKeyMatch, 'prompt progress storage key should be readable by tests');
+assert.equal(promptProgressStorageKeyMatch[1], 'dailySpeakingPractice.promptProgress');
 const currentRepositoryMatch = html.match(/const CURRENT_GITHUB_REPOSITORY = (\{[\s\S]*?\});/);
 assert.ok(currentRepositoryMatch, 'current GitHub repository config should be readable by tests');
 const currentRepository = Function(`return (${currentRepositoryMatch[1]});`)();
@@ -481,9 +484,65 @@ assert.match(
   'resetting notes should clear the auto-fill sentinel'
 );
 assert.match(
+  html,
+  /function\s+resetPromptRelatedState\(/,
+  'page should expose one helper for resetting prompt-related state'
+);
+const resetPromptRelatedStateSource = extractNamedFunction(html, 'resetPromptRelatedState');
+assert.match(
+  resetPromptRelatedStateSource,
+  /stopActiveRecording\(\{ clearStatusOnStop: true \}\)/,
+  'prompt reset should stop any active recording'
+);
+assert.match(
+  resetPromptRelatedStateSource,
+  /stopActivePlayback\(\)/,
+  'prompt reset should stop any active playback'
+);
+assert.match(
+  resetPromptRelatedStateSource,
+  /resetNotesTextarea\(\)/,
+  'prompt reset should clear prompt notes'
+);
+assert.match(
+  resetPromptRelatedStateSource,
+  /recordingStatus'\)\.textContent = ''/,
+  'prompt reset should clear transient recording and playback status text'
+);
+assert.match(
   extractNamedFunction(html, 'newPrompt'),
-  /resetNotesTextarea\(\);[\s\S]*renderPrompt\(\);/,
-  'new prompt should clear notes before rendering the next prompt'
+  /resetPromptRelatedState\(\);[\s\S]*renderPrompt\(\);/,
+  'new prompt should reset prompt-related state before rendering the next prompt'
+);
+assert.match(
+  html,
+  /function\s+getQuestionBankProgressId\(/,
+  'page should derive a progress identity for the current question bank'
+);
+assert.match(
+  html,
+  /function\s+restorePromptProgress\(/,
+  'page should restore saved prompt progress'
+);
+assert.match(
+  html,
+  /function\s+savePromptProgress\(/,
+  'page should save prompt progress'
+);
+assert.match(
+  extractNamedFunction(html, 'selectPart'),
+  /state\.promptIndex = state\.promptIndices\[state\.partIndex\]/,
+  'switching parts should restore that part current prompt'
+);
+assert.match(
+  extractNamedFunction(html, 'selectPromptFromBank'),
+  /state\.promptIndices\[state\.partIndex\] = state\.promptIndex[\s\S]*?savePromptProgress\(\)/,
+  'selecting a prompt should save that part current prompt'
+);
+assert.match(
+  extractNamedFunction(html, 'newPrompt'),
+  /state\.promptIndices\[state\.partIndex\] = state\.promptIndex[\s\S]*?savePromptProgress\(\)/,
+  'new prompt should save the new prompt for the current part'
 );
 assert.match(
   extractNamedFunction(html, 'toggleModelAnswer'),
@@ -697,6 +756,11 @@ assert.match(
   extractNamedFunction(html, 'applyImportedQuestionBank'),
   /if \(importOptions\.save\) \{[\s\S]*?saveImportedQuestionBank\(markdown, sourceLabel\);[\s\S]*?\}/,
   'successful manual imports should persist by default'
+);
+assert.match(
+  extractNamedFunction(html, 'applyImportedQuestionBank'),
+  /currentQuestionBankProgressId = getQuestionBankProgressId\(practiceContent\.parts, sourceLabel\)[\s\S]*?restorePromptProgress\(\)/,
+  'imported question banks should restore the saved prompt for that exact bank'
 );
 assert.match(
   extractNamedFunction(html, 'loadSavedQuestionBank'),
