@@ -173,9 +173,11 @@ assert.match(html, /function\s+loadSavedQuestionBank\(/, 'page should automatica
 assert.match(html, /function\s+getCurrentPromptRecordingKey\(/, 'page should key recordings to the current prompt');
 assert.match(html, /MODEL_ANSWER_AUDIO_MANIFEST_URL/, 'page should know where generated model-answer audio is stored');
 assert.match(html, /function\s+getModelAnswerAudioKey\(/, 'page should derive stable model-answer audio keys');
+assert.match(html, /function\s+getPromptQuestionAudioKey\(/, 'page should derive stable prompt-question audio keys');
 assert.match(html, /id="model-answer-audio-manifest"/, 'page should embed generated model-answer audio manifest for direct file use');
 assert.match(html, /function\s+getEmbeddedModelAnswerAudioManifest\(/, 'page should read the embedded model-answer audio manifest');
 assert.match(html, /function\s+loadModelAnswerAudioManifest\(/, 'page should load the generated model-answer audio manifest');
+assert.match(html, /function\s+playGeneratedPromptQuestionAudio\(/, 'page should try generated prompt-question audio before browser speech synthesis');
 assert.match(html, /function\s+playGeneratedModelAnswerAudio\(/, 'page should try generated audio before browser speech synthesis');
 assert.match(html, /function\s+splitModelAnswerSentences\(/, 'page should split model answers into highlightable sentences');
 assert.match(html, /function\s+renderModelAnswerText\(/, 'page should render model answers as sentence spans');
@@ -229,6 +231,8 @@ assert.ok(modelAnswerAudioManifest.entries && typeof modelAnswerAudioManifest.en
 assert.match(audioGenerationScript, /writeEmbeddedManifest/, 'audio generation script should keep the embedded HTML manifest in sync');
 assert.match(audioGenerationScript, /edge-tts/, 'audio generation script should use edge-tts');
 assert.match(audioGenerationScript, /en-US-AriaNeural/, 'audio generation script should default to en-US-AriaNeural');
+assert.match(audioGenerationScript, /function\s+getPromptQuestionAudioKey\(/, 'audio generation script should key prompt-question audio separately');
+assert.match(audioGenerationScript, /collectPart1Questions/, 'audio generation script should collect Part 1 questions for generated audio');
 assert.match(audioGenerationScript, /Part 1/, 'audio generation script should include Part 1 model answers');
 assert.match(audioGenerationScript, /Part 2|part\.name === 'Part 2'/, 'audio generation script should include Part 2 model answers');
 assert.match(audioGenerationScript, /Part 3|part\.name === 'Part 3'/, 'audio generation script should include Part 3 model answers');
@@ -258,6 +262,7 @@ const parseQuestionBankMarkdown = Function(`${extractNamedFunction(html, 'parseQ
 const normalizeQuestionBankUrl = Function(`${extractNamedFunction(html, 'normalizeQuestionBankUrl')}; return normalizeQuestionBankUrl;`)();
 const getQuestionBankSourceName = Function(`${extractNamedFunction(html, 'getQuestionBankSourceName')}; return getQuestionBankSourceName;`)();
 const getModelAnswerAudioKey = Function(`${extractNamedFunction(html, 'getModelAnswerAudioKey')}; return getModelAnswerAudioKey;`)();
+const getPromptQuestionAudioKey = Function(`${extractNamedFunction(html, 'getPromptQuestionAudioKey')}; return getPromptQuestionAudioKey;`)();
 const storageKeyMatch = html.match(/const SAVED_QUESTION_BANK_STORAGE_KEY = '([^']+)'/);
 assert.ok(storageKeyMatch, 'saved question bank storage key should be readable by tests');
 assert.equal(storageKeyMatch[1], 'dailySpeakingPractice.latestQuestionBank');
@@ -372,6 +377,10 @@ const firstPart1ImportedAudioKey = getModelAnswerAudioKey(
   firstPart1ImportedPrompt.question,
   firstPart1ImportedPrompt.answer
 );
+const firstPart1ImportedQuestionAudioKey = getPromptQuestionAudioKey(
+  'Part 1',
+  firstPart1ImportedPrompt.question
+);
 const firstPart2ImportedPrompt = realImportedBank.parts[1].prompts[0];
 const firstPart2ImportedAudioKey = getModelAnswerAudioKey(
   'Part 2',
@@ -385,6 +394,14 @@ assert.ok(
 assert.ok(
   modelAnswerAudioManifest.entries[firstPart1ImportedAudioKey],
   'generated model-answer audio manifest should include imported Part 1 answers'
+);
+assert.ok(
+  modelAnswerAudioManifest.items.some((item) => item.partName === 'Part 1' && item.kind === 'question'),
+  'generated audio manifest should include imported Part 1 question audio items'
+);
+assert.ok(
+  modelAnswerAudioManifest.entries[firstPart1ImportedQuestionAudioKey],
+  'generated audio manifest should include imported Part 1 question audio'
 );
 assert.ok(
   modelAnswerAudioManifest.entries[firstPart2ImportedAudioKey],
@@ -543,6 +560,36 @@ assert.match(
   extractNamedFunction(html, 'newPrompt'),
   /state\.promptIndices\[state\.partIndex\] = state\.promptIndex[\s\S]*?savePromptProgress\(\)/,
   'new prompt should save the new prompt for the current part'
+);
+assert.match(
+  html,
+  /function\s+readCurrentPromptQuestionAloud\(/,
+  'page should expose a helper for reading the current prompt question aloud'
+);
+assert.match(
+  extractNamedFunction(html, 'readCurrentPromptQuestionAloud'),
+  /await playGeneratedPromptQuestionAudio\(\)/,
+  'prompt question speech should try generated Edge TTS audio before browser speech synthesis'
+);
+assert.match(
+  extractNamedFunction(html, 'playGeneratedPromptQuestionAudio'),
+  /new Audio\(audioPath\)/,
+  'generated prompt-question audio should play from the manifest path'
+);
+assert.match(
+  extractNamedFunction(html, 'readCurrentPromptQuestionAloud'),
+  /new SpeechSynthesisUtterance\(getPromptQuestion\(prompt\)\)/,
+  'prompt question speech should fall back to browser speech for the current question text'
+);
+assert.match(
+  extractNamedFunction(html, 'readCurrentPromptQuestionAloud'),
+  /utterance\.rate = 0\.9/,
+  'prompt question speech should use the same measured rate as model-answer speech'
+);
+assert.match(
+  extractNamedFunction(html, 'newPrompt'),
+  /renderPrompt\(\);[\s\S]*?if \(part\.name === 'Part 1'\) \{[\s\S]*?readCurrentPromptQuestionAloud\(\);[\s\S]*?\}/,
+  'Part 1 New Prompt should read the new question aloud after rendering it'
 );
 assert.match(
   extractNamedFunction(html, 'toggleModelAnswer'),
@@ -723,6 +770,21 @@ assert.notEqual(
   getModelAnswerAudioKey('Part 2', 'Describe a useful skill.', 'A useful skill I learned is organizing notes.'),
   getModelAnswerAudioKey('Part 2', 'Describe a useful skill.', 'A different answer.'),
   'model-answer audio keys should change when answer text changes'
+);
+assert.equal(
+  getPromptQuestionAudioKey('Part 1', 'Do you work or are you a student?'),
+  getPromptQuestionAudioKey('Part 1', 'Do you work or are you a student?'),
+  'prompt-question audio keys should be deterministic'
+);
+assert.match(
+  getPromptQuestionAudioKey('Part 1', 'Do you work or are you a student?'),
+  /^question-[0-9a-f]{8}$/,
+  'prompt-question audio keys should use a distinct question prefix'
+);
+assert.notEqual(
+  getPromptQuestionAudioKey('Part 1', 'Do you work or are you a student?'),
+  getModelAnswerAudioKey('Part 1', 'Do you work or are you a student?', 'I am a student.'),
+  'prompt-question audio keys should not collide with model-answer audio keys'
 );
 
 assert.equal(

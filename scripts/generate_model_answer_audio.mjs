@@ -26,6 +26,16 @@ function getModelAnswerAudioKey(partName, question, answer) {
   return `answer-${(hash >>> 0).toString(16).padStart(8, '0')}`;
 }
 
+function getPromptQuestionAudioKey(partName, question) {
+  const source = `${partName}\n${question}`;
+  let hash = 2166136261;
+  for (let index = 0; index < source.length; index++) {
+    hash ^= source.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `question-${(hash >>> 0).toString(16).padStart(8, '0')}`;
+}
+
 function countWords(value) {
   return String(value || '').match(/\b[\w'-]+\b/g)?.length || 0;
 }
@@ -54,10 +64,39 @@ function collectEmbeddedModelAnswers() {
         continue;
       }
       prompts.push({
+        kind: 'answer',
         source: 'embedded-html',
         partName: part.name,
         question: normalizeText(prompt.question),
-        answer
+        answer,
+        audioText: answer
+      });
+    }
+  }
+
+  return prompts;
+}
+
+function collectEmbeddedPart1Questions() {
+  const content = readEmbeddedPracticeContent();
+  const prompts = [];
+
+  for (const part of content.parts || []) {
+    if (part.name !== 'Part 1') {
+      continue;
+    }
+    for (const prompt of part.prompts || []) {
+      const question = normalizeText(prompt.question);
+      if (!question) {
+        continue;
+      }
+      prompts.push({
+        kind: 'question',
+        source: 'embedded-html',
+        partName: part.name,
+        question,
+        answer: '',
+        audioText: question
       });
     }
   }
@@ -101,10 +140,12 @@ function collectMarkdownModelAnswers() {
       const part1AnswerMatch = trimmed.match(/^Answer:\s*(.+)$/i);
       if (part1AnswerMatch && currentQuestion) {
         prompts.push({
+          kind: 'answer',
           source: 'markdown-bank',
           partName: 'Part 1',
           question: currentQuestion,
-          answer: normalizeText(part1AnswerMatch[1])
+          answer: normalizeText(part1AnswerMatch[1]),
+          audioText: normalizeText(part1AnswerMatch[1])
         });
       }
       continue;
@@ -125,10 +166,12 @@ function collectMarkdownModelAnswers() {
     const part2AnswerMatch = trimmed.match(/^Model answer:\s*(.+)$/i);
     if (part2AnswerMatch && currentQuestion) {
       prompts.push({
+        kind: 'answer',
         source: 'markdown-bank',
         partName: 'Part 2',
         question: currentQuestion,
-        answer: normalizeText(part2AnswerMatch[1])
+        answer: normalizeText(part2AnswerMatch[1]),
+        audioText: normalizeText(part2AnswerMatch[1])
       });
       continue;
     }
@@ -142,10 +185,12 @@ function collectMarkdownModelAnswers() {
     const part3AnswerMatch = trimmed.match(/^Answer:\s*(.+)$/i);
     if (part3AnswerMatch && currentQuestion) {
       prompts.push({
+        kind: 'answer',
         source: 'markdown-bank',
         partName: 'Part 3',
         question: currentQuestion,
-        answer: normalizeText(part3AnswerMatch[1])
+        answer: normalizeText(part3AnswerMatch[1]),
+        audioText: normalizeText(part3AnswerMatch[1])
       });
     }
   }
@@ -153,13 +198,58 @@ function collectMarkdownModelAnswers() {
   return prompts;
 }
 
+function collectMarkdownPart1Questions() {
+  const markdown = readFileSync(MARKDOWN_PATH, 'utf8').replace(/\r\n?/g, '\n');
+  const lines = markdown.split('\n');
+  const prompts = [];
+  let section = '';
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (/^##\s+Part 1 Quick Interview Bank/i.test(trimmed)) {
+      section = 'part1';
+      continue;
+    }
+    if (/^##\s+Part 2 And Part 3 Cue-Card Bank/i.test(trimmed)) {
+      break;
+    }
+    if (section !== 'part1') {
+      continue;
+    }
+
+    const part1QuestionMatch = trimmed.match(/^Question:\s*(.+)$/i);
+    if (part1QuestionMatch) {
+      const question = normalizeText(part1QuestionMatch[1]);
+      prompts.push({
+        kind: 'question',
+        source: 'markdown-bank',
+        partName: 'Part 1',
+        question,
+        answer: '',
+        audioText: question
+      });
+    }
+  }
+
+  return prompts;
+}
+
+function collectPart1Questions() {
+  return [
+    ...collectEmbeddedPart1Questions(),
+    ...collectMarkdownPart1Questions()
+  ];
+}
+
 function dedupePrompts(prompts) {
   const byKey = new Map();
 
   for (const prompt of prompts) {
-    const key = getModelAnswerAudioKey(prompt.partName, prompt.question, prompt.answer);
+    const key = prompt.kind === 'question'
+      ? getPromptQuestionAudioKey(prompt.partName, prompt.question)
+      : getModelAnswerAudioKey(prompt.partName, prompt.question, prompt.answer);
     if (!byKey.has(key)) {
-      byKey.set(key, { ...prompt, key, words: countWords(prompt.answer) });
+      byKey.set(key, { ...prompt, key, words: countWords(prompt.audioText) });
     }
   }
 
@@ -204,7 +294,7 @@ function generateAudioFile(command, prompt, outputPath) {
       '--voice',
       voice,
       '--text',
-      prompt.answer,
+      prompt.audioText,
       '--write-media',
       outputPath
     ],
@@ -227,6 +317,7 @@ function buildManifest(prompts) {
     entries[prompt.key] = relativePath;
     items.push({
       key: prompt.key,
+      kind: prompt.kind,
       partName: prompt.partName,
       question: prompt.question,
       words: prompt.words,
@@ -265,7 +356,8 @@ function writeEmbeddedManifest(manifest) {
 
 const prompts = dedupePrompts([
   ...collectEmbeddedModelAnswers(),
-  ...collectMarkdownModelAnswers()
+  ...collectMarkdownModelAnswers(),
+  ...collectPart1Questions()
 ]);
 
 if (!dryRun) {
@@ -290,4 +382,4 @@ if (!dryRun) {
   writeEmbeddedManifest(manifest);
 }
 
-console.log(`${dryRun ? 'Found' : 'Generated manifest for'} ${prompts.length} Part 1/Part 2/Part 3 model-answer audio items.`);
+console.log(`${dryRun ? 'Found' : 'Generated manifest for'} ${prompts.length} generated audio items.`);
