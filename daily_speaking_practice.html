@@ -71,6 +71,34 @@
       padding: 20px;
     }
 
+    .foldable-section {
+      margin-bottom: 16px;
+    }
+
+    .foldable-section summary {
+      cursor: pointer;
+      color: #171717;
+    }
+
+    .foldable-section summary h2 {
+      display: inline;
+      margin: 0;
+    }
+
+    .foldable-section summary::marker {
+      color: var(--muted);
+    }
+
+    .foldable-section summary:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .foldable-section > summary + * {
+      margin-top: 14px;
+    }
+
     h2 {
       margin: 0 0 14px;
       color: #171717;
@@ -3571,12 +3599,14 @@
   </header>
 
   <main>
-    <section class="card">
-      <h2>Today’s 20-Minute Routine</h2>
+    <details class="card foldable-section" id="routineSection">
+      <summary>
+        <h2>Today’s 20-Minute Routine</h2>
+      </summary>
       <div class="daily-checklist" id="routineList"></div>
       <p class="muted">Progress: <span id="progressText">0%</span></p>
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-    </section>
+    </details>
 
     <section class="card">
       <h2>IELTS Speaking Prompt</h2>
@@ -3652,10 +3682,12 @@
       <div class="phrase-list" id="rescuePhrases"></div>
     </section>
 
-    <section class="card">
-      <h2>7-Day IELTS Speaking Plan</h2>
+    <details class="card foldable-section" id="weeklyPlanSection">
+      <summary>
+        <h2>7-Day IELTS Speaking Plan</h2>
+      </summary>
       <div class="grid" id="weeklyPlan"></div>
-    </section>
+    </details>
 
     <section class="card">
       <h2>Self-Review</h2>

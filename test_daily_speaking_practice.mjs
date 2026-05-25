@@ -57,6 +57,21 @@ assert.doesNotMatch(html, /<h2>Practice Timer<\/h2>/, 'practice timer section sh
 assert.doesNotMatch(html, /id="timer"/, 'standalone timer display should be removed');
 assert.doesNotMatch(html, /function\s+startTimer\(/, 'standalone timer start logic should be removed');
 assert.doesNotMatch(html, /function\s+resetTimer\(/, 'standalone timer reset logic should be removed');
+assert.match(
+  html,
+  /<details class="card foldable-section" id="routineSection">\s*<summary>\s*<h2>Today’s 20-Minute Routine<\/h2>\s*<\/summary>/,
+  'daily routine should be folded behind an accessible summary heading'
+);
+assert.match(
+  html,
+  /<details class="card foldable-section" id="weeklyPlanSection">\s*<summary>\s*<h2>7-Day IELTS Speaking Plan<\/h2>\s*<\/summary>/,
+  'weekly IELTS plan should be folded behind an accessible summary heading'
+);
+assert.doesNotMatch(
+  html,
+  /<details class="card foldable-section" id="(?:routineSection|weeklyPlanSection)" open>/,
+  'routine and weekly plan disclosures should start collapsed'
+);
 
 const questionBankLines = questionBankMarkdown.replace(/\r\n?/g, '\n').split('\n');
 let questionBankAnswerCount = 0;
