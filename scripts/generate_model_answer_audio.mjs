@@ -1,20 +1,21 @@
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 
 const ROOT_DIR = fileURLToPath(new URL('../', import.meta.url));
 const HTML_PATH = join(ROOT_DIR, 'daily_speaking_practice.html');
 const MARKDOWN_PATH = join(ROOT_DIR, 'ielts_2025_sep_dec_question_bank.md');
 const AUDIO_DIR = join(ROOT_DIR, 'audio', 'model-answers');
 const MANIFEST_PATH = join(ROOT_DIR, 'audio', 'model_answer_audio_manifest.json');
-const DEFAULT_VOICE = 'en-US-AriaNeural';
+const DEFAULT_VOICE = 'en-GB-SoniaNeural';
 const GENERATOR = 'edge-tts';
 
 const args = new Set(process.argv.slice(2));
 const force = args.has('--force');
 const dryRun = args.has('--dry-run');
 const voice = process.env.MODEL_ANSWER_VOICE || DEFAULT_VOICE;
+const concurrency = Math.max(1, Number.parseInt(process.env.EDGE_TTS_CONCURRENCY || '8', 10) || 8);
 
 function getModelAnswerAudioKey(partName, question, answer) {
   const source = `${partName}\n${question}\n${answer}`;
@@ -70,33 +71,6 @@ function collectEmbeddedModelAnswers() {
         question: normalizeText(prompt.question),
         answer,
         audioText: answer
-      });
-    }
-  }
-
-  return prompts;
-}
-
-function collectEmbeddedPart1Questions() {
-  const content = readEmbeddedPracticeContent();
-  const prompts = [];
-
-  for (const part of content.parts || []) {
-    if (part.name !== 'Part 1') {
-      continue;
-    }
-    for (const prompt of part.prompts || []) {
-      const question = normalizeText(prompt.question);
-      if (!question) {
-        continue;
-      }
-      prompts.push({
-        kind: 'question',
-        source: 'embedded-html',
-        partName: part.name,
-        question,
-        answer: '',
-        audioText: question
       });
     }
   }
@@ -198,47 +172,18 @@ function collectMarkdownModelAnswers() {
   return prompts;
 }
 
-function collectMarkdownPart1Questions() {
-  const markdown = readFileSync(MARKDOWN_PATH, 'utf8').replace(/\r\n?/g, '\n');
-  const lines = markdown.split('\n');
-  const prompts = [];
-  let section = '';
-
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (/^##\s+Part 1 Quick Interview Bank/i.test(trimmed)) {
-      section = 'part1';
-      continue;
-    }
-    if (/^##\s+Part 2 And Part 3 Cue-Card Bank/i.test(trimmed)) {
-      break;
-    }
-    if (section !== 'part1') {
-      continue;
-    }
-
-    const part1QuestionMatch = trimmed.match(/^Question:\s*(.+)$/i);
-    if (part1QuestionMatch) {
-      const question = normalizeText(part1QuestionMatch[1]);
-      prompts.push({
-        kind: 'question',
-        source: 'markdown-bank',
-        partName: 'Part 1',
-        question,
-        answer: '',
-        audioText: question
-      });
-    }
-  }
-
-  return prompts;
-}
-
-function collectPart1Questions() {
+function collectPromptQuestions() {
   return [
-    ...collectEmbeddedPart1Questions(),
-    ...collectMarkdownPart1Questions()
-  ];
+    ...collectEmbeddedModelAnswers(),
+    ...collectMarkdownModelAnswers()
+  ].map((prompt) => ({
+    kind: 'question',
+    source: prompt.source,
+    partName: prompt.partName,
+    question: prompt.question,
+    answer: '',
+    audioText: prompt.question
+  }));
 }
 
 function dedupePrompts(prompts) {
@@ -287,9 +232,7 @@ function resolveEdgeTtsCommand() {
 
 function generateAudioFile(command, prompt, outputPath) {
   const [bin, ...baseArgs] = command;
-  const result = spawnSync(
-    bin,
-    [
+  const child = spawn(bin, [
       ...baseArgs,
       '--voice',
       voice,
@@ -297,15 +240,34 @@ function generateAudioFile(command, prompt, outputPath) {
       prompt.audioText,
       '--write-media',
       outputPath
-    ],
-    { encoding: 'utf8' }
-  );
+    ]);
+  let stdout = '';
+  let stderr = '';
+  child.stdout?.setEncoding('utf8');
+  child.stderr?.setEncoding('utf8');
+  child.stdout?.on('data', (chunk) => { stdout += chunk; });
+  child.stderr?.on('data', (chunk) => { stderr += chunk; });
+  return new Promise((resolve, reject) => {
+    child.once('error', reject);
+    child.once('close', (code) => {
+      if (code === 0) {
+        resolve();
+        return;
+      }
+      reject(new Error(`Failed to generate ${prompt.key}: ${stderr || stdout || `${bin} exited with ${code}`}`));
+    });
+  });
+}
 
-  if (result.status !== 0) {
-    throw new Error(
-      `Failed to generate ${prompt.key}: ${result.stderr || result.stdout || `${bin} exited with ${result.status}`}`
-    );
+async function generateAudioFiles(command, pendingItems) {
+  let cursor = 0;
+  async function worker() {
+    while (cursor < pendingItems.length) {
+      const item = pendingItems[cursor++];
+      await generateAudioFile(command, item.prompt, item.outputPath);
+    }
   }
+  await Promise.all(Array.from({ length: Math.min(concurrency, pendingItems.length) }, worker));
 }
 
 function buildManifest(prompts) {
@@ -320,6 +282,7 @@ function buildManifest(prompts) {
       kind: prompt.kind,
       partName: prompt.partName,
       question: prompt.question,
+      ...(prompt.kind === 'answer' ? { answer: prompt.answer } : {}),
       words: prompt.words,
       audio: relativePath,
       source: prompt.source
@@ -357,7 +320,7 @@ function writeEmbeddedManifest(manifest) {
 const prompts = dedupePrompts([
   ...collectEmbeddedModelAnswers(),
   ...collectMarkdownModelAnswers(),
-  ...collectPart1Questions()
+  ...collectPromptQuestions()
 ]);
 
 if (!dryRun) {
@@ -365,6 +328,7 @@ if (!dryRun) {
 }
 
 const command = dryRun ? null : resolveEdgeTtsCommand();
+const pendingItems = [];
 for (const prompt of prompts) {
   const outputPath = join(AUDIO_DIR, `${prompt.key}.mp3`);
   if (!force && !dryRun && existsSync(outputPath) && statSync(outputPath).size > 0) {
@@ -373,7 +337,10 @@ for (const prompt of prompts) {
   if (dryRun) {
     continue;
   }
-  generateAudioFile(command, prompt, outputPath);
+  pendingItems.push({ prompt, outputPath });
+}
+if (!dryRun) {
+  await generateAudioFiles(command, pendingItems);
 }
 
 const manifest = buildManifest(prompts);

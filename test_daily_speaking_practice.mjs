@@ -31,6 +31,33 @@ function countWords(value) {
   return String(value || '').match(/\b[\w'-]+\b/g)?.length || 0;
 }
 
+function getDuplicateSentences(value) {
+  const sentences = String(value || '').match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [];
+  const seen = new Set();
+  const duplicates = [];
+  for (const sentence of sentences) {
+    const normalized = sentence
+      .toLowerCase()
+      .replace(/[^a-z0-9' ]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (seen.has(normalized)) {
+      duplicates.push(sentence.trim());
+    }
+    seen.add(normalized);
+  }
+  return duplicates;
+}
+
+function assertPart3AnswerQuality(answer, label) {
+  assert.deepEqual(getDuplicateSentences(answer), [], `${label} should not repeat a sentence`);
+  assert.doesNotMatch(
+    answer,
+    /For .+?, support from families|In practice, (?!the issue\b).+? has to be judged|The best view is balanced: (?!the idea\b).+? can be positive|These qualities matter because they turn (?!the idea\b).+? into something useful/,
+    `${label} should not contain a malformed template insertion`
+  );
+}
+
 for (const part of content.parts) {
   assert.ok(part.focus, `${part.name} needs a practice focus`);
   assert.ok(Array.isArray(part.prompts), `${part.name} prompts must be an array`);
@@ -46,6 +73,7 @@ for (const part of content.parts) {
     }
     if (part.name === 'Part 3') {
       assert.ok(countWords(prompt.answer) >= 150, `${part.name} model answer should support extended discussion practice`);
+      assertPart3AnswerQuality(prompt.answer, `${part.name} built-in answer for "${prompt.question}"`);
     }
   }
 }
@@ -193,7 +221,8 @@ assert.match(html, /id="model-answer-audio-manifest"/, 'page should embed genera
 assert.match(html, /function\s+getEmbeddedModelAnswerAudioManifest\(/, 'page should read the embedded model-answer audio manifest');
 assert.match(html, /function\s+loadModelAnswerAudioManifest\(/, 'page should load the generated model-answer audio manifest');
 assert.match(html, /function\s+playGeneratedPromptQuestionAudio\(/, 'page should try generated prompt-question audio before browser speech synthesis');
-assert.match(html, /function\s+playGeneratedModelAnswerAudio\(/, 'page should try generated audio before browser speech synthesis');
+assert.match(html, /function\s+playGeneratedModelAnswerAudio\(/, 'page should play model answers from generated Edge TTS audio');
+assert.match(html, /function\s+syncPromptAnswersWithGeneratedAudio\(/, 'page should synchronize cached answer text with generated Edge TTS assets');
 assert.match(html, /function\s+splitModelAnswerSentences\(/, 'page should split model answers into highlightable sentences');
 assert.match(html, /function\s+renderModelAnswerText\(/, 'page should render model answers as sentence spans');
 assert.match(html, /function\s+highlightModelAnswerSentence\(/, 'page should highlight the sentence currently being read');
@@ -241,13 +270,17 @@ assert.match(html, /\.play-icon/, 'play button should use a play icon');
 assert.match(html, /\.pause-icon/, 'playback buttons should support a pause icon');
 assert.ok(modelAnswerManifestExists, 'generated model-answer audio manifest should exist');
 assert.ok(modelAnswerAudioManifest && typeof modelAnswerAudioManifest === 'object', 'generated model-answer audio manifest should be JSON');
-assert.equal(modelAnswerAudioManifest.voice, 'en-US-AriaNeural', 'generated audio should use the planned free TTS voice');
+assert.equal(modelAnswerAudioManifest.voice, 'en-GB-SoniaNeural', 'generated audio should use the planned female UK TTS voice');
 assert.ok(modelAnswerAudioManifest.entries && typeof modelAnswerAudioManifest.entries === 'object', 'manifest should store audio entries by generated key');
+assert.ok(
+  modelAnswerAudioManifest.items.filter((item) => item.kind === 'answer').every((item) => item.answer),
+  'every generated model-answer item should include its canonical spoken text'
+);
 assert.match(audioGenerationScript, /writeEmbeddedManifest/, 'audio generation script should keep the embedded HTML manifest in sync');
 assert.match(audioGenerationScript, /edge-tts/, 'audio generation script should use edge-tts');
-assert.match(audioGenerationScript, /en-US-AriaNeural/, 'audio generation script should default to en-US-AriaNeural');
+assert.match(audioGenerationScript, /en-GB-SoniaNeural/, 'audio generation script should default to en-GB-SoniaNeural');
 assert.match(audioGenerationScript, /function\s+getPromptQuestionAudioKey\(/, 'audio generation script should key prompt-question audio separately');
-assert.match(audioGenerationScript, /collectPart1Questions/, 'audio generation script should collect Part 1 questions for generated audio');
+assert.match(audioGenerationScript, /collectPromptQuestions/, 'audio generation script should collect questions from every part for generated audio');
 assert.match(audioGenerationScript, /Part 1/, 'audio generation script should include Part 1 model answers');
 assert.match(audioGenerationScript, /Part 2|part\.name === 'Part 2'/, 'audio generation script should include Part 2 model answers');
 assert.match(audioGenerationScript, /Part 3|part\.name === 'Part 3'/, 'audio generation script should include Part 3 model answers');
@@ -278,6 +311,44 @@ const normalizeQuestionBankUrl = Function(`${extractNamedFunction(html, 'normali
 const getQuestionBankSourceName = Function(`${extractNamedFunction(html, 'getQuestionBankSourceName')}; return getQuestionBankSourceName;`)();
 const getModelAnswerAudioKey = Function(`${extractNamedFunction(html, 'getModelAnswerAudioKey')}; return getModelAnswerAudioKey;`)();
 const getPromptQuestionAudioKey = Function(`${extractNamedFunction(html, 'getPromptQuestionAudioKey')}; return getPromptQuestionAudioKey;`)();
+const syncPromptAnswersWithGeneratedAudio = Function(
+  'modelAnswerAudioManifest',
+  'getPromptQuestion',
+  `${extractNamedFunction(html, 'syncPromptAnswersWithGeneratedAudio')}; return syncPromptAnswersWithGeneratedAudio;`
+)(modelAnswerAudioManifest, (prompt) => typeof prompt === 'string' ? prompt : prompt.question);
+const staleCachedParts = [{
+  name: 'Part 3',
+  prompts: [{
+    question: 'Why do first impressions sometimes change?',
+    answer: 'This stale cached answer contains the old duplicated ending.'
+  }]
+}];
+syncPromptAnswersWithGeneratedAudio(staleCachedParts);
+const synchronizedFirstImpressionsAnswer = staleCachedParts[0].prompts[0].answer;
+assert.notEqual(
+  synchronizedFirstImpressionsAnswer,
+  'This stale cached answer contains the old duplicated ending.',
+  'a stale cached Part 3 answer should be replaced with the canonical Edge TTS text'
+);
+assert.ok(
+  modelAnswerAudioManifest.entries[getModelAnswerAudioKey(
+    'Part 3',
+    'Why do first impressions sometimes change?',
+    synchronizedFirstImpressionsAnswer
+  )],
+  'the synchronized first-impressions answer should resolve to generated Edge TTS audio'
+);
+for (const part of content.parts) {
+  for (const prompt of part.prompts) {
+    const questionAudioKey = getPromptQuestionAudioKey(part.name, prompt.question);
+    const questionAudioPath = modelAnswerAudioManifest.entries[questionAudioKey];
+    assert.ok(questionAudioPath, `${part.name} built-in question should have generated Edge TTS audio`);
+    assert.ok(
+      existsSync(new URL(`./${questionAudioPath}`, import.meta.url)),
+      `${part.name} built-in Edge TTS question audio file should exist`
+    );
+  }
+}
 const storageKeyMatch = html.match(/const SAVED_QUESTION_BANK_STORAGE_KEY = '([^']+)'/);
 assert.ok(storageKeyMatch, 'saved question bank storage key should be readable by tests');
 assert.equal(storageKeyMatch[1], 'dailySpeakingPractice.latestQuestionBank');
@@ -424,6 +495,13 @@ assert.ok(
 );
 for (const part of realImportedBank.parts) {
   for (const prompt of part.prompts) {
+    const questionAudioKey = getPromptQuestionAudioKey(part.name, prompt.question);
+    const questionAudioPath = modelAnswerAudioManifest.entries[questionAudioKey];
+    assert.ok(questionAudioPath, `${part.name} imported question should have generated Edge TTS audio`);
+    assert.ok(
+      existsSync(new URL(`./${questionAudioPath}`, import.meta.url)),
+      `${part.name} imported Edge TTS question audio file should exist`
+    );
     assert.ok(Array.isArray(prompt.keywords), `${part.name} imported prompt should include curated keywords`);
     assert.ok(prompt.keywords.length >= 3, `${part.name} imported prompt should include at least three curated keywords`);
     if (part.name === 'Part 2') {
@@ -431,6 +509,7 @@ for (const part of realImportedBank.parts) {
     }
     if (part.name === 'Part 3') {
       assert.ok(countWords(prompt.answer) >= 150, `${part.name} imported model answer should support extended discussion practice`);
+      assertPart3AnswerQuality(prompt.answer, `${part.name} imported answer for "${prompt.question}"`);
     }
   }
 }
@@ -603,8 +682,13 @@ assert.match(
 );
 assert.match(
   extractNamedFunction(html, 'newPrompt'),
-  /renderPrompt\(\);[\s\S]*?if \(part\.name === 'Part 1'\) \{[\s\S]*?readCurrentPromptQuestionAloud\(\);[\s\S]*?\}/,
-  'Part 1 New Prompt should read the new question aloud after rendering it'
+  /renderPrompt\(\);[\s\S]*?readCurrentPromptQuestionAloud\(\);/,
+  'New Prompt should read the new question aloud after rendering it for every part'
+);
+assert.match(
+  extractNamedFunction(html, 'repeatPrompt'),
+  /renderPrompt\(\);[\s\S]*?readCurrentPromptQuestionAloud\(\);/,
+  'Repeat This Prompt should read the current question aloud after rendering it'
 );
 assert.match(
   extractNamedFunction(html, 'toggleModelAnswer'),
@@ -689,7 +773,7 @@ assert.match(
 assert.match(
   extractNamedFunction(html, 'readModelAnswerAloud'),
   /await playGeneratedModelAnswerAudio\(modelAnswer\)/,
-  'model answer read button should try generated audio before browser speech synthesis'
+  'model answer read button should use generated Edge TTS audio'
 );
 assert.match(
   extractNamedFunction(html, 'readModelAnswerAloud'),
@@ -721,15 +805,15 @@ assert.match(
   /window\.location\.protocol === 'file:'[\s\S]*?return/,
   'embedded generated audio manifest should be used when the page is opened directly from disk'
 );
-assert.match(
+assert.doesNotMatch(
   extractNamedFunction(html, 'readModelAnswerAloud'),
   /new SpeechSynthesisUtterance\(modelAnswer\)/,
-  'model answer read button should keep browser speech synthesis as fallback'
+  'model answer read button should never fall back to browser speech synthesis'
 );
-assert.match(
+assert.doesNotMatch(
   extractNamedFunction(html, 'readModelAnswerAloud'),
-  /speechSynthesis\.speak\(utterance\)/,
-  'model answer read button should speak the model answer text'
+  /speechSynthesis/,
+  'model answer playback should remain Edge TTS only'
 );
 assert.match(
   html,
@@ -738,13 +822,13 @@ assert.match(
 );
 assert.match(
   extractNamedFunction(html, 'toggleModelAnswerPlayback'),
-  /speechSynthesis\.pause\(\)|playbackAudio\.pause\(\)/,
+  /playbackAudio\.pause\(\)/,
   'model-answer toggle should pause active playback'
 );
-assert.match(
-  extractNamedFunction(html, 'readModelAnswerAloud'),
-  /boundary[\s\S]*?highlightModelAnswerSentence/,
-  'browser speech synthesis should highlight the sentence reported by boundary events'
+assert.doesNotMatch(
+  extractNamedFunction(html, 'toggleModelAnswerPlayback'),
+  /model-answer-speech|speechSynthesis/,
+  'model-answer toggle should not retain a browser-speech playback path'
 );
 assert.match(
   html,
@@ -833,6 +917,11 @@ assert.match(
   extractNamedFunction(html, 'applyImportedQuestionBank'),
   /if \(importOptions\.save\) \{[\s\S]*?saveImportedQuestionBank\(markdown, sourceLabel\);[\s\S]*?\}/,
   'successful manual imports should persist by default'
+);
+assert.match(
+  extractNamedFunction(html, 'applyImportedQuestionBank'),
+  /syncPromptAnswersWithGeneratedAudio\(imported\.parts\)/,
+  'cached or imported answers should be synchronized to the exact text used for Edge TTS'
 );
 assert.match(
   extractNamedFunction(html, 'applyImportedQuestionBank'),
